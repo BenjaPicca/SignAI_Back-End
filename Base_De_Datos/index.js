@@ -3,6 +3,7 @@ import { client } from "./.dbconfig.js"
 // Creamos el servidor de Express con la configuración estándar básica
 const app = express();
 
+app.use(express.json());
 
 app.get("/", (req, res) => {
     // Esto envía el texto "Hello World!" como respuesta a la HTTP request
@@ -22,10 +23,13 @@ app.post("/insertar", async (req, res) => {
         NombreUsuario,
         Contraseña
     } = req.body;
-
+    try{
     await client.query('INSERT INTO public."Usuario" ("Nombre", "Apellido", "NombreUsuario", "Mail", "Contraseña") VALUES ($1, $2, $3, $4, $5)',
         [Nombre, Apellido, NombreUsuario, Mail, Contraseña]);
-    res.send("Se ha insertado Correctamente")
+    res.send("Se ha insertado Correctamente");}
+    catch{
+        res.send(err)
+    }
 })
 
 app.get("/prueba", async (req, res) => {
@@ -36,20 +40,20 @@ app.get("/prueba", async (req, res) => {
 
 app.delete("/delUsuario", async (req, res) => {
     const Mail = req.body.Mail;
-    await client.query('DELETE * FROM public."Usuario" WHERE "Mail"=$1', [Mail])
+    await client.query('DELETE FROM public."Usuario" WHERE "Mail"=$1', [Mail])
     res.send("Se ha eliminado", { Mail })
 })
 
 app.put("/Update", async (req, res) => {
     const {
-        mail,
+        Mail,
         Nombre,
         Apellido,
         NombreUsuario,
         Contraseña
     } = req.body;
-    const { rows } = await client.query('UPDATE public."Usuario" SET "Nombre" =$1, "Apellido"=$2, "NombreUsuario"=$3, "Contraseña"=$4 WHERE "Mail"=$5 ', [Nombre, Apellido, NombreUsuario, Contraseña, mail])
-    res.json(rows)
+    await client.query('UPDATE public."Usuario" SET "Nombre" =$1, "Apellido"=$2, "NombreUsuario"=$3, "Contraseña"=$4 WHERE "Mail"=$5 ', [Nombre, Apellido, NombreUsuario, Contraseña, Mail])
+    res.send("Se modificó correctamente")
 })
 app.listen(3000, () => {
     console.log("Example app listening on port 3000!");
