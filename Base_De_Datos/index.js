@@ -15,11 +15,14 @@ app.get("/chau", (req, res) => {
 });
 
 app.post("/insertar", async (req, res) => {
-    await client.query('INSERT INTO public."Usuario" ("Nombre", "Apellido", "NombreUsuario", "Mail", "Contraseña") VALUES ($1, $2, $3, $4, $5)',
+    await client.query('INSERT INTO public."Usuario" (Nombre, Apellido, NombreUsuario, Mail, Contraseña) VALUES ($1, $2, $3, $4, $5)',
         ["Benjamin", "Piccagli", "BenjaPicca", "benjapiccagli@gmail.com", "labruna9"]);
     res.send("Se ha insertado Correctamente")
 })
 
+app.get("/prueba",async(req,res)=>{
+    await client.query('SELECT Mail, Nombre, NombreUsuario FROM public."Usuario" WHERE ID=$1',[1])
+})
 app.listen(3000, () => {
     console.log("Example app listening on port 3000!");
 });
