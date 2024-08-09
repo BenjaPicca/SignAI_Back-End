@@ -23,11 +23,12 @@ app.post("/insertar", async (req, res) => {
         NombreUsuario,
         Contraseña
     } = req.body;
-    try{
-    await client.query('INSERT INTO public."Usuario" ("Nombre", "Apellido", "NombreUsuario", "Mail", "Contraseña") VALUES ($1, $2, $3, $4, $5)',
-        [Nombre, Apellido, NombreUsuario, Mail, Contraseña]);
-    res.send("Se ha insertado Correctamente");}
-    catch{
+    try {
+        await client.query('INSERT INTO public."Usuario" ("Nombre", "Apellido", "NombreUsuario", "Mail", "Contraseña") VALUES ($1, $2, $3, $4, $5)',
+            [Nombre, Apellido, NombreUsuario, Mail, Contraseña]);
+        res.send("Se ha insertado Correctamente");
+    }
+    catch {
         res.send(err)
     }
 })
@@ -41,7 +42,7 @@ app.get("/prueba", async (req, res) => {
 app.delete("/delUsuario", async (req, res) => {
     const Mail = req.body.Mail;
     await client.query('DELETE FROM public."Usuario" WHERE "Mail"=$1', [Mail])
-    res.send("Se ha eliminado", { Mail })
+    res.send("Se ha eliminado el usuario correctamente")
 })
 
 app.put("/Update", async (req, res) => {
@@ -54,6 +55,22 @@ app.put("/Update", async (req, res) => {
     } = req.body;
     await client.query('UPDATE public."Usuario" SET "Nombre" =$1, "Apellido"=$2, "NombreUsuario"=$3, "Contraseña"=$4 WHERE "Mail"=$5 ', [Nombre, Apellido, NombreUsuario, Contraseña, Mail])
     res.send("Se modificó correctamente")
+})
+
+app.get("/GetFeedback", async (req, res) => {
+    const ID = req.body.ID;
+    const { rows } = await client.query('SELECT "Feedback" FROM public."Conversacion" WHERE "ID"=$1', [ID])
+    res.json(rows[0])
+})
+app.post("/CrearFeedback", async (req, res) => {
+    const { Feedback,
+        Texto_Devuelto,
+        Fecha_Conversacion,
+        Video_Inicial,
+    }
+        = req.body.Feedback;
+    const { rows } = await client.query('INSERT INTO public."Conversacion"("Feedback","Texto_Devuelto","Fecha_Conversación","Video_Inicial") VALUES ($1,$2,$3,$4)'[Feedback, Texto_Devuelto, Fecha_Conversacion, Video_Inicial])
+    res.json(rows[0])
 })
 app.listen(3000, () => {
     console.log("Example app listening on port 3000!");
