@@ -59,18 +59,29 @@ app.put("/Update", async (req, res) => {
 
 app.get("/GetFeedback", async (req, res) => {
     const ID = req.body.ID;
-    const { rows } = await client.query('SELECT "Feedback" FROM public."Conversacion" WHERE "ID"=$1', [ID])
-    res.json(rows[0])
+    const {_, rows } = await client.query('SELECT "Feedback", "Texto_Devuelto","Fecha_Conversación","Video_Inicial" FROM public."Conversación" WHERE "ID"=$1', [ID])
+    res.json(rows)
 })
 app.post("/CrearFeedback", async (req, res) => {
     const { Feedback,
         Texto_Devuelto,
-        Fecha_Conversacion,
+        Fecha_Conversación,
         Video_Inicial,
     }
-        = req.body.Feedback;
-    const { rows } = await client.query('INSERT INTO public."Conversacion"("Feedback","Texto_Devuelto","Fecha_Conversación","Video_Inicial") VALUES ($1,$2,$3,$4)'[Feedback, Texto_Devuelto, Fecha_Conversacion, Video_Inicial])
-    res.json(rows[0])
+        = req.body;
+    const { rows } = await client.query('INSERT INTO public."Conversación" ("Feedback","Texto_Devuelto","Fecha_Conversación","Video_Inicial") VALUES ($1,$2,$3,$4)',[Feedback, Texto_Devuelto, Fecha_Conversación, Video_Inicial])
+    res.send('Gracias por tu respuesta.')
+})
+
+app.delete("/EliminarConversación", async (req,res) =>{
+    const ID=req.body.ID;
+    try{
+    await client.query('DELETE FROM public."Conversación" WHERE "ID"=$1',[ID])
+    res.send('Se ha eliminado correctamente')
+    }
+    catch{
+        console.log(err)
+    }
 })
 app.listen(3000, () => {
     console.log("Example app listening on port 3000!");
