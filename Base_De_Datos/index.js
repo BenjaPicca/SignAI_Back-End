@@ -83,6 +83,19 @@ app.delete("/EliminarConversación", async (req,res) =>{
         console.log(err)
     }
 })
+
+app.put("/UpdateConver",async(req,res)=> {
+    const{Feedback,
+        Texto_Devuelto,
+        Fecha_Conversación,
+        Video_Inicial,
+        ID
+
+    }=req.body
+    await client.query('UPDATE public."Conversación" SET "Feedback"=$1, "Texto_Devuelto"=$2, "Fecha_Conversación"=$3,"Video_Inicial"=$4 WHERE "ID"=$5',[Feedback,Texto_Devuelto,Fecha_Conversación,Video_Inicial,ID])
+        res.send('Se ha actualizado la tabla correctamente')
+    
+})
 app.listen(3000, () => {
     console.log("Example app listening on port 3000!");
 });

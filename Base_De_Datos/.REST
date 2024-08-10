@@ -10,11 +10,11 @@ POST http://localhost:3000/insertar HTTP/1.1
 Content-Type: application/json
 
 {
-    "Nombre": "Ezequiel",
-    "Apellido": "Agradnik",
-    "NombreUsuario": "Echuu",
-    "Mail": "echuagrad@gmail.com",
-    "Contraseña":"Nico"
+    "Nombre": "",
+    "Apellido": "",
+    "NombreUsuario": "",
+    "Mail": "",
+    "Contraseña":""
 }
 
 ###
@@ -24,7 +24,7 @@ Content-Type: application/json
 
 {
     
-    "Mail": "nacho.vigilante@gmail.com"
+    "Mail": ""
 }
 
 ###
@@ -34,7 +34,7 @@ Content-Type: application/json
 
 {
     
-    "Mail": "mfrancoferreiro@gmail.com"
+    "Mail": ""
 }
 ###
 
@@ -42,11 +42,11 @@ PUT http://localhost:3000/Update HTTP/1.1
 Content-Type: application/json
 
 {
-    "Nombre": "Nacho",
-    "Apellido": "Vigi",
-    "NombreUsuario": "Vigi.Cra",
-    "Mail": "nacho.vigilante@gmail.com",
-    "Contraseña":"El coso este"
+    "Nombre": "",
+    "Apellido": "",
+    "NombreUsuario": "",
+    "Mail": "",
+    "Contraseña":""
 }
 //Conversación
 ###
@@ -54,7 +54,7 @@ GET http://localhost:3000/GetFeedback HTTP/1.1
 Content-Type: application/json
 
 {
-    "ID": 4
+    "ID": 
 }
 
 ###
@@ -62,10 +62,10 @@ POST http://localhost:3000/CrearFeedback HTTP/1.1
 Content-Type: application/json
 
 {
-  "Feedback":"No me idetifico nada que malo setton",
-  "Texto_Devuelto":"Hola, soy setton me gusta mucho dana.",
-  "Fecha_Conversación":"1997-04-26 13:17:26",
-  "Video_Inicial":"Akmahdsh"
+  "Feedback":"",
+  "Texto_Devuelto":"",
+  "Fecha_Conversación":"",
+  "Video_Inicial":""
 }
 
 ###
@@ -74,5 +74,18 @@ DELETE http://localhost:3000/EliminarConversación HTTP/1.1
 Content-Type: application/json
 
 {
-    "ID": 6
+    "ID": 
+}
+
+###
+
+PUT  http://localhost:3000/UpdateConver HTTP/1.1
+Content-Type: application/json
+
+{
+  "Feedback":"Buenardopolis",
+  "Texto_Devuelto":"Hola soy luisana amo todo lo que es la danza y gimnasia setton es mi novio y me lo chape tres veces en el pasillo lo amo muchisimo gracias turquito por hacerme feliz.",
+  "Fecha_Conversación":"2021-10-07 21:30:01",
+  "Video_Inicial":"cnncnsncsnn",
+  "ID":7
 }
