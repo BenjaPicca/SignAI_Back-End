@@ -59,7 +59,7 @@ app.put("/Update", async (req, res) => {
 
 app.get("/GetFeedback", async (req, res) => {
     const ID = req.body.ID;
-    const {_, rows } = await client.query('SELECT "Feedback", "Texto_Devuelto","Fecha_Conversación","Video_Inicial" FROM public."Conversación" WHERE "ID"=$1', [ID])
+    const {_, rows } = await client.query('SELECT "Feedback", "Texto_Devuelto","Fecha_Conversación","Video_Inicial" FROM public."Conversación" JOIN public."Usuario" ON "Usuario"."Mail"="Conversasión"."Mail_Usuario" WHERE "ID"=$1', [ID])
     res.json(rows)
 })
 app.post("/CrearFeedback", async (req, res) => {
@@ -67,9 +67,10 @@ app.post("/CrearFeedback", async (req, res) => {
         Texto_Devuelto,
         Fecha_Conversación,
         Video_Inicial,
+        Mail_Usuario
     }
         = req.body;
-    const { rows } = await client.query('INSERT INTO public."Conversación" ("Feedback","Texto_Devuelto","Fecha_Conversación","Video_Inicial") VALUES ($1,$2,$3,$4)',[Feedback, Texto_Devuelto, Fecha_Conversación, Video_Inicial])
+    const { rows } = await client.query('INSERT INTO public."Conversación" ("Feedback","Texto_Devuelto","Fecha_Conversación","Video_Inicial", "Mail_Usuario") VALUES ($1,$2,$3,$4,$5)',[Feedback, Texto_Devuelto, Fecha_Conversación, Video_Inicial,Mail_Usuario])
     res.send('Gracias por tu respuesta.')
 })
 
