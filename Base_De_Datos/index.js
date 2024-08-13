@@ -40,12 +40,15 @@ app.post("/insertar", async (req, res) => {
 
 app.get("/prueba", async (req, res) => {
     const Mail = req.body.Mail;
-    const { rows } = await client.query('SELECT "Nombre", "Mail", "NombreUsuario" FROM public."Usuario" WHERE "Mail"=$1', [Mail])
+    const { rows } = await client.query('SELECT "Nombre","Apellido", "Mail", "NombreUsuario" FROM public."Usuario" WHERE "Mail"=$1', [Mail])
     res.json(rows[0])
 })
 
 app.delete("/delUsuario", async (req, res) => {
     const Mail = req.body.Mail;
+    if(!Mail){
+        res.status(400).send("No es posible no ingresar nada porfavor ingrese un Mail.")
+    }
     await client.query('DELETE FROM public."Usuario" WHERE "Mail"=$1', [Mail])
     res.send("Se ha eliminado el usuario correctamente")
 })

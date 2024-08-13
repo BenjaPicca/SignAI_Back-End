@@ -24,7 +24,7 @@ Content-Type: application/json
 
 {
     
-    "Mail": ""
+    "Mail": "Pitorico4@gmail.com"
 }
 
 ###
@@ -57,11 +57,11 @@ POST http://localhost:3000/CrearFeedback HTTP/1.1
 Content-Type: application/json
 
 {
-  "Feedback":"Me sirvio, muy bueno",
-  "Texto_Devuelto":"Esta presentacion trata de un polllo",
-  "Fecha_Conversación":"2022-04-23 12:30:14",
-  "Video_Inicial":"hhttp/hgshsh/hdshd",
-  "Mail_Usuario":"benjapiccagli@gmail.com"
+  "Feedback":"",
+  "Texto_Devuelto":"",
+  "Fecha_Conversación":"2023-12-14 11:35:12",
+  "Video_Inicial":"https/adcsdcdc ",
+  "Mail_Usuario":""
 }
 
 ###
