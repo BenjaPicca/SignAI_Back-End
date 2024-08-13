@@ -23,6 +23,10 @@ app.post("/insertar", async (req, res) => {
         NombreUsuario,
         Contraseña
     } = req.body;
+    if (!Mail || !Nombre || !Apellido || !NombreUsuario || !Contraseña) {
+        return res.status(400).send("Todos los campos tienen que estar completos");
+    }
+
     try {
         
         await client.query('INSERT INTO public."Usuario" ("Nombre", "Apellido", "NombreUsuario", "Mail", "Contraseña") VALUES ($1, $2, $3, $4, $5)',
@@ -30,7 +34,7 @@ app.post("/insertar", async (req, res) => {
         res.send("Se ha insertado Correctamente");
     }
     catch {
-        res.send(err)
+        res.status(500).send("Error al insertar en la base de datos: " + err.message)
     }
 })
 
@@ -69,8 +73,8 @@ app.post("/CrearFeedback", async (req, res) => {
         Fecha_Conversación,
         Video_Inicial,
         Mail_Usuario
-    }
-        = req.body;
+    }= req.body;
+        
     const { rows } = await client.query('INSERT INTO public."Conversación" ("Feedback","Texto_Devuelto","Fecha_Conversación","Video_Inicial", "Mail_Usuario") VALUES ($1,$2,$3,$4,$5)',[Feedback, Texto_Devuelto, Fecha_Conversación, Video_Inicial,Mail_Usuario])
     res.send('Gracias por tu respuesta.')
 })
