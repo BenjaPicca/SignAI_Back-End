@@ -24,6 +24,7 @@ app.post("/insertar", async (req, res) => {
         Contraseña
     } = req.body;
     try {
+        
         await client.query('INSERT INTO public."Usuario" ("Nombre", "Apellido", "NombreUsuario", "Mail", "Contraseña") VALUES ($1, $2, $3, $4, $5)',
             [Nombre, Apellido, NombreUsuario, Mail, Contraseña]);
         res.send("Se ha insertado Correctamente");
@@ -57,9 +58,9 @@ app.put("/Update", async (req, res) => {
     res.send("Se modificó correctamente")
 })
 
-app.get("/GetFeedback", async (req, res) => {
-    const ID = req.body.ID;
-    const {_, rows } = await client.query('SELECT "Feedback", "Texto_Devuelto","Fecha_Conversación","Video_Inicial" FROM public."Conversación" JOIN public."Usuario" ON "Usuario"."Mail"="Conversasión"."Mail_Usuario" WHERE "ID"=$1', [ID])
+app.get("/GetFeedback/:id", async (req, res) => {
+    const ID = req.params.id;
+    const {_, rows } = await client.query('SELECT "Feedback", "Texto_Devuelto","Fecha_Conversación","Video_Inicial" FROM public."Conversación" JOIN public."Usuario" ON public."Usuario"."Mail"= public."Conversación"."Mail_Usuario" WHERE "ID"=$1', [ID])
     res.json(rows)
 })
 app.post("/CrearFeedback", async (req, res) => {
