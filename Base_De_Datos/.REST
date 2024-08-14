@@ -29,12 +29,22 @@ Content-Type: application/json
 
 ###
 
+GET http://localhost:3000/chequeoMail HTTP/1.1
+Content-Type: application/json
+
+{
+    
+    
+}
+
+### 
+
 DELETE http://localhost:3000/delUsuario HTTP/1.1
 Content-Type: application/json
 
 {
     
-    "Mail": ""
+    "Mail": "Pitorico4@gmail.com"
 }
 ###
 

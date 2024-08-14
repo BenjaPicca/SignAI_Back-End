@@ -44,11 +44,31 @@ app.get("/prueba", async (req, res) => {
     res.json(rows[0])
 })
 
+app.get("/chequeoMail", async(req,res)=>{
+    
+
+    // El usuario existe
+
+    // Lo quiero borrar
+
+})
+
 app.delete("/delUsuario", async (req, res) => {
     const Mail = req.body.Mail;
+
+    
     if(!Mail){
         res.status(400).send("No es posible no ingresar nada porfavor ingrese un Mail.")
+        return;
     }
+
+    const {rows} = await client.query('SELECT "Mail" FROM public."Usuario" WHERE "Mail"=$1', [Mail])
+    
+    if(rows.length === 0){
+        res.status(404).send("El mail ingreseado no existe");
+        return;
+    }
+
     await client.query('DELETE FROM public."Usuario" WHERE "Mail"=$1', [Mail])
     res.send("Se ha eliminado el usuario correctamente")
 })
