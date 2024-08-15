@@ -72,6 +72,17 @@ app.put("/Update", async (req, res) => {
         NombreUsuario,
         Contraseña
     } = req.body;
+    if(!Mail){
+        res.status(400).send('No hay un mail ingresado')
+        return;
+    }
+    const {rows} = await client.query('SELECT "Mail" FROM public."Usuario" WHERE "Mail"=$1', [Mail])
+     
+    if(rows.length === 0){
+        res.status(404).send("El mail ingreseado no existe");
+        return;
+    }
+    
     await client.query('UPDATE public."Usuario" SET "Nombre" =$1, "Apellido"=$2, "NombreUsuario"=$3, "Contraseña"=$4 WHERE "Mail"=$5 ', [Nombre, Apellido, NombreUsuario, Contraseña, Mail])
     res.send("Se modificó correctamente")
 })
