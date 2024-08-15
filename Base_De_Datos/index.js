@@ -38,19 +38,10 @@ app.post("/insertar", async (req, res) => {
     }
 })
 
-app.get("/prueba", async (req, res) => {
+app.get("/Selector", async (req, res) => {
     const Mail = req.body.Mail;
     const { rows } = await client.query('SELECT "Nombre","Apellido", "Mail", "NombreUsuario" FROM public."Usuario" WHERE "Mail"=$1', [Mail])
     res.json(rows[0])
-})
-
-app.get("/chequeoMail", async(req,res)=>{
-    
-
-    // El usuario existe
-
-    // Lo quiero borrar
-
 })
 
 app.delete("/delUsuario", async (req, res) => {
