@@ -104,7 +104,7 @@ app.post("/CrearFeedback", async (req, res) => {
     res.send('Gracias por tu respuesta.')
 })
 
-app.delete("/EliminarConversación", async (req,res) =>{
+app.delete("/EliminarConversación/:id", async (req,res) =>{
     const ID=req.body.ID;
     try{
     await client.query('DELETE FROM public."Conversación" WHERE "ID"=$1',[ID])
