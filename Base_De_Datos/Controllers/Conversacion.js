@@ -42,3 +42,10 @@ const updateConversación=async(req,res)=> {
         res.send('Se ha actualizado la tabla correctamente')
     
 }
+
+export default {
+    updateConversación,
+    deleteConversaciónById,
+    insertFeedback,
+    selectFeedbackById
+}

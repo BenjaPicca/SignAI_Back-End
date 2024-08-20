@@ -72,3 +72,9 @@ const updateUsuarioByMail=async(req, res) => {
     await client.query('UPDATE public."Usuario" SET "Nombre" =$1, "Apellido"=$2, "NombreUsuario"=$3, "Contraseña"=$4 WHERE "Mail"=$5 ', [Nombre, Apellido, NombreUsuario, Contraseña, Mail])
     res.send("Se modificó correctamente")
 }
+export default{
+    updateUsuarioByMail,
+    deleteUsuario,
+    selectUsuario,
+    insertUsuario
+}
