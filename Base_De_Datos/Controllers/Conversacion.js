@@ -1,4 +1,4 @@
-import { client } from "./.dbconfig.js.js"
+import { client } from "../.dbconfig.js"
 
 
 const selectFeedbackById= async (req, res) => {

@@ -1,16 +1,5 @@
 
-import { client } from "./.dbconfig.js.js"
-
-
-app.get("/", (req, res) => {
-    // Esto envía el texto "Hello World!" como respuesta a la HTTP request
-    res.send("Hello World!");
-});
-
-app.get("/chau", (req, res) => {
-    // Esto envía el texto "Hello World!" como respuesta a la HTTP request
-    res.send("CHAU");
-});
+import { client } from "../.dbconfig.js"
 
 const insertUsuario = async (req, res) => {
     const {
@@ -83,8 +72,3 @@ const updateUsuarioByMail=async(req, res) => {
     await client.query('UPDATE public."Usuario" SET "Nombre" =$1, "Apellido"=$2, "NombreUsuario"=$3, "Contraseña"=$4 WHERE "Mail"=$5 ', [Nombre, Apellido, NombreUsuario, Contraseña, Mail])
     res.send("Se modificó correctamente")
 }
-
-
-app.listen(3000, () => {
-    console.log("Example app listening on port 3000!");
-});
