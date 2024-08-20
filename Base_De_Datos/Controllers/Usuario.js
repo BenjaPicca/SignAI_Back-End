@@ -1,5 +1,5 @@
 
-import { client } from "./.dbconfig.js"
+import { client } from "./.dbconfig.js.js"
 
 
 app.get("/", (req, res) => {
