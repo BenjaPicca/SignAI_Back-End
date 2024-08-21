@@ -14,7 +14,7 @@ const insertUsuario = async (req, res) => {
     }
 
     try {
-        
+
         await client.query('INSERT INTO public."Usuario" ("Nombre", "Apellido", "NombreUsuario", "Mail", "Contraseña") VALUES ($1, $2, $3, $4, $5)',
             [Nombre, Apellido, NombreUsuario, Mail, Contraseña]);
         res.send("Se ha insertado Correctamente");
@@ -24,24 +24,24 @@ const insertUsuario = async (req, res) => {
     }
 }
 
-const selectUsuario=async (req, res) => {
-    const Mail = req.body.Mail;
+const selectUsuario = async (req, res) => {
+    const Mail = req.params.mail;
     const { rows } = await client.query('SELECT "Nombre","Apellido", "Mail", "NombreUsuario" FROM public."Usuario" WHERE "Mail"=$1', [Mail])
     res.json(rows[0])
 }
 
-const deleteUsuario= async (req, res) => {
+const deleteUsuario = async (req, res) => {
     const Mail = req.body.Mail;
 
-    
-    if(!Mail){
+
+    if (!Mail) {
         res.status(400).send("No es posible no ingresar nada porfavor ingrese un Mail.")
         return;
     }
 
-    const {rows} = await client.query('SELECT "Mail" FROM public."Usuario" WHERE "Mail"=$1', [Mail])
-    
-    if(rows.length === 0){
+    const { rows } = await client.query('SELECT "Mail" FROM public."Usuario" WHERE "Mail"=$1', [Mail])
+
+    if (rows.length === 0) {
         res.status(404).send("El mail ingreseado no existe");
         return;
     }
@@ -50,7 +50,7 @@ const deleteUsuario= async (req, res) => {
     res.send("Se ha eliminado el usuario correctamente")
 }
 
-const updateUsuarioByMail=async(req, res) => {
+const updateUsuarioByMail = async (req, res) => {
     const {
         Mail,
         Nombre,
@@ -58,21 +58,21 @@ const updateUsuarioByMail=async(req, res) => {
         NombreUsuario,
         Contraseña
     } = req.body;
-    if(!Mail){
+    if (!Mail) {
         res.status(400).send('No hay un mail ingresado')
         return;
     }
-    const {rows} = await client.query('SELECT "Mail" FROM public."Usuario" WHERE "Mail"=$1', [Mail])
-     
-    if(rows.length === 0){
+    const { rows } = await client.query('SELECT "Mail" FROM public."Usuario" WHERE "Mail"=$1', [Mail])
+
+    if (rows.length === 0) {
         res.status(404).send("El mail ingreseado no existe");
         return;
     }
-    
+
     await client.query('UPDATE public."Usuario" SET "Nombre" =$1, "Apellido"=$2, "NombreUsuario"=$3, "Contraseña"=$4 WHERE "Mail"=$5 ', [Nombre, Apellido, NombreUsuario, Contraseña, Mail])
     res.send("Se modificó correctamente")
 }
-export default{
+export default {
     updateUsuarioByMail,
     deleteUsuario,
     selectUsuario,

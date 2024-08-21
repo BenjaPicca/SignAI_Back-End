@@ -7,10 +7,13 @@ import Usuario from "./Controllers/Usuario.js";
 
 app.use(express.json())
 
+app.get("/", (req, res) => {
+    res.send("API working");
+})
 
 //Usuario
 app.post("/insertar", Usuario.insertUsuario)
-app.get("/Selector", Usuario.selectUsuario)
+app.get("/Selector/:mail", Usuario.selectUsuario)
 app.delete("/delUsuario", Usuario.deleteUsuario)
 app.put("/Update", Usuario.updateUsuarioByMail)
 
