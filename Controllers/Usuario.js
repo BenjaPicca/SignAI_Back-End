@@ -19,7 +19,7 @@ const insertUsuario = async (req, res) => {
             [Nombre, Apellido, NombreUsuario, Mail, Contraseña]);
         res.send("Se ha insertado Correctamente");
     }
-    catch {
+    catch (err){
         res.status(500).send("Error al insertar en la base de datos: " + err.message)
     }
 }
