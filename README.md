@@ -8,4 +8,5 @@ The main objective of Sign AI is to provide an accessible and efficient tool for
 
 ### Note
 
-This repository only contains the code to the Back-End section. To see the AI / Machine Learning repository go to [AI / MACHINE LEARNING REPOSITORY](https://github.com/MatiasGrynfeld/SignAI-ML).
+This repository only contains the code to the Back-End section. To see the AI / Machine Learning repository go to [AI / MACHINE LEARNING REPOSITORY](https://github.com/MatiasGrynfeld/SignAI-ML). Also you can see the Front-End section in this repository [FRONT-END REPOSITORY](https://github.com/tomasgrinstein/SignAI_Front-End).
+ 
