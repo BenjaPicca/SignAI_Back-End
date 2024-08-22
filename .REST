@@ -3,11 +3,11 @@ POST https://sign-ai-web.vercel.app/insertar HTTP/1.1
 Content-Type: application/json
 
 {
-    "Nombre": "Nacho",
-    "Apellido": "Vigilante",
-    "NombreUsuario": "Vigi_IWNL",
-    "Mail": "nachoovigilante@gmail.com",
-    "Contraseña":"Node"
+    "Nombre": "Juan Ignacio",
+    "Apellido": "Calmeri",
+    "NombreUsuario": "Juani_Calmeri",
+    "Mail": "jaunicalmeri@gmail.com",
+    "Contraseña":"10213"
 }
 
 ###
@@ -17,7 +17,7 @@ GET http://localhost:3000/Selector/benjapiccagli@gmail.com HTTP/1.1
 
 ### 
 
-DELETE http://localhost:3000/delUsuario/nachoovigilante@gmail.com HTTP/1.1
+DELETE http://localhost:3000/delUsuario/echuagrad@gmail.com HTTP/1.1
 
 ###
 
@@ -25,31 +25,31 @@ PUT http://localhost:3000/Update HTTP/1.1
 Content-Type: application/json
 
 {
-    "Nombre": "Ignacio",
-    "Apellido": "Kelblo",
-    "NombreUsuario": "Macho.kelblo",
-    "Mail": " mknachokelbo@gmail.com",
+    "Nombre": "Juan Ignacio",
+    "Apellido": "Calmeri",
+    "NombreUsuario": "9z Juani",
+    "Mail": "jaunicalmeri@gmail.com",
     "Contraseña":"1234"
 }
 //Conversación
 ###
-GET http://localhost:3000/GetFeedback/ HTTP/1.1
+GET http://localhost:3000/GetFeedback/16 HTTP/1.1
 
 ###
 POST http://localhost:3000/CrearFeedback HTTP/1.1
 Content-Type: application/json
 
 {
-  "Feedback":"Sisi señores yo soy de river ",
-  "Texto_Devuelto":"nashex",
-  "Fecha_Conversación":"2014-02-11 22:31:41",
-  "Video_Inicial":"https/jssxscdcd",
-  "Mail_Usuario":"manucolu@gmail.com"
+  "Feedback":"La aplicación es excelente el unico error que pude encotrar es que al yo dar la seña de mi nombre no pudo identificar muy bien y me dio la palabra comer cuando yo quise decir Juan",
+  "Texto_Devuelto":"Hola, yo soy comer y tengo 16 años",
+  "Fecha_Conversación":"2024-08-22 13:51:41",
+  "Video_Inicial":"www/dgvgvsgv gdvsg",
+  "Mail_Usuario":"jaunicalmeri@gmail.com"
 }
 
 ###
 
-DELETE http://localhost:3000/EliminarConversación/ HTTP/1.1
+DELETE http://localhost:3000/EliminarConver/7 HTTP/1.1
 
 ###
 
@@ -57,9 +57,9 @@ PUT  http://localhost:3000/UpdateConver HTTP/1.1
 Content-Type: application/json
 
 {
-  "Feedback":"Buenardopolis",
-  "Texto_Devuelto":"Hola soy luisana amo todo lo que es la danza y gimnasia setton es mi novio y me lo chape tres veces en el pasillo lo amo muchisimo gracias turquito por hacerme feliz.",
+  "Feedback":"God",
+  "Texto_Devuelto":"Hola soy juan amo todo lo que es la danza y gimnasia vernik es mi novio y me lo chape tres veces en el pasillo lo amo muchisimo gracias turquito por hacerme feliz.",
   "Fecha_Conversación":"2021-10-07 21:30:01",
   "Video_Inicial":"cnncnsncsnn",
-  "ID":7
+  "ID":16
 }

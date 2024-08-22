@@ -20,7 +20,7 @@ app.put("/Update", Usuario.updateUsuarioByMail)
 //Conversación
 app.get("/GetFeedback/:id", Conversacion.selectFeedbackById)
 app.post("/CrearFeedback", Conversacion.insertFeedback)
-app.delete("/EliminarConversación/:id", Conversacion.deleteConversaciónById)
+app.delete("/EliminarConver/:id", Conversacion.deleteConversaciónById)
 app.put("/UpdateConver", Conversacion.updateConversación)
 
 app.listen(port, () => {
