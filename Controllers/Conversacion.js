@@ -14,13 +14,12 @@ const insertFeedback= async (req, res) => {
         Video_Inicial,
         Mail_Usuario
     }= req.body;
-        
     const { rows } = await client.query('INSERT INTO public."Conversación" ("Feedback","Texto_Devuelto","Fecha_Conversación","Video_Inicial", "Mail_Usuario") VALUES ($1,$2,$3,$4,$5)',[Feedback, Texto_Devuelto, Fecha_Conversación, Video_Inicial,Mail_Usuario])
     res.send('Gracias por tu respuesta.')
 }
 
 const deleteConversaciónById= async (req,res) =>{
-    const ID=req.body.ID;
+    const ID=req.params.ID;
     try{
     await client.query('DELETE FROM public."Conversación" WHERE "ID"=$1',[ID])
     res.send('Se ha eliminado correctamente')

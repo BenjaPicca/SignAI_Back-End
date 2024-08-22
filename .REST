@@ -3,32 +3,22 @@ POST https://sign-ai-web.vercel.app/insertar HTTP/1.1
 Content-Type: application/json
 
 {
-    "Nombre": "nachito",
-    "Apellido": "Kelblooo",
-    "NombreUsuario": "Kelbiiiii_",
-    "Mail": "nachokelbos@gmail.com",
-    "Contraseña":"1234"
+    "Nombre": "Nacho",
+    "Apellido": "Vigilante",
+    "NombreUsuario": "Vigi_IWNL",
+    "Mail": "nachoovigilante@gmail.com",
+    "Contraseña":"Node"
 }
 
 ###
 
-GET http://localhost:3000/Selector HTTP/1.1
-Content-Type: application/json
+GET http://localhost:3000/Selector/benjapiccagli@gmail.com HTTP/1.1
 
-{
-    
-    "Mail": "nachokelbo@gmail.com"
-}
 
 ### 
 
-DELETE http://localhost:3000/delUsuario HTTP/1.1
-Content-Type: application/json
+DELETE http://localhost:3000/delUsuario/nachoovigilante@gmail.com HTTP/1.1
 
-{
-    
-    "Mail": "Pitorico4@gmail.com"
-}
 ###
 
 PUT http://localhost:3000/Update HTTP/1.1
@@ -43,25 +33,23 @@ Content-Type: application/json
 }
 //Conversación
 ###
-GET http://localhost:3000/GetFeedback/10 HTTP/1.1
+GET http://localhost:3000/GetFeedback/ HTTP/1.1
 
 ###
 POST http://localhost:3000/CrearFeedback HTTP/1.1
 Content-Type: application/json
 
 {
-  "Feedback":"Pene con papas",
-  "Texto_Devuelto":"Hola soy un pene con cabeza de steve jobs",
-  "Fecha_Conversación":"2013-11-14 12:05:14",
-  "Video_Inicial":"https/jhahdahgh ",
-  "Mail_Usuario":"nachokelbo@gmail.com"
+  "Feedback":"Sisi señores yo soy de river ",
+  "Texto_Devuelto":"nashex",
+  "Fecha_Conversación":"2014-02-11 22:31:41",
+  "Video_Inicial":"https/jssxscdcd",
+  "Mail_Usuario":"manucolu@gmail.com"
 }
 
 ###
 
-DELETE http://localhost:3000/EliminarConversación/1 HTTP/1.1
-Content-Type: application/json
-
+DELETE http://localhost:3000/EliminarConversación/ HTTP/1.1
 
 ###
 

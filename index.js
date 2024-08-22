@@ -14,7 +14,7 @@ app.get("/", (req, res) => {
 //Usuario
 app.post("/insertar", Usuario.insertUsuario)
 app.get("/Selector/:mail", Usuario.selectUsuario)
-app.delete("/delUsuario", Usuario.deleteUsuario)
+app.delete("/delUsuario/:Mail", Usuario.deleteUsuario)
 app.put("/Update", Usuario.updateUsuarioByMail)
 
 //Conversación

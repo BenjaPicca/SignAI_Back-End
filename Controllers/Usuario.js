@@ -31,14 +31,8 @@ const selectUsuario = async (req, res) => {
 }
 
 const deleteUsuario = async (req, res) => {
-    const Mail = req.body.Mail;
-
-
-    if (!Mail) {
-        res.status(400).send("No es posible no ingresar nada porfavor ingrese un Mail.")
-        return;
-    }
-
+    const Mail = req.params.Mail;
+    
     const { rows } = await client.query('SELECT "Mail" FROM public."Usuario" WHERE "Mail"=$1', [Mail])
 
     if (rows.length === 0) {
