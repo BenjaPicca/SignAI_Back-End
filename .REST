@@ -14,7 +14,7 @@ GET https://sign-ai-web.vercel.app/Selector/benjapiccagli@gmail.com HTTP/1.1
 
 ### 
 
-DELETE https://sign-ai-web.vercel.app/uromart@gmail.com HTTP/1.1
+DELETE https://sign-ai-web.vercel.app/delUsuario/uromart@gmail.com HTTP/1.1
 
 ###
 
