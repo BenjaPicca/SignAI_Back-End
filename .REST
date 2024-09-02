@@ -3,9 +3,9 @@ POST https://sign-ai-web.vercel.app/insertar HTTP/1.1
 Content-Type: application/json
 
 {
-    "NombreUsuario": "bA",
-    "Mail": "BA@gmail.com",
-    "Contraseña":"12345"
+    "NombreUsuario": "Mart",
+    "Mail": "uromart@gmail.com",
+    "Contraseña":"Palermitano"
 }
 
 ###
@@ -14,7 +14,7 @@ GET https://sign-ai-web.vercel.app/Selector/benjapiccagli@gmail.com HTTP/1.1
 
 ### 
 
-DELETE http://localhost:3000/delUsuario/echuagrad@gmail.com HTTP/1.1
+DELETE http://localhost:3000/delUsuario/aaaaaA@gmail.com HTTP/1.1
 
 ###
 
