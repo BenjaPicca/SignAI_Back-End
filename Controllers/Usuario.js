@@ -14,7 +14,7 @@ const insertUsuario = async (req, res) => {
     try {
 
         await client.query('INSERT INTO public."Usuario" ("Nombre", "Apellido", "NombreUsuario", "Mail", "Contraseña") VALUES ($1, $2, $3, $4, $5)',
-            ["Nombre", "Apellido", NombreUsuario, Mail, Contraseña]);
+            [ NombreUsuario, Mail, Contraseña]);
         res.send("Se ha insertado Correctamente");
     }
     catch (err){
@@ -26,7 +26,7 @@ const selectUsuario = async (req, res) => {
     const Mail = req.params.mail;
     
     try
-    {const { rows } = await client.query('SELECT "Nombre","Apellido", "Mail", "NombreUsuario" FROM public."Usuario" WHERE "Mail"=$1', [Mail])
+    {const { rows } = await client.query('SELECT "Mail", "NombreUsuario" FROM public."Usuario" WHERE "Mail"=$1', [Mail])
     res.json(rows[0])}
     catch(err){
         res.status(500).send("Error"+ err.message)
@@ -50,8 +50,6 @@ const deleteUsuario = async (req, res) => {
 const updateUsuarioByMail = async (req, res) => {
     const {
         Mail,
-        Nombre,
-        Apellido,
         NombreUsuario,
         Contraseña
     } = req.body;
