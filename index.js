@@ -11,6 +11,8 @@ app.get("/", (req, res) => {
     res.send("API working");
 })
 
+
+
 //Usuario
 app.post("/insertar", Usuario.insertUsuario)
 app.get("/Selector/:mail", Usuario.selectUsuario)

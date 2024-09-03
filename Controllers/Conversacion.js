@@ -1,5 +1,5 @@
 import { client } from "../.dbconfig.js"
-
+import bcryptjs from "bcryptjs";
 
 const selectFeedbackById= async (req, res) => {
     const ID = req.params.id;

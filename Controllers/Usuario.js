@@ -1,4 +1,4 @@
-
+import bcryptjs from "bcryptjs";
 import { client } from "../.dbconfig.js"
 
 const insertUsuario = async (req, res) => {
