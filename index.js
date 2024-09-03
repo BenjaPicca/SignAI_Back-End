@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 const app = express();
 const port = 3000;
 
@@ -10,8 +11,14 @@ app.use(express.json())
 app.get("/", (req, res) => {
     res.send("API working");
 })
+// app.use(cors({
+//     origin : 'https://sign-ai-web.vercel.app', // Origen permitido
+//     methods : ['GET', 'POST', 'OPTIONS'], // Métodos permitidos
+//     allowedHeaders : ['Content-Type'], // Cabeceras permitidas
+//     credentials : true // Permitir credenciales
+// }))
 
-
+app.use(cors());
 
 //Usuario
 app.post("/insertar", Usuario.insertUsuario)
