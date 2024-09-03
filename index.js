@@ -12,10 +12,10 @@ app.get("/", (req, res) => {
     res.send("API working");
 })
 app.use(cors({
-    origin : '127.0.0.1:5501', // Origen permitido
+    origin : 'http//127.0.0.1:5501', // Origen permitido
     methods : ['GET', 'POST', 'OPTIONS'], // Métodos permitidos
     allowedHeaders : ['Content-Type'], // Cabeceras permitidas
-    credentials : true // Permitir credenciales
+ // credentials : true // Permitir credenciales
 }))
 
 app.use(cors());
