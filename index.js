@@ -18,8 +18,6 @@ app.use(cors({
  // credentials : true // Permitir credenciales
 }))
 
-app.use(cors());
-
 //Usuario
 app.post("/insertar", Usuario.insertUsuario)
 app.get("/Selector/:mail", Usuario.selectUsuario)
