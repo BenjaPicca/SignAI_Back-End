@@ -8,15 +8,16 @@ import Usuario from "./Controllers/Usuario.js";
 
 app.use(express.json())
 
+app.use(cors({
+    origin: '*', // Origen permitido
+    methods: ['GET', 'POST', 'OPTIONS'], // Métodos permitidos
+    // allowedHeaders : ['Content-Type'], // Cabeceras permitidas
+    // credentials : true // Permitir credenciales
+}))
+
 app.get("/", (req, res) => {
     res.send("API working");
 })
-app.use(cors({
-    origin : 'http://127.0.0.1:5501', // Origen permitido
-    methods : ['GET', 'POST', 'OPTIONS'], // Métodos permitidos
-    allowedHeaders : ['Content-Type'], // Cabeceras permitidas
- // credentials : true // Permitir credenciales
-}))
 
 //Usuario
 app.post("/insertar", Usuario.insertUsuario)
