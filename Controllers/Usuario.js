@@ -13,7 +13,7 @@ const insertUsuario = async (req, res) => {
 
     try {
 
-        await client.query('INSERT INTO public."Usuario" ("Nombre", "Apellido", "NombreUsuario", "Mail", "Contraseña") VALUES ($1, $2, $3, $4, $5)',
+        await client.query('INSERT INTO public."Usuario" ("NombreUsuario", "Mail", "Contraseña") VALUES ($1, $2, $3)',
             [ NombreUsuario, Mail, Contraseña]);
         res.send("Se ha insertado Correctamente");
     }
