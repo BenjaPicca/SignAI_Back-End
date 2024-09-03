@@ -14,7 +14,7 @@ const insertUsuario = async (req, res) => {
     try {
 
         await client.query('INSERT INTO public."Usuario" ("NombreUsuario", "Mail", "Contraseña") VALUES ($1, $2, $3)',
-            [ NombreUsuario, Mail, Contraseña]);
+             [NombreUsuario, Mail, Contraseña]);
         res.send("Se ha insertado Correctamente");
     }
     catch (err){
