@@ -13,8 +13,8 @@ const insertUsuario = async (req, res) => {
 
     try {
 
-        await client.query('INSERT INTO public."Usuario" ("Nombre", "Apellido", "NombreUsuario", "Mail", "Contraseña") VALUES ($1, $2, $3, $4, $5)',
-            [ NombreUsuario, Mail, Contraseña]);
+        await client.query('INSERT INTO public."Usuario" ("NombreUsuario", "Mail", "Contraseña") VALUES ($1, $2, $3)',
+             [NombreUsuario, Mail, Contraseña]);
         res.send("Se ha insertado Correctamente");
     }
     catch (err){
@@ -64,7 +64,7 @@ const updateUsuarioByMail = async (req, res) => {
         return;
     }
 
-    await client.query('UPDATE public."Usuario" SET "Nombre" =$1, "Apellido"=$2, "NombreUsuario"=$3, "Contraseña"=$4 WHERE "Mail"=$5 ', [Nombre, Apellido, NombreUsuario, Contraseña, Mail])
+    await client.query('UPDATE public."Usuario" SET "NombreUsuario"=$1, "Contraseña"=$2 WHERE "Mail"=$3 ', [NombreUsuario, Contraseña, Mail])
     res.send("Se modificó correctamente")
 }
 export default {

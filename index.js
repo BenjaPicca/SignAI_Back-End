@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 const app = express();
 const port = 3000;
 
@@ -7,11 +8,16 @@ import Usuario from "./Controllers/Usuario.js";
 
 app.use(express.json())
 
+app.use(cors({
+    origin: '*', // Origen permitido
+    methods: ['GET', 'POST', 'OPTIONS'], // Métodos permitidos
+    // allowedHeaders : ['Content-Type'], // Cabeceras permitidas
+    // credentials : true // Permitir credenciales
+}))
+
 app.get("/", (req, res) => {
     res.send("API working");
 })
-
-
 
 //Usuario
 app.post("/insertar", Usuario.insertUsuario)
