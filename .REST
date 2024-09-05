@@ -28,31 +28,31 @@ Content-Type: application/json
 }
 //Conversación
 ###
-GET http://localhost:3000/GetFeedback/16 HTTP/1.1
+GET https://sign-ai-web.vercel.app/GetFeedback/16 HTTP/1.1
 
 ###
-POST http://localhost:3000/CrearFeedback HTTP/1.1
+POST https://sign-ai-web.vercel.app/CrearFeedback HTTP/1.1
 Content-Type: application/json
 
 {
-  "Feedback":"La aplicación es excelente el unico error que pude encotrar es que al yo dar la seña de mi nombre no pudo identificar muy bien y me dio la palabra comer cuando yo quise decir Juan",
-  "Texto_Devuelto":"Hola, yo soy comer y tengo 16 años",
-  "Fecha_Conversación":"2024-08-22 13:51:41",
-  "Video_Inicial":"www/dgvgvsgv gdvsg",
+  "Feedback":"Bueno",
+  "Texto_Devuelto":"Hola, yo soy benja y tengo 16 años",
+  "Fecha_Conversación":"2023-02-12 23:31:21",
+  "Video_Inicial":"www/dgpgvsgv gdvsg",
   "Mail_Usuario":"jaunicalmeri@gmail.com"
 }
 
 ###
 
-DELETE http://localhost:3000/EliminarConver/7 HTTP/1.1
+DELETE https://sign-ai-web.vercel.app/EliminarConver/17 HTTP/1.1
 
 ###
 
-PUT  http://localhost:3000/UpdateConver HTTP/1.1
+PUT  https://sign-ai-web.vercel.app/UpdateConver HTTP/1.1
 Content-Type: application/json
 
 {
-  "Feedback":"God",
+  "Feedback":"godinees",
   "Texto_Devuelto":"Hola soy juan amo todo lo que es la danza y gimnasia vernik es mi novio y me lo chape tres veces en el pasillo lo amo muchisimo gracias turquito por hacerme feliz.",
   "Fecha_Conversación":"2021-10-07 21:30:01",
   "Video_Inicial":"cnncnsncsnn",
