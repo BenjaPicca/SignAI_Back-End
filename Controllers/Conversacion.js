@@ -1,5 +1,6 @@
 import { client } from "../.dbconfig.js"
 import bcryptjs from "bcryptjs";
+import cloudinary from "cloudinary";
 
 const selectFeedbackById= async (req, res) => {
     const ID = req.params.id;
@@ -14,8 +15,34 @@ const insertFeedback= async (req, res) => {
         Video_Inicial,
         Mail_Usuario
     }= req.body;
+
     const { rows } = await client.query('INSERT INTO public."Conversación" ("Feedback","Texto_Devuelto","Fecha_Conversación","Video_Inicial", "Mail_Usuario") VALUES ($1,$2,$3,$4,$5)',[Feedback, Texto_Devuelto, Fecha_Conversación, Video_Inicial,Mail_Usuario])
     res.send('Gracias por tu respuesta.')
+}
+
+const CrearVideo= async (req,res)=>{
+    
+
+    cloudinary.config({
+        cloud_name: 'dn2hwzynj',
+        api_key: '966768427936784',
+        api_secret: 'yRu2TC3_mZfQV12s4kl5kDN8fDY'
+      });
+      
+      // Subir el video a Cloudinary
+      cloudinary.uploader.upload("https://sign-ai-web.vercel.app/CrearVideo", { resource_type: "video" }), 
+        function(error, result) {
+          if (error) {
+            console.error("Error al subir el video:", error);
+          } else {
+            console.log("Video subido correctamente:", result.secure_url);
+            // Usa la URL del video result.secure_url para el siguiente paso
+          }
+        }
+
+    const Video_Inicial=req.body.Video_Inicial
+    const {rows}= await client.query('INSERT INTO public."Conversación"("Video_Inicial") VALUES ($1)',[Video_Inicial])
+      ;
 }
 
 const deleteConversaciónById= async (req,res) =>{
@@ -47,5 +74,6 @@ export default {
     updateConversación,
     deleteConversaciónById,
     insertFeedback,
-    selectFeedbackById
+    selectFeedbackById,
+    CrearVideo
 }

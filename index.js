@@ -28,6 +28,7 @@ app.put("/Update", Usuario.updateUsuarioByMail)
 //Conversación
 app.get("/GetFeedback/:id", Conversacion.selectFeedbackById)
 app.post("/CrearFeedback", Conversacion.insertFeedback)
+app.post("/CrearVideo",Conversacion.CrearVideo)
 app.delete("/EliminarConver/:id", Conversacion.deleteConversaciónById)
 app.put("/UpdateConver", Conversacion.updateConversación)
 
