@@ -48,7 +48,7 @@ POST https://sign-ai-web.vercel.app/CrearVideo HTTP/1.
 Content-Type: multipart/form-data
 
 {
-  "Video_Inicial":"result.secure_url"
+  "result.secure_url":""
 }
 
 ###
