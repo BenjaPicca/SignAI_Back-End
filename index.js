@@ -2,14 +2,18 @@ import express from "express";
 import cors from "cors";
 const app = express();
 const port = 3000;
+const multer= require('multer');
 
-//https://console.cloudinary.com/pm/c-061dcdfee81a13b9d53f5f072b04b8/getting-started     Con el archivo ya descargado
-
-//
+const upload = multer({ dest: 'uploads/' })
 
 
 import Conversacion from "./Controllers/Conversacion.js";
 import Usuario from "./Controllers/Usuario.js";
+
+app.use("/fields/single",upload.single('Video'),(req,res)=>{
+    console.log(req.file)
+    res.send('Ter,ino')
+})
 
 app.use(express.json())
 
@@ -33,6 +37,7 @@ app.put("/Update", Usuario.updateUsuarioByMail)
 //Conversación
 app.get("/GetFeedback/:id", Conversacion.selectFeedbackById)
 app.post("/CrearFeedback", Conversacion.insertFeedback)
+app.post("/CrearVideo",Conversacion.CrearVideo)
 app.delete("/EliminarConver/:id", Conversacion.deleteConversaciónById)
 app.put("/UpdateConver", Conversacion.updateConversación)
 
