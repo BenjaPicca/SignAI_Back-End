@@ -17,7 +17,7 @@ const insertUsuario = async (req, res) => {
 
         await pool.query('INSERT INTO public."Usuario" ("NombreUsuario", "Mail", "Contraseña") VALUES ($1, $2, $3)',
              [NombreUsuario, Mail, Contraseña]);
-        res.send("Se ha insertado Correctamente");
+        res.json({message: "Se ha insertado Correctamente"});
     }
     catch (err){
         res.status(500).send("Error al insertar en la base de datos: " + err.message)
