@@ -1,6 +1,7 @@
 import { pool } from "../.dbconfig.js"
 import bcryptjs from "bcryptjs";
 import { v2 as cloudinary } from 'cloudinary';
+import "dotenv/config";
 
 const selectFeedbackById = async (req, res) => {
     const ID = req.params.id;
@@ -22,9 +23,9 @@ const insertFeedback = async (req, res) => {
 
 const CrearVideo = async (req, res) => {
     cloudinary.config({
-        cloud_name: 'dn2hwzynj',
-        api_key: '966768427936784',
-        api_secret: 'yRu2TC3_mZfQV12s4kl5kDN8fDY'
+        cloud_name:process.env.CLOUD_NAME,
+        api_key: process.env.CLOUD_KEY,
+        api_secret: process.env.CLOUD_SECRET
     });
 
     // Subir el video a Cloudinary
