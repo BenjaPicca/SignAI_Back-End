@@ -1,7 +1,7 @@
 import { pool } from "../.dbconfig.js"
 import bcryptjs from "bcryptjs";
 import { v2 as cloudinary } from 'cloudinary';
- 
+
 const selectFeedbackById = async (req, res) => {
     const ID = req.params.id;
     const { _, rows } = await pool.query('SELECT "Feedback", "Texto_Devuelto","Fecha_Conversación","Video_Inicial" FROM public."Conversación" JOIN public."Usuario" ON public."Usuario"."Mail"= public."Conversación"."Mail_Usuario" WHERE "ID"=$1', [ID])
@@ -21,8 +21,6 @@ const insertFeedback = async (req, res) => {
 }
 
 const CrearVideo = async (req, res) => {
-
-
     cloudinary.config({
         cloud_name: 'dn2hwzynj',
         api_key: '966768427936784',
@@ -30,11 +28,12 @@ const CrearVideo = async (req, res) => {
     });
 
     // Subir el video a Cloudinary
-    cloudinary.uploader.upload("https://sign-ai-web.vercel.app/CrearVideo", { resource_type: "video" }),
+    cloudinary.uploader.upload(req.file.path,
         async function (error, result) {
             if (error) {
                 console.error("Error al subir el video:", error);
             } else {
+                console.log(result);
                 console.log("Video subido correctamente:", result.secure_url);
                 // Usa la URL del video result.secure_url para el siguiente paso
                 try {
@@ -45,8 +44,7 @@ const CrearVideo = async (req, res) => {
                 }
             }
         }
-
-        ;
+    );
 }
 
 const deleteConversaciónById = async (req, res) => {

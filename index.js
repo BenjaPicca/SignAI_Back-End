@@ -2,17 +2,14 @@ import express from "express";
 import cors from "cors";
 const app = express();
 const port = 3000;
-const multer= require('multer');
-
-const upload = multer({ dest: 'uploads/' })
-
 
 import Conversacion from "./Controllers/Conversacion.js";
 import Usuario from "./Controllers/Usuario.js";
+import { upload } from "./multer.js";
 
-app.use("/fields/single",upload.single('Video'),(req,res)=>{
+app.post("/fields/single", upload.single('video'), (req, res) => {
     console.log(req.file)
-    res.send('Ter,ino')
+    res.send('Termino')
 })
 
 app.use(express.json())
@@ -37,7 +34,7 @@ app.put("/Update", Usuario.updateUsuarioByMail)
 //Conversación
 app.get("/GetFeedback/:id", Conversacion.selectFeedbackById)
 app.post("/CrearFeedback", Conversacion.insertFeedback)
-app.post("/CrearVideo",Conversacion.CrearVideo)
+app.post("/CrearVideo", upload.single("video"), Conversacion.CrearVideo)
 app.delete("/EliminarConver/:id", Conversacion.deleteConversaciónById)
 app.put("/UpdateConver", Conversacion.updateConversación)
 
