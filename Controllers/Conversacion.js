@@ -11,25 +11,23 @@ const selectFeedbackById = async (req, res) => {
 
 const insertFeedback = async (req, res) => {
     const { Feedback,
-        Texto_Devuelto,
-        Fecha_Conversación,
-        Video_Inicial,
         Mail_Usuario
     } = req.body;
 
-    const { rows } = await pool.query('INSERT INTO public."Conversación" ("Feedback","Texto_Devuelto","Fecha_Conversación","Video_Inicial", "Mail_Usuario") VALUES ($1,$2,$3,$4,$5)', [Feedback, Texto_Devuelto, Fecha_Conversación, Video_Inicial, Mail_Usuario])
+    const { rows } = await pool.query('INSERT INTO public."Conversación" ("Feedback","Mail_Usuario") VALUES ($1,$2)', [Feedback, Mail_Usuario])
     res.send('Gracias por tu respuesta.')
 }
 
 const CrearVideo = async (req, res) => {
     cloudinary.config({
-        cloud_name:process.env.CLOUD_NAME,
+        cloud_name: process.env.CLOUD_NAME,
         api_key: process.env.CLOUD_KEY,
         api_secret: process.env.CLOUD_SECRET
     });
 
     // Subir el video a Cloudinary
     cloudinary.uploader.upload(req.file.path,
+        { resource_type: "video" },
         async function (error, result) {
             if (error) {
                 console.error("Error al subir el video:", error);
@@ -38,10 +36,9 @@ const CrearVideo = async (req, res) => {
                 console.log("Video subido correctamente:", result.secure_url);
                 // Usa la URL del video result.secure_url para el siguiente paso
                 try {
-                    await pool.query('INSERT INTO public."Conversación"("Video_Inicial") VALUES ($1)', [result.secure_url])
+                    await pool.query('INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación") VALUES ($1)', [result.secure_url, new Date()])
                 } catch (e) {
                     console.error(e);
-
                 }
             }
         }
@@ -62,13 +59,9 @@ const deleteConversaciónById = async (req, res) => {
 
 const updateConversación = async (req, res) => {
     const { Feedback,
-        Texto_Devuelto,
-        Fecha_Conversación,
-        Video_Inicial,
         ID
-
     } = req.body
-    await pool.query('UPDATE public."Conversación" SET "Feedback"=$1, "Texto_Devuelto"=$2, "Fecha_Conversación"=$3,"Video_Inicial"=$4 WHERE "ID"=$5', [Feedback, Texto_Devuelto, Fecha_Conversación, Video_Inicial, ID])
+    await pool.query('UPDATE public."Conversación" SET "Feedback"=$1, WHERE "ID"=$2', [Feedback, ID])
     res.send('Se ha actualizado la tabla correctamente')
 
 }
