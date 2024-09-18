@@ -33,10 +33,13 @@ const CrearVideo = async (req, res) => {
                 console.error("Error al subir el video:", error);
             } else {
                 console.log(result);
-                console.log("Video subido correctamente:", result.secure_url);
+                console.log("Video subido correctamente:", result.public_id);
+
+                const public_id = result.public_id;
+
                 // Usa la URL del video result.secure_url para el siguiente paso
                 try {
-                    await pool.query('INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación") VALUES ($1)', [result.secure_url, new Date()])
+                    await pool.query('INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación") VALUES ($1,$2)', [public_id, new Date()])
                 } catch (e) {
                     console.error(e);
                 }
