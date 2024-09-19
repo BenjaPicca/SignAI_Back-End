@@ -1,4 +1,4 @@
-import bcryptjs from "bcryptjs";
+import bcrypt from "bcryptjs";
 import { pool } from "../.dbconfig.js"
 
 const insertUsuario = async (req, res) => {
@@ -17,10 +17,10 @@ const insertUsuario = async (req, res) => {
 
         await pool.query('INSERT INTO public."Usuario" ("NombreUsuario", "Mail", "Contraseña") VALUES ($1, $2, $3)',
              [NombreUsuario, Mail, Contraseña]);
-        res.json({message: "Se ha insertado Correctamente"});
+        return res.json({message: "Se ha insertado Correctamente"});
     }
     catch (err){
-        res.status(500).send("Error al insertar en la base de datos: " + err.message)
+        return res.status(500).send("Error al insertar en la base de datos: " + err.message)
     }
 }
 
@@ -29,9 +29,9 @@ const selectUsuario = async (req, res) => {
     
     try
     {const { rows } = await pool.query('SELECT "Mail", "NombreUsuario" FROM public."Usuario" WHERE "Mail"=$1', [Mail])
-    res.json(rows[0])}
+     return res.json(rows[0])}
     catch(err){
-        res.status(500).send("Error"+ err.message)
+        return res.status(500).send("Error"+ err.message)
     }
 }
 
@@ -46,7 +46,7 @@ const deleteUsuario = async (req, res) => {
     }
 
     await pool.query('DELETE FROM public."Usuario" WHERE "Mail"=$1', [Mail])
-    res.send("Se ha eliminado el usuario correctamente")
+    return res.send("Se ha eliminado el usuario correctamente")
 }
 
 const updateUsuarioByMail = async (req, res) => {
@@ -67,7 +67,7 @@ const updateUsuarioByMail = async (req, res) => {
     }
 
     await pool.query('UPDATE public."Usuario" SET "NombreUsuario"=$1, "Contraseña"=$2 WHERE "Mail"=$3 ', [NombreUsuario, Contraseña, Mail])
-    res.send("Se modificó correctamente")
+    return res.send("Se modificó correctamente")
 }
 export default {
     updateUsuarioByMail,

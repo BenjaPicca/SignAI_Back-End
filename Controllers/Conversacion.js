@@ -1,12 +1,12 @@
 import { pool } from "../.dbconfig.js"
-import bcryptjs from "bcryptjs";
+import bcrypt from "bcryptjs";
 import { v2 as cloudinary } from 'cloudinary';
 import "dotenv/config";
 
 const selectFeedbackById = async (req, res) => {
     const ID = req.params.id;
     const { _, rows } = await pool.query('SELECT "Feedback", "Texto_Devuelto","Fecha_Conversación","Video_Inicial" FROM public."Conversación" JOIN public."Usuario" ON public."Usuario"."Mail"= public."Conversación"."Mail_Usuario" WHERE "ID"=$1', [ID])
-    res.json(rows)
+    return res.json(rows)
 }
 
 const insertFeedback = async (req, res) => {
@@ -15,7 +15,7 @@ const insertFeedback = async (req, res) => {
     } = req.body;
 
     const { rows } = await pool.query('INSERT INTO public."Conversación" ("Feedback","Mail_Usuario") VALUES ($1,$2)', [Feedback, Mail_Usuario])
-    res.send('Gracias por tu respuesta.')
+   return res.send('Gracias por tu respuesta.')
 }
 
 const CrearVideo = async (req, res) => {
@@ -53,7 +53,7 @@ const deleteConversaciónById = async (req, res) => {
     try {
         await pool.query('DELETE FROM public."Conversación" WHERE "ID"=$1', [ID])
 
-        res.send('Se ha eliminado correctamente')
+        return res.send('Se ha eliminado correctamente')
     }
     catch {
         console.log(err)
@@ -65,7 +65,7 @@ const updateConversación = async (req, res) => {
         ID
     } = req.body
     await pool.query('UPDATE public."Conversación" SET "Feedback"=$1, WHERE "ID"=$2', [Feedback, ID])
-    res.send('Se ha actualizado la tabla correctamente')
+    return res.send('Se ha actualizado la tabla correctamente')
 
 }
 
