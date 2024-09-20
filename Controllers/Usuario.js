@@ -13,7 +13,7 @@ const insertUsuario = async (req, res) => {
         return res.status(400).send("Todos los campos tienen que estar completos");
     }
     const salt = bcrypt.genSaltSync(10)
-        const hash = bcrypt.hashSync(usuario.password, salt)
+        const hash = bcrypt.hashSync(Contraseña, salt)
         console.log(hash)
 
         Contraseña = hash;
@@ -81,9 +81,42 @@ const updateUsuarioByMail = async (req, res) => {
     await pool.query('UPDATE public."Usuario" SET "NombreUsuario"=$1, "Contraseña"=$2 WHERE "Mail"=$3 ', [NombreUsuario, Contraseña, Mail])
     return res.send("Se modificó correctamente")
 }
+const login= async(req,res)=>{
+const {Mail,Contraseña}=req.body;
+       
+       if(!Mail||!Contraseña){
+           return res.status(404).json({message:error.message})
+       }
+       
+       try{
+            const usuario_db= await pool.query(
+                'SELECT * FROM public."Usuario" WHERE Mail = $1',
+                [Mail])
+            if(!usuario){
+                return res.status(400).json({message:"No hay un usuario asociado a ese mail"})
+            }
+            const password=usuario_db.Contraseña
+            const secret=""
+            
+            const comparison=bcrypt.compareSync(usuario.password,password)
+            console.log(comparison)
+            if(comparison){
+                const token = jwt.sign({ id: usuario_db.id}, secret, { expiresIn: 30000 * 60000 });
+                return res.status(200).json({token:token})
+            }
+            if(!comparison){
+                return res.status(400).json({message:"Contraseña incorrecta"})
+            }
+       }
+       catch(err){
+          return res.status(500).json({message:err.message})
+       }
+}
+
 export default {
     updateUsuarioByMail,
     deleteUsuario,
     selectUsuario,
-    insertUsuario
+    insertUsuario,
+    login
 }

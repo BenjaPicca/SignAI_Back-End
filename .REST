@@ -9,6 +9,16 @@ Content-Type: application/json
 }
 
 ###
+POST https://sign-ai-web.vercel.app/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "NombreUsuario": "A",
+    "Mail": "K@gmail.com",
+    "Contraseña":"shhshshs"
+}
+
+###
 
 GET https://sign-ai-web.vercel.app/Selector/benjapiccagli@gmail.com HTTP/1.1
 
