@@ -12,6 +12,12 @@ const insertUsuario = async (req, res) => {
     if (!Mail ||!NombreUsuario || !Contraseña) {
         return res.status(400).send("Todos los campos tienen que estar completos");
     }
+    const salt = bcrypt.genSaltSync(10)
+        const hash = bcrypt.hashSync(usuario.password, salt)
+        console.log(hash)
+
+        Contraseña = hash;
+        console.log(Mail,NombreUsuario,Contraseña)
 
     try {
 
@@ -27,6 +33,9 @@ const insertUsuario = async (req, res) => {
 const selectUsuario = async (req, res) => {
     const Mail = req.params.mail;
     
+    if(!Mail){
+        res.status(404).json({message:'No hay ningún Mail'})
+    }
     try
     {const { rows } = await pool.query('SELECT "Mail", "NombreUsuario" FROM public."Usuario" WHERE "Mail"=$1', [Mail])
      return res.json(rows[0])}
@@ -38,6 +47,9 @@ const selectUsuario = async (req, res) => {
 const deleteUsuario = async (req, res) => {
     const Mail = req.params.Mail;
     
+    if(!Mail){
+        res.status(404).json({message:'No hay ningún Mail'})
+    }
     const { rows } = await pool.query('SELECT "Mail" FROM public."Usuario" WHERE "Mail"=$1', [Mail])
 
     if (rows.length === 0) {

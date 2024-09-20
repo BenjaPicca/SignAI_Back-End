@@ -5,6 +5,10 @@ import "dotenv/config";
 
 const selectFeedbackById = async (req, res) => {
     const ID = req.params.id;
+
+    if(!ID){
+        res.status(404).json({message:'no hay ningun id'})
+    }
     const { _, rows } = await pool.query('SELECT "Feedback", "Texto_Devuelto","Fecha_Conversación","Video_Inicial" FROM public."Conversación" JOIN public."Usuario" ON public."Usuario"."Mail"= public."Conversación"."Mail_Usuario" WHERE "ID"=$1', [ID])
     return res.json(rows)
 }
@@ -13,6 +17,9 @@ const insertFeedback = async (req, res) => {
     const { Feedback,
         Mail_Usuario
     } = req.body;
+    if(!Mail_Usuario){
+        res.status(404).json({message:'No hay ningun Mail'})
+    }
 
     const { rows } = await pool.query('INSERT INTO public."Conversación" ("Feedback","Mail_Usuario") VALUES ($1,$2)', [Feedback, Mail_Usuario])
    return res.send('Gracias por tu respuesta.')
@@ -50,6 +57,9 @@ const CrearVideo = async (req, res) => {
 
 const deleteConversaciónById = async (req, res) => {
     const ID = req.params.ID;
+    if(!ID){
+        res.status(404).json({message:'No hay Id'})
+    }
     try {
         await pool.query('DELETE FROM public."Conversación" WHERE "ID"=$1', [ID])
 
@@ -64,6 +74,9 @@ const updateConversación = async (req, res) => {
     const { Feedback,
         ID
     } = req.body
+    if(!ID){
+        res.status(404)({message:'No hay ningún Id'})
+    }
     await pool.query('UPDATE public."Conversación" SET "Feedback"=$1, WHERE "ID"=$2', [Feedback, ID])
     return res.send('Se ha actualizado la tabla correctamente')
 
