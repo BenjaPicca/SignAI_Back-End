@@ -9,7 +9,8 @@ Content-Type: application/json
 }
 
 ###
-POST https://sign-ai-web.vercel.app/login HTTP/1.1
+POST http://localhost:3000/login HTTP/1.1
+Authorization: Bearer 
 Content-Type: application/json
 
 {
