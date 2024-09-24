@@ -10,7 +10,7 @@ const insertUsuario = async (req, res) => {
     } = req.body;
     console.log(req.body);
     if (!Mail || !NombreUsuario || !Contraseña) {
-        return res.status(400).send("Todos los campos tienen que estar completos");
+        return res.status(400).json({message:"Todos los campos tienen que estar completos"});
     }
 
     try {
@@ -23,7 +23,7 @@ const insertUsuario = async (req, res) => {
         console.log(Mail, NombreUsuario, Contraseña)
         await pool.query('INSERT INTO public."Usuario" ("NombreUsuario", "Mail", "Contraseña") VALUES ($1, $2, $3)',
             [NombreUsuario, Mail, Contraseña]);
-        return res.json({ message: "Se ha insertado Correctamente" });
+        return res.status(200).json({ message: "Se ha insertado Correctamente" });
     }
     catch (err) {
         return res.status(500).json({message:'Error al insertar en base de datos'})
@@ -41,7 +41,7 @@ const selectUsuario = async (req, res) => {
         return res.json(rows[0])
     }
     catch (err) {
-        return res.status(500).send("Error" + err.message)
+        return res.status(500).json({message:'Error en selección de usuario'})
     }
 }
 
@@ -54,12 +54,12 @@ const deleteUsuario = async (req, res) => {
     const { rows } = await pool.query('SELECT "Mail" FROM public."Usuario" WHERE "Mail"=$1', [Mail])
 
     if (rows.length === 0) {
-        res.status(404).send("El mail ingreseado no existe");
+        res.status(404).json({message:"El mail ingreseado no existe"});
         return;
     }
 
     await pool.query('DELETE FROM public."Usuario" WHERE "Mail"=$1', [Mail])
-    return res.send("Se ha eliminado el usuario correctamente")
+    return res.status(200).json({message:"Se ha eliminado el usuario correctamente"})
 }
 
 const updateUsuarioByMail = async (req, res) => {
@@ -69,18 +69,22 @@ const updateUsuarioByMail = async (req, res) => {
         Contraseña
     } = req.body;
     if (!Mail) {
-        res.status(400).send('No hay un mail ingresado')
+        res.status(400).json({message:'No hay un mail ingresado'})
         return;
     }
     const { rows } = await pool.query('SELECT "Mail" FROM public."Usuario" WHERE "Mail"=$1', [Mail])
 
     if (rows.length === 0) {
-        res.status(404).send("El mail ingreseado no existe");
+        res.status(404).json({message:"El mail ingreseado no existe"});
         return;
     }
-
+    try{
     await pool.query('UPDATE public."Usuario" SET "NombreUsuario"=$1, "Contraseña"=$2 WHERE "Mail"=$3 ', [NombreUsuario, Contraseña, Mail])
-    return res.send("Se modificó correctamente")
+    return res.status(200).json({message:"Se modificó correctamente"})
+    }
+    catch(err){
+        return res.status(500).json({message:'Error en actualización de usuario'})
+    }
 }
 const login = async (req, res) => {
     const usuario = req.body;

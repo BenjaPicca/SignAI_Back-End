@@ -34,7 +34,7 @@ app.delete("/delUsuario/:Mail", Usuario.deleteUsuario)
 app.put("/Update", Usuario.updateUsuarioByMail)
 
 //Conversación
-app.get("/GetFeedback/:id",verifyAdmin,verifyToken, Conversacion.selectFeedbackById)
+app.get("/GetFeedback/:id",verifyToken,verifyAdmin, Conversacion.selectFeedbackById)
 app.post("/CrearFeedback",verifyToken, Conversacion.insertFeedback)
 app.post("/CrearVideo",verifyToken, upload.single("video"), Conversacion.CrearVideo)
 app.delete("/EliminarConver/:id",verifyToken, Conversacion.deleteConversaciónById)

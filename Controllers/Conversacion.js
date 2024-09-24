@@ -22,7 +22,7 @@ const insertFeedback = async (req, res) => {
     }
 
     const { rows } = await pool.query('INSERT INTO public."Conversación" ("Feedback","Mail_Usuario") VALUES ($1,$2)', [Feedback, Mail_Usuario])
-   return res.send('Gracias por tu respuesta.')
+   return res.json({message:'Gracias por tu respuesta.'})
 }
 
 const CrearVideo = async (req, res) => {
@@ -47,6 +47,7 @@ const CrearVideo = async (req, res) => {
                 // Usa la URL del video result.secure_url para el siguiente paso
                 try {
                     await pool.query('INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación") VALUES ($1,$2)', [public_id, new Date()])
+                    return res.status(200).json({message:'Video insertado'})
                 } catch (e) {
                     console.error(e);
                 }
@@ -63,10 +64,10 @@ const deleteConversaciónById = async (req, res) => {
     try {
         await pool.query('DELETE FROM public."Conversación" WHERE "ID"=$1', [ID])
 
-        return res.send('Se ha eliminado correctamente')
+        return res.status(200).json({message:'Se ha eliminado correctamente'})
     }
-    catch {
-        console.log(err)
+    catch(err) {
+        return res.status(500).json({message:'Error al eliminar usuario'})
     }
 }
 
@@ -78,7 +79,7 @@ const updateConversación = async (req, res) => {
         res.status(404)({message:'No hay ningún Id'})
     }
     await pool.query('UPDATE public."Conversación" SET "Feedback"=$1, WHERE "ID"=$2', [Feedback, ID])
-    return res.send('Se ha actualizado la tabla correctamente')
+    return res.status(200).json({message:'Se ha actualizado la tabla correctamente'})
 
 }
 
