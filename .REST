@@ -1,11 +1,11 @@
 //Usuario
-POST https://sign-ai-web.vercel.app/insertar HTTP/1.1
+POST http://localhost:3000/insertar HTTP/1.1
 Content-Type: application/json
 
 {
-    "NombreUsuario": "Ramo_dushBack",
-    "Mail": "Ramon123@gmail.com",
-    "Contraseña":"Ramoncho"
+    "NombreUsuario": "Nico_Said",
+    "Mail": "48111228@gmail.com",
+    "Contraseña":"Nicito"
 }
 
 ###
