@@ -3,7 +3,7 @@ import { pool } from "../.dbconfig.js"
 
 const insertUsuario = async (req, res) => {
 
-    const {
+    let {
         Mail,
         NombreUsuario,
         Contraseña
@@ -26,7 +26,7 @@ const insertUsuario = async (req, res) => {
         return res.json({ message: "Se ha insertado Correctamente" });
     }
     catch (err) {
-        return res.status(500).send("Error al insertar en la base de datos: " + err.message)
+        return res.status(500).json({message:'Error al insertar en base de datos'})
     }
 }
 
