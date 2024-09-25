@@ -26,14 +26,14 @@ export const verifyToken = async (req, res, next) => {
     }
     const token = tokenParts[1];
     try{
-        const secret="Vamos Racing"
+        const secret="Holaa"
         const decoded = jwt.verify(token,secret)
-        const id=decoded.id
-        console.log(id)
-        const usuario= Usuario(id)
+        const mail=decoded.mail
+        console.log(mail)
+        const usuario= Usuario.selectUsuario(mail)
         if (usuario){
-            console.log(id)
-            req.id=id
+            console.log(mail)
+            req.mail=mail
             next()
         }
         else{
@@ -42,7 +42,7 @@ export const verifyToken = async (req, res, next) => {
     }
     catch(error){
         
-        return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error.message });
     }
 };
 
@@ -56,8 +56,8 @@ export const verifyAdmin = async (req, res, next) => {
             2. Si no lo es, devolver un error 403 (Forbidden)
     
     */
-   const id=req.id
-   const usuario= await Usuario(id)
+   const mail=req.mail
+   const usuario= await Usuario.selectUsuario(mail)
    console.log(usuario)
    console.log(usuario.admin)
    if(usuario.admin===true){

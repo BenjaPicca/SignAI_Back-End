@@ -32,7 +32,7 @@ const insertUsuario = async (req, res) => {
 }
 
 const selectUsuario = async (req, res) => {
-    const Mail = req.params.mail;
+    const Mail = req.params.Mail;
 
     if (!Mail) {
         res.status(404).json({ message: 'No hay ningún Mail' })
