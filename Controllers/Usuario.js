@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import { pool } from "../.dbconfig.js"
+import jwt from "jsonwebtoken";
 
 const insertUsuario = async (req, res) => {
 
@@ -89,22 +90,32 @@ const updateUsuarioByMail = async (req, res) => {
 const login = async (req, res) => {
     const usuario = req.body;
 
+    console.log(usuario)
+    console.log(usuario.Mail)
+    console.log(usuario.Contraseña)
+
     if (!usuario.Mail || !usuario.Contraseña) {
         return res.status(404).json({ message: error.message })
     }
+    
 
     try {
         const { rows } = await pool.query(
-            'SELECT * FROM public."Usuario" WHERE Mail = $1',
-            [Mail])
+            'SELECT * FROM public."Usuario" WHERE "Mail" = $1',
+            [usuario.Mail])
+            
 
-        if (!rows.length < 1) {
+        console.log(rows);
+
+        if (rows.length < 1) {
             return res.status(400).json({ message: "No hay un usuario asociado a ese mail" })
         }
 
         const usuario_db = rows[0];
+        console.log(usuario_db);
 
         const password = usuario_db.Contraseña
+        
         const secret = "Holaa"
 
         const comparison = bcrypt.compareSync(usuario.Contraseña, password)

@@ -10,26 +10,27 @@ Content-Type: application/json
 
 ###
 POST http://localhost:3000/login HTTP/1.1
-Authorization: Bearer 
 Content-Type: application/json
 
 {
-    "NombreUsuario": "A",
-    "Mail": "K@gmail.com",
-    "Contraseña":"shhshshs"
+    
+    "Mail": "48111228@gmail.com",
+    "Contraseña":"Nicito"
 }
 
 ###
 
 GET https://sign-ai-web.vercel.app/Selector/benjapiccagli@gmail.com HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQ4MTExMjI4QGdtYWlsLmNvbSIsImlhdCI6MTcyNzI4NTUzNywiZXhwIjozNTI3Mjg1NTM3fQ._Iff-DZphJE2c_6UEmY9gBLThMN14cdWmKhfHCWe0gM
 
 ### 
 
 DELETE https://sign-ai-web.vercel.app/delUsuario/uromart@gmail.com HTTP/1.1
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQ4MTExMjI4QGdtYWlsLmNvbSIsImlhdCI6MTcyNzI4NTUzNywiZXhwIjozNTI3Mjg1NTM3fQ._Iff-DZphJE2c_6UEmY9gBLThMN14cdWmKhfHCWe0gM
 ###
 
 PUT https://sign-ai-web.vercel.app/Update HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQ4MTExMjI4QGdtYWlsLmNvbSIsImlhdCI6MTcyNzI4NTUzNywiZXhwIjozNTI3Mjg1NTM3fQ._Iff-DZphJE2c_6UEmY9gBLThMN14cdWmKhfHCWe0gM
 Content-Type: application/json
 
 {
@@ -40,9 +41,10 @@ Content-Type: application/json
 //Conversación
 ###
 GET https://sign-ai-web.vercel.app/GetFeedback/16 HTTP/1.1
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQ4MTExMjI4QGdtYWlsLmNvbSIsImlhdCI6MTcyNzI4NTUzNywiZXhwIjozNTI3Mjg1NTM3fQ._Iff-DZphJE2c_6UEmY9gBLThMN14cdWmKhfHCWe0gM
 ###
 POST https://sign-ai-web.vercel.app/CrearFeedback HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQ4MTExMjI4QGdtYWlsLmNvbSIsImlhdCI6MTcyNzI4NTUzNywiZXhwIjozNTI3Mjg1NTM3fQ._Iff-DZphJE2c_6UEmY9gBLThMN14cdWmKhfHCWe0gM
 Content-Type: application/json
 
 {
@@ -53,10 +55,11 @@ Content-Type: application/json
 
 ###
 DELETE https://sign-ai-web.vercel.app/EliminarConver/17 HTTP/1.1
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQ4MTExMjI4QGdtYWlsLmNvbSIsImlhdCI6MTcyNzI4NTUzNywiZXhwIjozNTI3Mjg1NTM3fQ._Iff-DZphJE2c_6UEmY9gBLThMN14cdWmKhfHCWe0gM
 ###
 
 PUT  https://sign-ai-web.vercel.app/UpdateConver HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQ4MTExMjI4QGdtYWlsLmNvbSIsImlhdCI6MTcyNzI4NTUzNywiZXhwIjozNTI3Mjg1NTM3fQ._Iff-DZphJE2c_6UEmY9gBLThMN14cdWmKhfHCWe0gM
 Content-Type: application/json
 
 {

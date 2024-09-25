@@ -28,7 +28,7 @@ app.get("/", (req, res) => {
 
 //Usuario
 app.post("/insertar", Usuario.insertUsuario)
-app.post("/login",verifyToken,Usuario.login)
+app.post("/login",Usuario.login)
 app.get("/Selector/:mail",verifyToken,verifyAdmin, Usuario.selectUsuario)
 app.delete("/delUsuario/:Mail", Usuario.deleteUsuario)
 app.put("/Update", Usuario.updateUsuarioByMail)

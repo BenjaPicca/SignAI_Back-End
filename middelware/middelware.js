@@ -25,11 +25,11 @@ export const verifyToken = async (req, res, next) => {
         return res.status(400).json({ message: "Formato del token no válido" });
     }
     const token = tokenParts[1];
-    console.log(token)
     try{
         const secret="Vamos Racing"
         const decoded = jwt.verify(token,secret)
         const id=decoded.id
+        console.log(id)
         const usuario= Usuario(id)
         if (usuario){
             console.log(id)
@@ -42,7 +42,7 @@ export const verifyToken = async (req, res, next) => {
     }
     catch(error){
         
-        return res.status(401).json({ error: error });
+        return res.status(500).json({ error: error });
     }
 };
 
