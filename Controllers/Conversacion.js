@@ -1,5 +1,4 @@
 import { pool } from "../.dbconfig.js"
-import bcrypt from "bcryptjs";
 import { v2 as cloudinary } from 'cloudinary';
 import "dotenv/config";
 
@@ -105,10 +104,32 @@ const updateFeedback = async (req, res) => {
 
 }
 
+const texto= async(req,res)=>{
+    
+    const {Texto_Devuelto,id}=req.body
+
+    if(!Texto_Devuelto){
+        return res.status(404).json({message:'No llego ningún texto.'})
+    }
+    if(!id){
+        return res.status(404).json({message:'no se encuentra el id ingresado'})
+    }
+    try{
+        await pool.query('UPDATE public."Conversación" SET "Texto_Devuelto"=$1, "Fecha_Conversación"=$3, estado=entregado WHERE "ID"=$2',
+            [Texto_Devuelto,id,new Date()])
+    }
+    catch(err){
+        return res.status(500).json({message:'Error al guardar texto'})
+    }
+}
+
+
+
 export default {
     updateFeedback,
     deleteConversaciónById,
     insertFeedback,
     selectFeedbackById,
-    CrearVideo
+    CrearVideo,
+    texto
 }
