@@ -21,12 +21,21 @@ const insertFeedback = async (req, res) => {
     const { Feedback,
         Mail_Usuario
     } = req.body;
+    console.log(Mail_Usuario)
+    console.log(Feedback);
     if(!Mail_Usuario){
-        res.status(404).json({message:'No hay ningun Mail'})
+        return res.status(404).json({message:'No hay ningun Mail'})
     }
 
-    const { rows } = await pool.query('INSERT INTO public."Conversación" ("Feedback","Mail_Usuario") VALUES ($1,$2)', [Feedback, Mail_Usuario])
-   return res.json({message:'Gracias por tu respuesta.'})
+    try{
+         await pool.query('INSERT INTO public."Conversación" ("Feedback","Mail_Usuario","Fecha_Conversación") VALUES ($1,$2,$3)', 
+         [Feedback, Mail_Usuario,new Date()]);
+        return res.json({message:'Gracias por tu respuesta.'}
+    )
+}
+    catch(error){
+        return res.status(500).json({message:'Error al insertar feedback'})
+    }
 }
 
 const CrearVideo = async (req, res) => {
@@ -36,7 +45,6 @@ const CrearVideo = async (req, res) => {
         api_secret: process.env.CLOUD_SECRET
     });
 
-    // Subir el video a Cloudinary
     cloudinary.uploader.upload(req.file.path,
         { resource_type: "video" },
         async function (error, result) {
@@ -48,12 +56,11 @@ const CrearVideo = async (req, res) => {
 
                 const public_id = result.public_id;
 
-                // Usa la URL del video result.secure_url para el siguiente paso
                 try {
                     await pool.query('INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación") VALUES ($1,$2)', [public_id, new Date()])
                     return res.status(200).json({message:'Video insertado'})
-                } catch (e) {
-                    console.error(e);
+                } catch (err) {
+                    console.error(err);
                 }
             }
         }
@@ -61,12 +68,13 @@ const CrearVideo = async (req, res) => {
 }
 
 const deleteConversaciónById = async (req, res) => {
-    const ID = req.params.ID;
-    if(!ID){
-        res.status(404).json({message:'No hay Id'})
+    const {id} = req.params;
+    console.log(id);
+    if(!id){
+        return res.status(404).json({message:'No hay Id'})
     }
     try {
-        await pool.query('DELETE FROM public."Conversación" WHERE "ID"=$1', [ID])
+        await pool.query('DELETE FROM public."Conversación" WHERE "ID"=$1', [id])
 
         return res.status(200).json({message:'Se ha eliminado correctamente'})
     }
@@ -75,20 +83,30 @@ const deleteConversaciónById = async (req, res) => {
     }
 }
 
-const updateConversación = async (req, res) => {
+const updateFeedback = async (req, res) => {
     const { Feedback,
-        ID
+        id
     } = req.body
-    if(!ID){
-        res.status(404)({message:'No hay ningún Id'})
+
+    console.log(id);
+    console.log(Feedback);
+    if(!id){
+        return res.status(404)({message:'No hay ningún Id'})
     }
-    await pool.query('UPDATE public."Conversación" SET "Feedback"=$1, WHERE "ID"=$2', [Feedback, ID])
-    return res.status(200).json({message:'Se ha actualizado la tabla correctamente'})
+    
+    try{
+        await pool.query('UPDATE public."Conversación" SET "Feedback"=$1, "Fecha_Conversación"=$3 WHERE "ID"=$2', 
+    [Feedback, id,new Date()]);
+    return res.status(200).json({message:'Se ha actualizado la tabla correctamente'});
+}
+    catch(err){
+        return res.status(500).json({message:'Error al actualizar conversación.'})
+    }
 
 }
 
 export default {
-    updateConversación,
+    updateFeedback,
     deleteConversaciónById,
     insertFeedback,
     selectFeedbackById,

@@ -30,7 +30,7 @@ app.get("/", (req, res) => {
 app.post("/insertar", Usuario.insertUsuario)
 app.post("/login", Usuario.login)
 app.get("/Selector/:mail", verifyToken, verifyAdmin, Usuario.selectUsuario)
-app.delete("/delUsuario/:Mail", Usuario.deleteUsuario)
+app.delete("/delUsuario/:mail", verifyToken,verifyAdmin, Usuario.deleteUsuario)
 app.put("/Update", Usuario.updateUsuarioByMail)
 
 //Conversación
@@ -38,7 +38,7 @@ app.get("/GetFeedback/:id", verifyToken, verifyAdmin, Conversacion.selectFeedbac
 app.post("/CrearFeedback", verifyToken, Conversacion.insertFeedback)
 app.post("/CrearVideo", verifyToken, upload.single("video"), Conversacion.CrearVideo)
 app.delete("/EliminarConver/:id", verifyToken, Conversacion.deleteConversaciónById)
-app.put("/UpdateConver", verifyToken, Conversacion.updateConversación)
+app.put("/UpdateFeed", verifyToken, Conversacion.updateFeedback)
 
 app.listen(port, () => {
     console.log("Escuchando ando")

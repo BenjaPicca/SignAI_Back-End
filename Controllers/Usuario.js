@@ -33,15 +33,14 @@ const insertUsuario = async (req, res) => {
 }
 
 const selectUsuario = async (req, res) => {
-    const usuario = req.body;
-    const Mail = req.params.Mail;
-    console.log(Mail)
+    const {mail} = req.params;
+    console.log(mail)
 
-    if (!usuario.Mail) {
-        res.status(404).json({ message: 'No hay ningún Mail' })
+    if (!mail) {
+        return res.status(404).json({ message: 'No hay ningún Mail' })
     }
     try {
-        const { rows } = await pool.query('SELECT "Mail", "NombreUsuario" FROM public."Usuario" WHERE "Mail"=$1', [usuario.Mail])
+        const { rows } = await pool.query('SELECT "Mail", "NombreUsuario" FROM public."Usuario" WHERE "Mail"=$1', [mail])
         return res.json(rows[0])
     }
     catch (err) {
@@ -50,24 +49,28 @@ const selectUsuario = async (req, res) => {
 }
 
 const deleteUsuario = async (req, res) => {
-    const Mail = req.params.Mail;
+    const mail = req.params.mail;
 
-    if (!Mail) {
-        res.status(404).json({ message: 'No hay ningún Mail' })
+    if (!mail) {
+        return res.status(404).json({ message: 'No hay ningún Mail' })
     }
-    const { rows } = await pool.query('SELECT "Mail" FROM public."Usuario" WHERE "Mail"=$1', [Mail])
+    const { rows } = await pool.query('SELECT "Mail" FROM public."Usuario" WHERE "Mail"=$1', [mail])
 
     if (rows.length === 0) {
         res.status(404).json({ message: "El mail ingreseado no existe" });
         return;
     }
 
-    await pool.query('DELETE FROM public."Usuario" WHERE "Mail"=$1', [Mail])
+    try{
+        await pool.query('DELETE FROM public."Usuario" WHERE "Mail"=$1', [mail])
     return res.status(200).json({ message: "Se ha eliminado el usuario correctamente" })
+    }catch(err){
+        return res.status(500).json({message:'No se pudo eliminar al usuario'})
+    }
 }
 
 const updateUsuarioByMail = async (req, res) => {
-    const {
+    let {
         Mail,
         NombreUsuario,
         Contraseña,
@@ -84,6 +87,12 @@ const updateUsuarioByMail = async (req, res) => {
         return;
     }
     try {
+        const salt = bcrypt.genSaltSync(10)
+        const hash = bcrypt.hashSync(Contraseña, salt)
+        console.log(hash)
+
+        Contraseña = hash;
+        console.log(Mail, NombreUsuario, Contraseña, admin)
         await pool.query('UPDATE public."Usuario" SET "NombreUsuario"=$1, "Contraseña"=$2, admin=$4 WHERE "Mail"=$3 ', [NombreUsuario, Contraseña, Mail, admin])
         return res.status(200).json({ message: "Se modificó correctamente" })
     }

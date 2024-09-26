@@ -59,7 +59,7 @@ DELETE https://sign-ai-web.vercel.app/EliminarConver/17 HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQ4MTExMjI4QGdtYWlsLmNvbSIsImlhdCI6MTcyNzI4NTUzNywiZXhwIjozNTI3Mjg1NTM3fQ._Iff-DZphJE2c_6UEmY9gBLThMN14cdWmKhfHCWe0gM
 ###
 
-PUT  https://sign-ai-web.vercel.app/UpdateConver HTTP/1.1
+PUT  https://sign-ai-web.vercel.app/UpdateFeed HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQ4MTExMjI4QGdtYWlsLmNvbSIsImlhdCI6MTcyNzI4NTUzNywiZXhwIjozNTI3Mjg1NTM3fQ._Iff-DZphJE2c_6UEmY9gBLThMN14cdWmKhfHCWe0gM
 Content-Type: application/json
 
