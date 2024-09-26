@@ -9,8 +9,12 @@ const selectFeedbackById = async (req, res) => {
     if(!ID){
         res.status(404).json({message:'no hay ningun id'})
     }
+    try{
     const { _, rows } = await pool.query('SELECT "Feedback", "Texto_Devuelto","Fecha_Conversación","Video_Inicial" FROM public."Conversación" JOIN public."Usuario" ON public."Usuario"."Mail"= public."Conversación"."Mail_Usuario" WHERE "ID"=$1', [ID])
-    return res.json(rows)
+    return res.json(rows)}
+    catch(error){
+        return res.status(500).json({message:'No se pudo seleccionar.'})
+    }
 }
 
 const insertFeedback = async (req, res) => {

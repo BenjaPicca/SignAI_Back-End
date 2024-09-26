@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { pool } from "../.dbconfig.js";
 import Conversacion from "../Controllers/Conversacion.js";
 import Usuario from "../Controllers/Usuario.js";
 
@@ -28,12 +29,12 @@ export const verifyToken = async (req, res, next) => {
     try{
         const secret="Holaa"
         const decoded = jwt.verify(token,secret)
-        const mail=decoded.mail
-        console.log(mail)
-        const usuario= Usuario.selectUsuario(mail)
+        const {id}=decoded
+        console.log(id)
+        const usuario= await pool.query('SELECT * FROM public."Usuario" WHERE "Mail" = $1',[id])
         if (usuario){
-            console.log(mail)
-            req.mail=mail
+            console.log(id)
+            req.id=id
             next()
         }
         else{
@@ -56,8 +57,12 @@ export const verifyAdmin = async (req, res, next) => {
             2. Si no lo es, devolver un error 403 (Forbidden)
     
     */
-   const mail=req.mail
-   const usuario= await Usuario.selectUsuario(mail)
+   const {id}=req.id
+   const {rows} = await pool.query('SELECT * FROM public."Usuario" WHERE "Mail" = $1',[id])
+   if(rows.length>0){
+        return res.status(404).json({message:'No se encontro nada en la seleccion.'})
+   }
+   const usuario = rows[0];
    console.log(usuario)
    console.log(usuario.admin)
    if(usuario.admin===true){
