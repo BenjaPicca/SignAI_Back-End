@@ -59,11 +59,23 @@ DELETE http://localhost:3000/EliminarConver/4 HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkVDSFUxM0BnbWFpbC5jb20iLCJpYXQiOjE3MjczNjI5NjksImV4cCI6MzUyNzM2Mjk2OX0.TPY5Sk8IoeN7tv3dxLcKUMWOGffWU44HDF7qOAKc_sM
 ###
 
-PUT  http://localhost:3000/UpdateFeed HTTP/1.1
+PUT  http://localhost:3000/16/UpdateFeed HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkVDSFUxM0BnbWFpbC5jb20iLCJpYXQiOjE3MjczNjI5NjksImV4cCI6MzUyNzM2Mjk2OX0.TPY5Sk8IoeN7tv3dxLcKUMWOGffWU44HDF7qOAKc_sM
 Content-Type: application/json
 
 {
-  "Feedback":"godinees",
-  "id":16
+  "Feedback":"godinees"
 }
+
+###
+
+PUT  http://localhost:3000/16/texto HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkVDSFUxM0BnbWFpbC5jb20iLCJpYXQiOjE3MjczNjI5NjksImV4cCI6MzUyNzM2Mjk2OX0.TPY5Sk8IoeN7tv3dxLcKUMWOGffWU44HDF7qOAKc_sM
+Content-Type: application/json
+
+{
+  "Texto_Devuelto":"Hola soy echu",
+  "estado": "entregado"
+}
+
+###

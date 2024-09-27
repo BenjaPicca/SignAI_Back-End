@@ -38,8 +38,8 @@ app.get("/GetFeedback/:id", verifyToken, verifyAdmin, Conversacion.selectFeedbac
 app.post("/CrearFeedback", verifyToken, Conversacion.insertFeedback)
 app.post("/CrearVideo", verifyToken, upload.single("video"), Conversacion.CrearVideo)
 app.delete("/EliminarConver/:id", verifyToken, Conversacion.deleteConversaciónById)
-app.put("/UpdateFeed", verifyToken, Conversacion.updateFeedback)
-app.put("/texto",verifyToken,Conversacion.texto)
+app.put("/:id/UpdateFeed", verifyToken, Conversacion.updateFeedback)
+app.put("/:id/texto",verifyToken,Conversacion.textoEntregado)
 
 app.listen(port, () => {
     console.log("Escuchando ando")

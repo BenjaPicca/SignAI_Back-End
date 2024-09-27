@@ -38,6 +38,7 @@ const insertFeedback = async (req, res) => {
 }
 
 const CrearVideo = async (req, res) => {
+    const Mail_Usuario=req.body;
     cloudinary.config({
         cloud_name: process.env.CLOUD_NAME,
         api_key: process.env.CLOUD_KEY,
@@ -56,10 +57,12 @@ const CrearVideo = async (req, res) => {
                 const public_id = result.public_id;
 
                 try {
-                    await pool.query('INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación") VALUES ($1,$2)', [public_id, new Date()])
-                    return res.status(200).json({message:'Video insertado'})
+                    await pool.query(`INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación","Mail_Usuario",estado) VALUES ($1,$2,$3,'pendiente')`,
+                     [public_id, new Date(),Mail_Usuario])
+                    return res.status(200).json({message:'Video agregado.'})
                 } catch (err) {
                     console.error(err);
+                    return res.status(500).json({message:'Error al agregegar video'});
                 }
             }
         }
@@ -104,10 +107,12 @@ const updateFeedback = async (req, res) => {
 
 }
 
-const texto= async(req,res)=>{
-    
-    const {Texto_Devuelto,id}=req.body
+const textoEntregado= async(req,res)=>{
+    const {id}=req.params;
+    const {Texto_Devuelto, estado}=req.body;
 
+    console.log(id);
+    console.log(Texto_Devuelto);
     if(!Texto_Devuelto){
         return res.status(404).json({message:'No llego ningún texto.'})
     }
@@ -115,11 +120,12 @@ const texto= async(req,res)=>{
         return res.status(404).json({message:'no se encuentra el id ingresado'})
     }
     try{
-        await pool.query('UPDATE public."Conversación" SET "Texto_Devuelto"=$1, "Fecha_Conversación"=$3, estado=entregado WHERE "ID"=$2',
-            [Texto_Devuelto,id,new Date()])
+        await pool.query('UPDATE public."Conversación" SET "Texto_Devuelto"=$1, "Fecha_Conversación"=$3, estado = $4 WHERE "ID"=$2',
+            [Texto_Devuelto,id,new Date(),estado])
+        return res.status(200).json({message:'Texto entregado'})
     }
     catch(err){
-        return res.status(500).json({message:'Error al guardar texto'})
+        return res.status(500).json({message:err.message})
     }
 }
 
@@ -131,5 +137,5 @@ export default {
     insertFeedback,
     selectFeedbackById,
     CrearVideo,
-    texto
+    textoEntregado
 }
