@@ -4,18 +4,6 @@ import Conversacion from "../Controllers/Conversacion.js";
 import Usuario from "../Controllers/Usuario.js";
 
 export const verifyToken = async (req, res, next) => {
-    // --------------- COMPLETAR ---------------
-    /*
-
-        Recordar que para cumplir con toda la funcionalidad deben:
-
-            1. Verificar si hay un token en los headers de autorización
-            2. Verificar que el token esté en el formato correcto (Bearer <token>)
-            3. Verificar que el token sea válido (utilizando la librería jsonwebtoken)
-            4. Verificar que tenga un id de usuario al decodificarlo
-    
-        Recordar también que si sucede cualquier error en este proceso, deben devolver un error 401 (Unauthorized)
-    */
     const header_token = req.headers['authorization']
     console.log(header_token)
     if(!header_token){
