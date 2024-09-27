@@ -1,0 +1,69 @@
+//Usuario
+POST http://localhost:3000/insertar HTTP/1.1
+Content-Type: application/json
+
+{
+    "NombreUsuario": "ECHU",
+    "Mail": "ECHU13@gmail.com",
+    "Contraseña":"ECHU",
+    "admin": true
+}
+
+###
+POST http://localhost:3000/login HTTP/1.1
+Content-Type: application/json
+
+{
+    
+    "Mail": "ECHU13@gmail.com",
+    "Contraseña":"ECHU"
+}
+
+###
+
+GET http://localhost:3000/Selector/benjapiccagli@gmail.com HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkVDSFUxM0BnbWFpbC5jb20iLCJpYXQiOjE3MjczNjI5NjksImV4cCI6MzUyNzM2Mjk2OX0.TPY5Sk8IoeN7tv3dxLcKUMWOGffWU44HDF7qOAKc_sM
+
+### 
+
+DELETE http://localhost:3000/delUsuario/BA@gmail.com HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkVDSFUxM0BnbWFpbC5jb20iLCJpYXQiOjE3MjczNjI5NjksImV4cCI6MzUyNzM2Mjk2OX0.TPY5Sk8IoeN7tv3dxLcKUMWOGffWU44HDF7qOAKc_sM
+###
+
+PUT http://localhost:3000/Update HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkVDSFUxM0BnbWFpbC5jb20iLCJpYXQiOjE3MjczNjI5NjksImV4cCI6MzUyNzM2Mjk2OX0.TPY5Sk8IoeN7tv3dxLcKUMWOGffWU44HDF7qOAKc_sM
+Content-Type: application/json
+
+{
+    "NombreUsuario": " V1g1_IWNL",
+    "Mail": "nacho.vigilante@gmail.com",
+    "Contraseña":"hasheo",
+    "admin": true
+}
+//Conversación
+###
+GET http://localhost:3000/GetFeedback/10 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkVDSFUxM0BnbWFpbC5jb20iLCJpYXQiOjE3MjczNjI5NjksImV4cCI6MzUyNzM2Mjk2OX0.TPY5Sk8IoeN7tv3dxLcKUMWOGffWU44HDF7qOAKc_sM
+###
+POST http://localhost:3000/CrearFeedback HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkVDSFUxM0BnbWFpbC5jb20iLCJpYXQiOjE3MjczNjI5NjksImV4cCI6MzUyNzM2Mjk2OX0.TPY5Sk8IoeN7tv3dxLcKUMWOGffWU44HDF7qOAKc_sM
+Content-Type: application/json
+
+{
+  "Feedback": "Cheto",
+  "Mail_Usuario": "ECHU13@gmail.com"
+}
+
+###
+DELETE http://localhost:3000/EliminarConver/4 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkVDSFUxM0BnbWFpbC5jb20iLCJpYXQiOjE3MjczNjI5NjksImV4cCI6MzUyNzM2Mjk2OX0.TPY5Sk8IoeN7tv3dxLcKUMWOGffWU44HDF7qOAKc_sM
+###
+
+PUT  http://localhost:3000/UpdateFeed HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkVDSFUxM0BnbWFpbC5jb20iLCJpYXQiOjE3MjczNjI5NjksImV4cCI6MzUyNzM2Mjk2OX0.TPY5Sk8IoeN7tv3dxLcKUMWOGffWU44HDF7qOAKc_sM
+Content-Type: application/json
+
+{
+  "Feedback":"godinees",
+  "id":16
+}
