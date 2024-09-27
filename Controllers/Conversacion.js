@@ -29,7 +29,7 @@ const insertFeedback = async (req, res) => {
     try{
          await pool.query('INSERT INTO public."Conversación" ("Feedback","Mail_Usuario","Fecha_Conversación") VALUES ($1,$2,$3)', 
          [Feedback, Mail_Usuario,new Date()]);
-        return res.json({message:'Gracias por tu respuesta.'}
+        return res.status(200).json({message:'Gracias por tu respuesta.'}
     )
 }
     catch(error){
@@ -38,13 +38,16 @@ const insertFeedback = async (req, res) => {
 }
 
 const CrearVideo = async (req, res) => {
-    const Mail_Usuario=req.body;
+    const {Mail_Usuario}=req.body;
+    console.log("mail usuario", Mail_Usuario);
     cloudinary.config({
         cloud_name: process.env.CLOUD_NAME,
         api_key: process.env.CLOUD_KEY,
         api_secret: process.env.CLOUD_SECRET
     });
-
+    if(!Mail_Usuario|| Mail_Usuario=== undefined){
+        return res.status(404).json({message:'No se encontró el mail.'})
+    }
     cloudinary.uploader.upload(req.file.path,
         { resource_type: "video" },
         async function (error, result) {
