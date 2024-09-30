@@ -89,9 +89,9 @@ const deleteConversaciónById = async (req, res) => {
 }
 
 const updateFeedback = async (req, res) => {
-    const { Feedback,
-        id
-    } = req.body
+   const {id}= req.params;
+    const  Feedback
+    = req.body.Feedback
 
     console.log(id);
     console.log(Feedback);

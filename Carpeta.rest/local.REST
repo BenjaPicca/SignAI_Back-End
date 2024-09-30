@@ -59,22 +59,22 @@ DELETE http://localhost:3000/EliminarConver/4 HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkVDSFUxM0BnbWFpbC5jb20iLCJpYXQiOjE3MjczNjI5NjksImV4cCI6MzUyNzM2Mjk2OX0.TPY5Sk8IoeN7tv3dxLcKUMWOGffWU44HDF7qOAKc_sM
 ###
 
-PUT  http://localhost:3000/16/UpdateFeed HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkVDSFUxM0BnbWFpbC5jb20iLCJpYXQiOjE3MjczNjI5NjksImV4cCI6MzUyNzM2Mjk2OX0.TPY5Sk8IoeN7tv3dxLcKUMWOGffWU44HDF7qOAKc_sM
+PUT  http://localhost:3000/43/UpdateFeed HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkVDSFUxM0BnbWFpbC5jb20iLCJpYXQiOjE3Mjc3MTY3NzksImV4cCI6MzUyNzcxNjc3OX0.tg5_IgQWQYs2GsPJQ2VJ28fE6EzL0FteYdmSPEzO6f0
 Content-Type: application/json
 
 {
-  "Feedback":"godinees"
+  "Feedback":"Miaaaaameeeeeeeeeeeeeee"
 }
 
 ###
 
-PUT  http://localhost:3000/16/texto HTTP/1.1
+PUT  http://localhost:3000/43/texto HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkVDSFUxM0BnbWFpbC5jb20iLCJpYXQiOjE3MjczNjI5NjksImV4cCI6MzUyNzM2Mjk2OX0.TPY5Sk8IoeN7tv3dxLcKUMWOGffWU44HDF7qOAKc_sM
 Content-Type: application/json
 
 {
-  "Texto_Devuelto":"Hola soy echu",
+  "Texto_Devuelto":"Hola soy echu y me gusta mucho la materia",
   "estado": "entregado"
 }
 
