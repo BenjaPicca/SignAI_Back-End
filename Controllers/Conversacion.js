@@ -82,11 +82,8 @@ const CrearVideo = async (req, res) => {
 
             if (data.success) {
                 // Redirige al usuario o guarda el token
-                console.log("Inicio de sesión exitoso:", data);
-                // Por ejemplo, guarda el token en el almacenamiento local
-                localStorage.setItem('token', data.token);
-                // Redirige al usuario a otra página
-                window.location.href = '../5pantalla/index.html';
+                console.log("Video enviado:", data);
+               
             } else {
                 // Muestra un mensaje de error
                 console.log("Error: " + data);
