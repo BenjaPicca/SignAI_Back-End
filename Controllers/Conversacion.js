@@ -1,6 +1,7 @@
 import { pool } from "../.dbconfig.js"
 import { v2 as cloudinary } from 'cloudinary';
 import "dotenv/config";
+import fetch from 'node-fetch';
 
 const selectFeedbackById = async (req, res) => {
     const ID = req.params.id;
@@ -62,6 +63,36 @@ const CrearVideo = async (req, res) => {
                 try {
                     await pool.query(`INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación","Mail_Usuario",estado) VALUES ($1,$2,$3,'pendiente')`,
                      [public_id, new Date(),Mail_Usuario])
+
+                    
+                    const body={
+                        id: result.public_id,
+                        url: result.url
+                    } //Aca va el node-fetch
+                    fetch('http://127.0.0.1:8000/translate', {  // URL de tu API de inicio de sesión
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(body),
+                })
+                .then(response => response.json())
+        .then(data => {
+            console.log(data);
+
+            if (data.success) {
+                // Redirige al usuario o guarda el token
+                console.log("Inicio de sesión exitoso:", data);
+                // Por ejemplo, guarda el token en el almacenamiento local
+                localStorage.setItem('token', data.token);
+                // Redirige al usuario a otra página
+                window.location.href = '../5pantalla/index.html';
+            } else {
+                // Muestra un mensaje de error
+                console.log("Error: " + data);
+            }
+        })
+
                     return res.status(200).json({message:'Video agregado.'})
                 } catch (err) {
                     console.error(err);
