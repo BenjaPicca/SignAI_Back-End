@@ -19,7 +19,7 @@ app.use(cors({
     origin: '*', // Origen permitido
     methods: ['GET', 'POST', 'OPTIONS'], // Métodos permitidos
      allowedHeaders : ['Content-Type'], // Cabeceras permitidas
-    // credentials : true // Permitir credenciales
+     credentials : true // Permitir credenciales
 }))
 
 app.get("/", (req, res) => {
