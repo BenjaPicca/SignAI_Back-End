@@ -18,7 +18,7 @@ app.use(express.json())
 app.use(cors({
     origin: '*', // Origen permitido
     methods: ['GET', 'POST', 'OPTIONS'], // Métodos permitidos
-    // allowedHeaders : ['Content-Type'], // Cabeceras permitidas
+     allowedHeaders : ['Content-Type'], // Cabeceras permitidas
     // credentials : true // Permitir credenciales
 }))
 
