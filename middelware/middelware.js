@@ -4,21 +4,22 @@ import Conversacion from "../Controllers/Conversacion.js";
 import Usuario from "../Controllers/Usuario.js";
 
 export const verifyToken = async (req, res, next) => {
-    const header_token = req.headers['authorization']
-    console.log(header_token)
-    if(!header_token){
-        return res.status(400).json({ message : "Token necesario" })
-    }
-    const tokenParts = header_token.split(' ');
-    if (tokenParts[0] !== 'Bearer' || tokenParts.length !== 2) {
-        return res.status(400).json({ message: "Formato del token no válido" });
-    }
-    const token = tokenParts[1];
-    try{
+    try {
+        const header_token = req.headers['authorization']
+        console.log(header_token)
+        if(!header_token){
+            return res.status(400).json({ message : "Token necesario" })
+        }
+        const tokenParts = header_token.split(' ');
+        if (tokenParts[0] !== 'Bearer' || tokenParts.length !== 2) {
+            return res.status(400).json({ message: "Formato del token no válido" });
+        }
+        const token = tokenParts[1];
+    
         const secret="Holaa"
         console.log(token);
         const decoded = jwt.verify(token,secret)
-        const {id}=decoded
+        const {id} = decoded
         const usuario= await pool.query('SELECT * FROM public."Usuario" WHERE "Mail" = $1',[id])
         if (usuario){
             console.log(id)
@@ -28,9 +29,7 @@ export const verifyToken = async (req, res, next) => {
         else{
             return res.status(400).json({ message: "ID no válido" });
         }
-    }
-    catch(error){
-        
+    } catch (error) {
         return res.status(500).json({ message: error.message });
     }
 };
