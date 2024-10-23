@@ -16,6 +16,7 @@ export const verifyToken = async (req, res, next) => {
     const token = tokenParts[1];
     try{
         const secret="Holaa"
+        console.log(token);
         const decoded = jwt.verify(token,secret)
         const {id}=decoded
         const usuario= await pool.query('SELECT * FROM public."Usuario" WHERE "Mail" = $1',[id])
