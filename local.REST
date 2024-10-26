@@ -80,3 +80,6 @@ Content-Type: application/json
   "id":34,
   
 }
+###
+
+GET  http://localhost:3000/16/getTexto HTTP/1.1

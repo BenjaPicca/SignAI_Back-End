@@ -40,6 +40,7 @@ app.post("/CrearVideo", verifyToken, upload.single("video"), Conversacion.CrearV
 app.delete("/EliminarConver/:id", verifyToken, Conversacion.deleteConversaciónById)
 app.put("/:id/UpdateFeed", verifyToken, Conversacion.updateFeedback)
 app.put("/:id/texto",verifyToken,Conversacion.textoEntregado)
+app.get("/:id/getTexto",verifyAdmin,verifyToken,Conversacion.getTexto)
 
 app.listen(port, () => {
     console.log("Escuchando ando")

@@ -157,6 +157,23 @@ const textoEntregado = async (req, res) => {
     }
 }
 
+const getTexto= async(req,res)=>{
+    const {id}= req.params;
+
+    if(!id){
+        return res.status(404).json({message:"No se encuentra ningún id ingresado."})
+    }
+
+    try{
+        const {_,rows} = await pool.query('SELECT "Texto_Devuelto" FROM public."Conversación" WHERE "ID"=$',
+            [id])
+            return res.status(200).json({message:rows})
+    }
+    catch(error){
+        return res.status(500).json({message:error.message})
+    }
+}
+
 
 
 export default {
@@ -165,5 +182,6 @@ export default {
     insertFeedback,
     selectFeedbackById,
     CrearVideo,
-    textoEntregado
+    textoEntregado,
+    getTexto
 }
