@@ -165,7 +165,7 @@ const getTexto= async(req,res)=>{
     }
 
     try{
-        const {_,rows} = await pool.query('SELECT "Texto_Devuelto" FROM public."Conversación" WHERE "ID"=$',
+        const {_,rows} = await pool.query('SELECT "Texto_Devuelto" FROM public."Conversación" WHERE "ID"=$1',
             [id])
             return res.status(200).json({message:rows})
     }
