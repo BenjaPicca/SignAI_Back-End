@@ -77,3 +77,6 @@ Content-Type: application/json
   "Texto-Devuelto":"Hola soy springfield"
   
 }
+###
+GET  https://sign-ai-web.vercel.app/43/getTexto HTTP/1.1
+
