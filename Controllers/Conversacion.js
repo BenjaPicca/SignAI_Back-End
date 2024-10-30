@@ -148,8 +148,8 @@ const textoEntregado = async (req, res) => {
         return res.status(404).json({ message: 'no se encuentra el id ingresado' })
     }
     try {
-        await pool.query('UPDATE public."Conversación" SET "Texto_Devuelto"=$1, "Fecha_Conversación"=$3, estado = $4 WHERE "ID"=$2',
-            [Texto_Devuelto, id, new Date(), estado])
+        await pool.query(`UPDATE public."Conversación" SET "Texto_Devuelto"=$1, "Fecha_Conversación"=$3, estado = 'entregado' WHERE "ID"=$2`,
+            [Texto_Devuelto, id, new Date(),])
         return res.status(200).json({ message: 'Texto entregado' })
     }
     catch (err) {
@@ -159,7 +159,6 @@ const textoEntregado = async (req, res) => {
 
 const getTexto= async(req,res)=>{
     const {id}= req.params;
-
     if(!id){
         return res.status(404).json({message:"No se encuentra ningún id ingresado."})
     }
