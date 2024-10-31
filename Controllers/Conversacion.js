@@ -139,7 +139,7 @@ const updateFeedback = async (req, res) => {
 
 const textoEntregado = async (req, res) => {
     const { id } = req.params;
-    const { Texto_Devuelto, estado } = req.body;
+    const { Texto_Devuelto} = req.body;
 
     console.log(id);
     console.log(Texto_Devuelto);
@@ -164,10 +164,14 @@ const getTexto= async(req,res)=>{
     if(!id){
         return res.status(404).json({message:"No se encuentra ningún id ingresado."})
     }
+    
 
     try{
         const {_,rows} = await pool.query('SELECT "Texto_Devuelto" FROM public."Conversación" WHERE "ID"=$1',
             [id])
+            if(rows.length<1){
+                return res.status(404).json({message:"No hay ningun texto"})
+            }
             return res.status(200).json(rows[0])
     }
     catch(error){
