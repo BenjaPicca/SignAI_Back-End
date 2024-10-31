@@ -61,8 +61,9 @@ const CrearVideo = async (req, res) => {
 
                 const public_id = result.public_id;
                 try {
-                    const id= await pool.query(`INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación","Mail_Usuario",estado) VALUES ($1,$2,$3,'pendiente') RETURNING "ID"`,
+                    const result= await pool.query(`INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación","Mail_Usuario",estado) VALUES ($1,$2,$3,'pendiente') RETURNING "ID"`,
                         [public_id, new Date(), Mail_Usuario])
+                       const id= result.rows[0].ID;
 
 
                     const body = {
