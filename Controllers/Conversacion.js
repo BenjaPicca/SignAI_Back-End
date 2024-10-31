@@ -61,8 +61,9 @@ const CrearVideo = async (req, res) => {
 
                 const public_id = result.public_id;
                 try {
-                    await pool.query(`INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación","Mail_Usuario",estado) VALUES ($1,$2,$3,'pendiente')`,
+                    const id= await pool.query(`INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación","Mail_Usuario",estado) VALUES ($1,$2,$3,'pendiente') RETURNING "ID"`,
                         [public_id, new Date(), Mail_Usuario])
+
 
                     const body = {
                         id: result.public_id,
@@ -87,7 +88,7 @@ const CrearVideo = async (req, res) => {
                             }
                         })
 
-                    return res.status(200).json({ message: 'Video agregado.' })
+                    return res.status(200).json({ message: 'Video agregado.', id })
                 } catch (err) {
                     console.error(err);
                     return res.status(500).json({ message: 'Error al agregegar video' });
