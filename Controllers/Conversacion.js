@@ -139,19 +139,23 @@ const updateFeedback = async (req, res) => {
 
 const textoEntregado = async (req, res) => {
     const { id } = req.params;
-    const { Texto_Devuelto} = req.body;
+    const { translation} = req.body;
 
     console.log(id);
-    console.log(Texto_Devuelto);
-    if (!Texto_Devuelto) {
+    console.log(translation);
+    if (!translation) {
         return res.status(404).json({ message: 'No llego ningún texto.' })
     }
     if (!id) {
         return res.status(404).json({ message: 'no se encuentra el id ingresado' })
     }
     try {
+        if (translation === "Error") {
+            // ??????????????? hace algo
+            return res.status(200).json({ message: 'Error recibido' })
+        }
         await pool.query(`UPDATE public."Conversación" SET "Texto_Devuelto"=$1, "Fecha_Conversación"=$3, estado = 'entregado' WHERE "ID"=$2`,
-            [Texto_Devuelto, id, new Date(),])
+            [translation, id, new Date(),])
         return res.status(200).json({ message: 'Texto entregado' })
     }
     catch (err) {
