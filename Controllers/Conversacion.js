@@ -152,7 +152,7 @@ const textoEntregado = async (req, res) => {
     try {
         if (translation === "Error") {
             // ??????????????? hace algo
-            return res.status(400).json({ message: 'Fail Translator' })
+            return res.status(200).json({ message: 'Fail Translator' })
         }
         await pool.query(`UPDATE public."Conversación" SET "Texto_Devuelto"=$1, "Fecha_Conversación"=$3, estado = 'entregado' WHERE "ID"=$2`,
             [translation, id, new Date(),])
