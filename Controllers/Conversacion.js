@@ -70,7 +70,7 @@ const CrearVideo = async (req, res) => {
                         id: result.public_id,
                         url: result.url
                     } //Aca va el node-fetch
-                    fetch('http://127.0.0.1:8000/translate', {
+                    fetch('https://signai-ml.onrender.com/translate', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -89,7 +89,7 @@ const CrearVideo = async (req, res) => {
                             }
                         })
 
-                    return res.status(200).json({ message: 'Video agregado.', id })
+                    return res.status(200).json({ message: 'Video agregado.', url})
                 } catch (err) {
                     console.error(err);
                     return res.status(500).json({ message: 'Error al agregegar video' });
@@ -152,7 +152,7 @@ const textoEntregado = async (req, res) => {
     try {
         if (translation === "Error") {
             // ??????????????? hace algo
-            return res.status(200).json({ message: 'Error recibido' })
+            return res.status(400).json({ message: 'Fail Translator' })
         }
         await pool.query(`UPDATE public."Conversación" SET "Texto_Devuelto"=$1, "Fecha_Conversación"=$3, estado = 'entregado' WHERE "ID"=$2`,
             [translation, id, new Date(),])
