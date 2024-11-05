@@ -74,8 +74,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkVDSFUxM0Bnb
 Content-Type: application/json
 
 {
-  "Texto_Devuelto":"Hola soy echu y me gusta mucho la materia",
-  "estado": "entregado"
+  "translation":"Hola soy echu y me gusta mucho la materia"
+  
 }
 
 ###
