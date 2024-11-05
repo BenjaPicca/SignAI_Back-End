@@ -59,11 +59,11 @@ const CrearVideo = async (req, res) => {
                 console.log(result);
                 console.log("Video subido correctamente:", result.public_id, result.url);
 
-                const public_id = result.public_id;
                 const url = result.url;
                 try {
                     const result= await pool.query(`INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación","Mail_Usuario",estado) VALUES ($1,$2,$3,'pendiente') RETURNING "ID"`,
                         [url, new Date(), Mail_Usuario])
+                        console.log(result)
                        
                        
 
