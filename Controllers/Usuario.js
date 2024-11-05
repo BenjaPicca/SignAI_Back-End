@@ -11,7 +11,7 @@ const insertUsuario = async (req, res) => {
         admin
     } = req.body;
     console.log(req.body);
-    if (!Mail || !NombreUsuario || !Contraseña || admin === undefined) {
+    if (!Mail || !NombreUsuario || !Contraseña) {
         return res.status(400).json({ message: "Todos los campos tienen que estar completos" });
     }
 
