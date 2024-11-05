@@ -64,12 +64,13 @@ const CrearVideo = async (req, res) => {
                     const result= await pool.query(`INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación","Mail_Usuario",estado) VALUES ($1,$2,$3,'pendiente') RETURNING "ID"`,
                         [url, new Date(), Mail_Usuario])
                         console.log(result)
+                        const ID=result.rows[0].ID
                        
                        
 
 
                     const body = {
-                        id: result.public_id,
+                        id: ID,
                         url: result.url
                     } //Aca va el node-fetch
                     fetch('https://signai-ml.onrender.com/translate', {
