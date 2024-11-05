@@ -39,7 +39,7 @@ app.post("/CrearFeedback", verifyToken, Conversacion.insertFeedback)
 app.post("/CrearVideo", verifyToken, upload.single("video"), Conversacion.CrearVideo)
 app.delete("/EliminarConver/:id", verifyToken, Conversacion.deleteConversaciónById)
 app.put("/:id/UpdateFeed", verifyToken, Conversacion.updateFeedback)
-app.put("/:id/texto", verifyToken, Conversacion.textoEntregado)
+app.put("/:id/texto", Conversacion.textoEntregado)
 app.get("/:id/getTexto",verifyToken,Conversacion.getTexto)
 
 app.listen(port, () => {
