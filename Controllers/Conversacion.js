@@ -2,8 +2,6 @@ import { pool } from "../.dbconfig.js"
 import { v2 as cloudinary } from 'cloudinary';
 import "dotenv/config";
 import fetch from 'node-fetch';
-import { verifyToken } from "../middelware/middelware.js";
-import { TokenExpiredError } from "jsonwebtoken";
 
 const selectFeedbackById = async (req, res) => {
     const ID = req.params.id;
@@ -65,7 +63,7 @@ const CrearVideo = async (req, res) => {
                 const url = result.url;
                 try {
                     const result= await pool.query(`INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación","Mail_Usuario",estado) VALUES ($1,$2,$3,'pendiente') RETURNING "ID"`,
-                        [public_id, new Date(), Mail_Usuario])
+                        [url, new Date(), Mail_Usuario])
                        
                        
 
