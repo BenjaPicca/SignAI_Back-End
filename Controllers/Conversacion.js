@@ -57,21 +57,18 @@ const CrearVideo = async (req, res) => {
                 console.error("Error al subir el video:", error);
             } else {
                 console.log(result);
-                console.log("Video subido correctamente:", result.public_id, result.url);
+                console.log("Video subido correctamente:", result.url, result.public_id);
 
                 const url = result.url;
                 try {
                     const result= await pool.query(`INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación","Mail_Usuario",estado) VALUES ($1,$2,$3,'pendiente') RETURNING "ID"`,
                         [url, new Date(), Mail_Usuario])
-                        console.log(result)
-                        const ID=result.rows[0].ID
+                        console.log(result);
+                        const ID=result.rows[0].ID;
                        
-                       
-
-
                     const body = {
                         id: ID,
-                        url: result.url
+                        url: url
                     } //Aca va el node-fetch
                     fetch('https://signai-ml.onrender.com/translate', {
                         method: 'POST',
@@ -150,7 +147,7 @@ const textoEntregado = async (req, res) => {
         return res.status(404).json({ message: 'No llego ningún texto.' })
     }
     if (!id) {
-        return res.status(404).json({ message: 'no se encuentra el id ingresado' })
+        return res.status(404).json({ message: 'No se encuentra el id ingresado' })
     }
     try {
         if (translation === "Error") {
