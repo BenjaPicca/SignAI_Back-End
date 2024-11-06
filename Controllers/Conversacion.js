@@ -10,7 +10,11 @@ const selectFeedbackById = async (req, res) => {
         res.status(404).json({ message: 'no hay ningun id' })
     }
     try {
-        const { _, rows } = await pool.query('SELECT "Feedback", "Texto_Devuelto","Fecha_Conversación","Video_Inicial" FROM public."Conversación" JOIN public."Usuario" ON public."Usuario"."Mail"= public."Conversación"."Mail_Usuario" WHERE "ID"=$1', [ID])
+        const { _, rows } = await pool.query(`SELECT "Feedback", "Texto_Devuelto","Fecha_Conversación","Video_Inicial" 
+        FROM public."Conversación" 
+        JOIN public."Usuario" ON public."Usuario"."Mail"= public."Conversación"."Mail_Usuario"
+         WHERE "ID"=$1`, 
+        [ID])
         return res.json(rows)
     }
     catch (error) {
@@ -29,8 +33,10 @@ const insertFeedback = async (req, res) => {
     }
 
     try {
-        await pool.query('INSERT INTO public."Conversación" ("Feedback","Mail_Usuario","Fecha_Conversación") VALUES ($1,$2,$3)',
-            [Feedback, Mail_Usuario, new Date()]);
+        await pool.query(`INSERT INTO public."Conversación"
+         ("Feedback","Mail_Usuario","Fecha_Conversación") 
+         VALUES ($1,$2,$3)`,
+        [Feedback, Mail_Usuario, new Date()]);
         return res.status(200).json({ message: 'Gracias por tu respuesta.' }
         )
     }
@@ -61,7 +67,10 @@ const CrearVideo = async (req, res) => {
 
                 const url = result.url;
                 try {
-                    const result= await pool.query(`INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación","Mail_Usuario",estado) VALUES ($1,$2,$3,'pendiente') RETURNING "ID"`,
+                    const result= await pool.query(`INSERT INTO public."Conversación"
+                    ("Video_Inicial","Fecha_Conversación","Mail_Usuario",estado)
+                     VALUES ($1,$2,$3,'pendiente') 
+                     RETURNING "ID"`,
                         [url, new Date(), Mail_Usuario])
                         console.log(result);
                         const ID=result.rows[0].ID;
@@ -106,7 +115,8 @@ const deleteConversaciónById = async (req, res) => {
         return res.status(404).json({ message: 'No hay Id' })
     }
     try {
-        await pool.query('DELETE FROM public."Conversación" WHERE "ID"=$1', [id])
+        await pool.query(`DELETE FROM public."Conversación"
+         WHERE "ID"=$1`, [id])
 
         return res.status(200).json({ message: 'Se ha eliminado correctamente' })
     }
@@ -127,7 +137,9 @@ const updateFeedback = async (req, res) => {
     }
 
     try {
-        await pool.query('UPDATE public."Conversación" SET "Feedback"=$1, "Fecha_Conversación"=$3 WHERE "ID"=$2',
+        await pool.query(`UPDATE public."Conversación" SET 
+        "Feedback"=$1, "Fecha_Conversación"=$3 
+        WHERE "ID"=$2`,
             [Feedback, id, new Date()]);
         return res.status(200).json({ message: 'Se ha actualizado la tabla correctamente' });
     }
@@ -171,7 +183,8 @@ const getTexto= async(req,res)=>{
     }
 
     try{
-        const {_,rows} = await pool.query('SELECT "Texto_Devuelto" FROM public."Conversación" WHERE "ID"=$1',
+        const {_,rows} = await pool.query(`SELECT "Texto_Devuelto" FROM public."Conversación"
+         WHERE "ID"=$1`,
             [id])
             if(rows.length<1){
                 return res.status(404).json({message:"No hay ningun texto"})

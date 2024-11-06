@@ -23,8 +23,10 @@ const insertUsuario = async (req, res) => {
 
         Contraseña = hash;
         console.log(Mail, NombreUsuario, Contraseña, admin)
-        await pool.query('INSERT INTO public."Usuario" ("NombreUsuario", "Mail", "Contraseña",admin) VALUES ($1, $2, $3,$4)',
-            [NombreUsuario, Mail, Contraseña, admin]);
+        await pool.query(`INSERT INTO public."Usuario"
+         ("NombreUsuario", "Mail", "Contraseña",admin)
+          VALUES ($1, $2, $3,$4)`,
+         [NombreUsuario, Mail, Contraseña, admin]);
         return res.status(200).json({ message: "Se ha insertado Correctamente" });
     }
     catch (err) {
@@ -40,7 +42,10 @@ const selectUsuario = async (req, res) => {
         return res.status(404).json({ message: 'No hay ningún Mail' })
     }
     try {
-        const { rows } = await pool.query('SELECT "Mail", "NombreUsuario" FROM public."Usuario" WHERE "Mail"=$1', [mail])
+        const { rows } = await pool.query(`SELECT "Mail", "NombreUsuario"
+         FROM public."Usuario" 
+         WHERE "Mail"=$1`,
+         [mail])
         return res.json(rows[0])
     }
     catch (err) {
@@ -54,7 +59,10 @@ const deleteUsuario = async (req, res) => {
     if (!mail) {
         return res.status(404).json({ message: 'No hay ningún Mail' })
     }
-    const { rows } = await pool.query('SELECT "Mail" FROM public."Usuario" WHERE "Mail"=$1', [mail])
+    const { rows } = await pool.query(`SELECT "Mail" 
+    FROM public."Usuario"
+     WHERE "Mail"=$1`,
+     [mail])
 
     if (rows.length === 0) {
         res.status(404).json({ message: "El mail ingreseado no existe" });
@@ -62,7 +70,9 @@ const deleteUsuario = async (req, res) => {
     }
 
     try{
-        await pool.query('DELETE FROM public."Usuario" WHERE "Mail"=$1', [mail])
+        await pool.query(`DELETE FROM public."Usuario" 
+        WHERE "Mail"=$1`,
+         [mail])
     return res.status(200).json({ message: "Se ha eliminado el usuario correctamente" })
     }catch(err){
         return res.status(500).json({message:'No se pudo eliminar al usuario'})
@@ -80,7 +90,9 @@ const updateUsuarioByMail = async (req, res) => {
         res.status(400).json({ message: 'No hay un mail ingresado' })
         return;
     }
-    const { rows } = await pool.query('SELECT "Mail" FROM public."Usuario" WHERE "Mail"=$1', [Mail])
+    const { rows } = await pool.query(`SELECT "Mail" FROM public."Usuario"
+     WHERE "Mail"=$1`, 
+     [Mail])
 
     if (rows.length === 0) {
         res.status(404).json({ message: "El mail ingreseado no existe" });
@@ -93,7 +105,10 @@ const updateUsuarioByMail = async (req, res) => {
 
         Contraseña = hash;
         console.log(Mail, NombreUsuario, Contraseña, admin)
-        await pool.query('UPDATE public."Usuario" SET "NombreUsuario"=$1, "Contraseña"=$2, admin=$4 WHERE "Mail"=$3 ', [NombreUsuario, Contraseña, Mail, admin])
+        await pool.query(`UPDATE public."Usuario"
+         SET "NombreUsuario"=$1, "Contraseña"=$2, admin=$4 
+         WHERE "Mail"=$3 `,
+         [NombreUsuario, Contraseña, Mail, admin])
         return res.status(200).json({ message: "Se modificó correctamente" })
     }
     catch (err) {
@@ -114,7 +129,7 @@ const login = async (req, res) => {
 
     try {
         const { rows } = await pool.query(
-            'SELECT * FROM public."Usuario" WHERE "Mail" = $1',
+            `SELECT * FROM public."Usuario" WHERE "Mail" = $1`,
             [usuario.Mail])
 
 

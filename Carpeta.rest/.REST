@@ -4,7 +4,7 @@ Content-Type: application/json
 
 {
     "NombreUsuario": "EZE",
-    "Mail": "ECHU90@gmail.com",
+    "Mail": "ECHU9v@gmail.com",
     "Contraseña":"ECHU"
 }
 
@@ -34,9 +34,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQ4MTExMjI4Q
 Content-Type: application/json
 
 {
-    "NombreUsuario": "9z Juani",
-    "Mail": "jaunicalmeri@gmail.com",
-    "Contraseña":"1234"
+    "NombreUsuario": "BenjaPicca",
+    "Mail": "benjapiccagli@gmail.com",
+    "Contraseña":"labruna9"
 }
 //Conversación
 ###
