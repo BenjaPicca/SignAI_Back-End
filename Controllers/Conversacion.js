@@ -13,8 +13,8 @@ const selectFeedbackById = async (req, res) => {
         const { _, rows } = await pool.query(`SELECT "Feedback", "Texto_Devuelto","Fecha_Conversación","Video_Inicial" 
         FROM public."Conversación" 
         JOIN public."Usuario" ON public."Usuario"."Mail"= public."Conversación"."Mail_Usuario"
-         WHERE "ID"=$1`, 
-        [ID])
+         WHERE "ID"=$1`,
+            [ID])
         return res.json(rows)
     }
     catch (error) {
@@ -36,7 +36,7 @@ const insertFeedback = async (req, res) => {
         await pool.query(`INSERT INTO public."Conversación"
          ("Feedback","Mail_Usuario","Fecha_Conversación") 
          VALUES ($1,$2,$3)`,
-        [Feedback, Mail_Usuario, new Date()]);
+            [Feedback, Mail_Usuario, new Date()]);
         return res.status(200).json({ message: 'Gracias por tu respuesta.' }
         )
     }
@@ -67,14 +67,14 @@ const CrearVideo = async (req, res) => {
 
                 const url = result.url;
                 try {
-                    const result= await pool.query(`INSERT INTO public."Conversación"
+                    const result = await pool.query(`INSERT INTO public."Conversación"
                     ("Video_Inicial","Fecha_Conversación","Mail_Usuario",estado)
                      VALUES ($1,$2,$3,'pendiente') 
                      RETURNING "ID"`,
                         [url, new Date(), Mail_Usuario])
-                        console.log(result);
-                        const ID=result.rows[0].ID;
-                       
+                    console.log(result);
+                    const ID = result.rows[0].ID;
+
                     const body = {
                         id: ID,
                         url: url
@@ -96,9 +96,9 @@ const CrearVideo = async (req, res) => {
                                 // Muestra un mensaje de error
                                 console.log("Error: " + data.message);
                             }
+                            res.status(200).json({ message: 'Video agregado.', url })
                         })
 
-                    return res.status(200).json({ message: 'Video agregado.', url})
                 } catch (err) {
                     console.error(err);
                     return res.status(500).json({ message: 'Error al agregegar video' });
@@ -151,7 +151,7 @@ const updateFeedback = async (req, res) => {
 
 const textoEntregado = async (req, res) => {
     const { id } = req.params;
-    const { translation} = req.body;
+    const { translation } = req.body;
 
     console.log(id);
     console.log(translation);
@@ -168,7 +168,7 @@ const textoEntregado = async (req, res) => {
         await pool.query(`UPDATE public."Conversación" 
         SET "Texto_Devuelto" = $1, "Fecha_Conversación" = $3, estado = 'entregado'
          WHERE "ID" = $2 `,
-         [translation, id, new Date()])
+            [translation, id, new Date()])
         return res.status(200).json({ message: 'Texto entregado' })
     }
     catch (err) {
@@ -176,24 +176,24 @@ const textoEntregado = async (req, res) => {
     }
 }
 
-const getTexto= async(req,res)=>{
-    const {id}= req.params;
-    if(!id){
-        return res.status(404).json({message:"No se encuentra ningún id ingresado."})
+const getTexto = async (req, res) => {
+    const { id } = req.params;
+    if (!id) {
+        return res.status(404).json({ message: "No se encuentra ningún id ingresado." })
     }
 
-    try{
-        const {_,rows} = await pool.query(`SELECT "Texto_Devuelto" FROM public."Conversación"
+    try {
+        const { _, rows } = await pool.query(`SELECT "Texto_Devuelto" FROM public."Conversación"
          WHERE "ID"=$1`,
             [id])
-            if(rows.length<1){
-                return res.status(404).json({message:"No hay ningun texto"})
-            }
-             
-            return res.status(200).json(rows[0])
+        if (rows.length < 1) {
+            return res.status(404).json({ message: "No hay ningun texto" })
+        }
+
+        return res.status(200).json(rows[0])
     }
-    catch(error){
-        return res.status(500).json({message:error.message})
+    catch (error) {
+        return res.status(500).json({ message: error.message })
     }
 }
 
