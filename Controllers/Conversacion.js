@@ -1,6 +1,6 @@
 import { pool } from "../.dbconfig.js"
 import { v2 as cloudinary } from 'cloudinary';
-import "dotenv/config";
+import "dotenv"
 import fetch from 'node-fetch';
 
 const selectFeedbackById = async (req, res) => {
@@ -33,9 +33,7 @@ const insertFeedback = async (req, res) => {
     }
 
     try {
-        await pool.query(`INSERT INTO public."Conversación"
-         ("Feedback","Mail_Usuario","Fecha_Conversación") 
-         VALUES ($1,$2,$3)`,
+        await pool.query('INSERT INTO public."Conversación" ("Feedback","Mail_Usuario","Fecha_Conversación") VALUES ($1,$2,$3)',
             [Feedback, Mail_Usuario, new Date()]);
         return res.status(200).json({ message: 'Gracias por tu respuesta.' }
         )
@@ -67,14 +65,11 @@ const CrearVideo = async (req, res) => {
 
                 const url = result.url;
                 try {
-                    const result = await pool.query(`INSERT INTO public."Conversación"
-                    ("Video_Inicial","Fecha_Conversación","Mail_Usuario",estado)
-                     VALUES ($1,$2,$3,'pendiente') 
-                     RETURNING "ID"`,
+                    const result= await pool.query(`INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación","Mail_Usuario",estado) VALUES ($1,$2,$3,'pendiente') RETURNING "ID"`,
                         [url, new Date(), Mail_Usuario])
-                    console.log(result);
-                    const ID = result.rows[0].ID;
-
+                        console.log(result);
+                        const ID=result.rows[0].ID;
+                       
                     const body = {
                         id: ID,
                         url: url
@@ -96,9 +91,9 @@ const CrearVideo = async (req, res) => {
                                 // Muestra un mensaje de error
                                 console.log("Error: " + data.message);
                             }
-                            res.status(200).json({ message: 'Video agregado.', ID })
                         })
 
+                    return res.status(200).json({ message: 'Video agregado.', url})
                 } catch (err) {
                     console.error(err);
                     return res.status(500).json({ message: 'Error al agregegar video' });
@@ -115,8 +110,7 @@ const deleteConversaciónById = async (req, res) => {
         return res.status(404).json({ message: 'No hay Id' })
     }
     try {
-        await pool.query(`DELETE FROM public."Conversación"
-         WHERE "ID"=$1`, [id])
+        await pool.query('DELETE FROM public."Conversación" WHERE "ID"=$1', [id])
 
         return res.status(200).json({ message: 'Se ha eliminado correctamente' })
     }
@@ -137,9 +131,7 @@ const updateFeedback = async (req, res) => {
     }
 
     try {
-        await pool.query(`UPDATE public."Conversación" SET 
-        "Feedback"=$1, "Fecha_Conversación"=$3 
-        WHERE "ID"=$2`,
+        await pool.query('UPDATE public."Conversación" SET "Feedback"=$1, "Fecha_Conversación"=$3 WHERE "ID"=$2',
             [Feedback, id, new Date()]);
         return res.status(200).json({ message: 'Se ha actualizado la tabla correctamente' });
     }
@@ -151,7 +143,7 @@ const updateFeedback = async (req, res) => {
 
 const textoEntregado = async (req, res) => {
     const { id } = req.params;
-    const { translation } = req.body;
+    const { translation} = req.body;
 
     console.log(id);
     console.log(translation);
@@ -168,7 +160,7 @@ const textoEntregado = async (req, res) => {
         await pool.query(`UPDATE public."Conversación" 
         SET "Texto_Devuelto" = $1, "Fecha_Conversación" = $3, estado = 'entregado'
          WHERE "ID" = $2 `,
-            [translation, id, new Date()])
+         [translation, id, new Date()])
         return res.status(200).json({ message: 'Texto entregado' })
     }
     catch (err) {
@@ -176,24 +168,23 @@ const textoEntregado = async (req, res) => {
     }
 }
 
-const getTexto = async (req, res) => {
-    const { id } = req.params;
-    if (!id) {
-        return res.status(404).json({ message: "No se encuentra ningún id ingresado." })
+const getTexto= async(req,res)=>{
+    const {id}= req.params;
+    if(!id){
+        return res.status(404).json({message:"No se encuentra ningún id ingresado."})
     }
 
-    try {
-        const { _, rows } = await pool.query(`SELECT "Texto_Devuelto" FROM public."Conversación"
-         WHERE "ID"=$1`,
+    try{
+        const {_,rows} = await pool.query('SELECT "Texto_Devuelto" FROM public."Conversación" WHERE "ID"=$1',
             [id])
-        if (rows.length < 1) {
-            return res.status(404).json({ message: "No hay ningun texto" })
-        }
-
-        return res.status(200).json(rows[0])
+            if(rows.length<1){
+                return res.status(404).json({message:"No hay ningun texto"})
+            }
+             
+            return res.status(200).json(rows[0])
     }
-    catch (error) {
-        return res.status(500).json({ message: error.message })
+    catch(error){
+        return res.status(500).json({message:error.message})
     }
 }
 
