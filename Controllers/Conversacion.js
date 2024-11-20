@@ -91,9 +91,10 @@ const CrearVideo = async (req, res) => {
                                 // Muestra un mensaje de error
                                 console.log("Error: " + data.message);
                             }
+                            res.status(200).json({ message: 'Video agregado.',ID})
                         })
 
-                    return res.status(200).json({ message: 'Video agregado.', url})
+                     
                 } catch (err) {
                     console.error(err);
                     return res.status(500).json({ message: 'Error al agregegar video' });
