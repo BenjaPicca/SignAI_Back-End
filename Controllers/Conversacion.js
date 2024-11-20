@@ -74,7 +74,7 @@ const CrearVideo = async (req, res) => {
                         id: ID,
                         url: url
                     } //Aca va el node-fetch
-                    fetch('https://signai-ml.onrender.com/translate', {
+                    fetch('http://127.0.0.1:8000/translate', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
