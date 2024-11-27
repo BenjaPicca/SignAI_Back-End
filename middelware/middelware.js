@@ -1,7 +1,5 @@
 import jwt from "jsonwebtoken";
 import { pool } from "../.dbconfig.js";
-import Conversacion from "../Controllers/Conversacion.js";
-import Usuario from "../Controllers/Usuario.js";
 
 export const verifyToken = async (req, res, next) => {
     try {
