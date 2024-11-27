@@ -1,6 +1,6 @@
 import { pool } from "../.dbconfig.js"
 import { v2 as cloudinary } from 'cloudinary';
-import "dotenv"
+import "dotenv/config"
 import fetch from 'node-fetch';
 
 const selectFeedbackById = async (req, res) => {
