@@ -3,8 +3,8 @@ import cors from "cors";
 const app = express();
 const port = 3000;
 
-import Conversacion from "./Controllers&Services/Conversacion.js";
-import Usuario from "./Controllers&Services/Usuario.js";
+import Conversacion from "./Controllers/Conversacion.js";
+import Usuario from "./Controllers/Usuario.js";
 import { upload } from "./multer.js";
 import { verifyAdmin, verifyToken } from "./middelware/middelware.js";
 
