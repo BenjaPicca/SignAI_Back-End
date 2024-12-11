@@ -48,8 +48,8 @@ const CrearVideo = async (req, res) => {
     console.log("mail usuario", Mail_Usuario);
     cloudinary.config({
         cloud_name: process.env.CLOUD_NAME,
-        api_key: process.env.CLOUD_KEY,
-        api_secret: process.env.CLOUD_SECRET
+        api_key: process.env.API_KEY,
+        api_secret: process.env.API_SECRET
     });
     if (!Mail_Usuario || Mail_Usuario === undefined) {
         return res.status(404).json({ message: 'No se encontró el mail.' })
