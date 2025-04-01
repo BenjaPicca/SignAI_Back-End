@@ -45,7 +45,7 @@ const CreateFeed= async(mailusuario,feedback)=>{
         return res.status(500)
     }
 }
-const CreateVideo= async(mailusuario)=>{
+const CreateVideo= async(mailusuario,url)=>{
     const pool= new Pool(config);
     await pool.connect();
 
