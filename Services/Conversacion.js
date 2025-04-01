@@ -1,6 +1,7 @@
-import { Pool } from "pg"
+import pkg from "pg"
 import "dotenv/config"
-import { pool } from "../.dbconfig";
+const {Pool}= pkg
+import { config } from "../.dbconfig";
 
 const SelectFeedById= async(ID)=>{
     const pool =new Pool(config);
