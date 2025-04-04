@@ -4,14 +4,9 @@ import jwt from "jsonwebtoken";
 
 const insertUsuario = async (req, res) => {
 
-    let {
-        Mail,
-        NombreUsuario,
-        Contraseña,
-        admin
-    } = req.body;
+    let {usuario} = req.body;
     console.log(req.body);
-    if (!Mail || !NombreUsuario || !Contraseña) {
+    if (!usuario.mail || !usuario.nombre || !usuario.contraseña) {
         return res.status(400).json({ message: "Todos los campos tienen que estar completos" });
     }
 
@@ -22,11 +17,11 @@ const insertUsuario = async (req, res) => {
         console.log(hash)
 
         Contraseña = hash;
-        console.log(Mail, NombreUsuario, Contraseña, admin)
+        console.log(usuario.mail, usuario.nombre, usuario.contraseña, usuario.admin)
         await pool.query(`INSERT INTO public."Usuario"
          ("NombreUsuario", "Mail", "Contraseña",admin)
           VALUES ($1, $2, $3,$4)`,
-         [NombreUsuario, Mail, Contraseña, admin]);
+         [usuario.nombre, usuario.mail, usuario.contraseña, usuario.admin]);
         return res.status(200).json({ message: "Se ha insertado Correctamente" });
     }
     catch (err) {
