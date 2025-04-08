@@ -2,6 +2,9 @@ import pkg from "pg"
 import "dotenv/config"
 const {Pool}= pkg
 import { config } from "../.dbconfig";
+import { v2 as cloudinary} from "cloudinary";
+
+
 
 const SelectFeedById= async(ID)=>{
     const pool =new Pool(config);
@@ -25,39 +28,35 @@ const SelectFeedById= async(ID)=>{
 
 }
 
-const CreateFeed= async(mailusuario,feedback)=>{
+const CreateVideo= async(mailusuario)=>{
     const pool= new Pool(config);
     await pool.connect();
 
-    try{
-        const rows= await pool.query
-        (
-            `INSERT INTO public."Conversación" ("Feedback","Mail_Usuario","Fecha_Conversación") VALUES ($1,$2,$3)`,
-            [feedback, mailusuario, new Date()]);
-           
-            if (rows.length<1) throw new Error("Error al crear feed")
-
-            
-            return res.status(200).json({message:"Gracias por responder."})
-
+    cloudinary.config({
+        cloud_name: process.env.CLOUD_NAME,
+        api_key: process.env.API_KEY,
+        api_secret: process.env.API_SECRET
+    });
+    if (!Mail_Usuario || Mail_Usuario === undefined) {
+        return res.status(404).json({ message: 'No se encontró el mail.' })
     }
-    catch(error){
-        return res.status(500)
-    }
-}
-const CreateVideo= async(mailusuario,url)=>{
-    const pool= new Pool(config);
-    await pool.connect();
+    cloudinary.uploader.upload(req.file.path,
+        { resource_type: "video" },
+        async function (error, result) {
+            if (error) {
+                console.error("Error al subir el video:", error);
+            } else {
+                console.log(result);
+                console.log("Video subido correctamente:", result.url, result.public_id);
 
-    try{
-        const result= await pool.query
-        (
-            `INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación","Mail_Usuario",estado) VALUES ($1,$2,$3,'pendiente') RETURNING "ID"`
-            [url, new Date(), mailusuario])
-            console.log(result);
-            const ID=result.rows[0].ID;
-        
-        const body = {
+                const url = result.url;
+                try {
+                    const result= await pool.query(`INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación","Mail_Usuario",estado) VALUES ($1,$2,$3,'pendiente') RETURNING "ID"`,
+                        [url, new Date(), mailusuario])
+                        console.log(result);
+                        const ID=result.rows[0].ID;
+                       
+                    const body = {
                         id: ID,
                         url: url
                     } //Aca va el node-fetch
@@ -81,11 +80,15 @@ const CreateVideo= async(mailusuario,url)=>{
                             res.status(200).json({ message: 'Video agregado.',ID})
                         })
 
-                    
+                     
                 } catch (err) {
                     console.error(err);
+                    await pool.end();
                     return res.status(500).json({ message: 'Error al agregegar video' });
                 }
+            }
+        }
+    );
 }
 
 const deleteConversaciónById= async(id)=>{

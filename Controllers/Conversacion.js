@@ -2,6 +2,7 @@ import { pool } from "../.dbconfig.js"
 import { v2 as cloudinary } from 'cloudinary';
 import "dotenv/config"
 import fetch from 'node-fetch';
+import Conversacion from "../Services/Conversacion.js";
 
 const selectFeedbackById = async (req, res) => {
     const ID = req.params.id;
@@ -44,64 +45,20 @@ const insertFeedback = async (req, res) => {
 }
 
 const CrearVideo = async (req, res) => {
-    const { Mail_Usuario } = req.body;
-    console.log("mail usuario", Mail_Usuario);
-    cloudinary.config({
-        cloud_name: process.env.CLOUD_NAME,
-        api_key: process.env.API_KEY,
-        api_secret: process.env.API_SECRET
-    });
-    if (!Mail_Usuario || Mail_Usuario === undefined) {
-        return res.status(404).json({ message: 'No se encontró el mail.' })
+    const { mailusuario } = req.body;
+    console.log("mail usuario", mailusuario);
+    if(!mailusuario){
+        return res.status(404).json({message:'Inicia sesión'})
     }
-    cloudinary.uploader.upload(req.file.path,
-        { resource_type: "video" },
-        async function (error, result) {
-            if (error) {
-                console.error("Error al subir el video:", error);
-            } else {
-                console.log(result);
-                console.log("Video subido correctamente:", result.url, result.public_id);
-
-                const url = result.url;
-                try {
-                    const result= await pool.query(`INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación","Mail_Usuario",estado) VALUES ($1,$2,$3,'pendiente') RETURNING "ID"`,
-                        [url, new Date(), Mail_Usuario])
-                        console.log(result);
-                        const ID=result.rows[0].ID;
-                       
-                    const body = {
-                        id: ID,
-                        url: url
-                    } //Aca va el node-fetch
-                    fetch('http://127.0.0.1:8000/translate', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(body),
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            console.log(data);
-
-                            if (data.message === "received") {
-                                console.log("Video enviado:", data);
-                            } else {
-                                // Muestra un mensaje de error
-                                console.log("Error: " + data.message);
-                            }
-                            res.status(200).json({ message: 'Video agregado.',ID})
-                        })
-
-                     
-                } catch (err) {
-                    console.error(err);
-                    return res.status(500).json({ message: 'Error al agregegar video' });
-                }
-            }
-        }
-    );
+    try{
+        await Conversacion.CreateVideo(mailusuario)
+        return res.status(200).json({message:'Video subid con exito.'})
+    }
+    catch(err){
+        return res.status(500).json({message:'Error al subir video.'})
+    }
+    
+   
 }
 
 const deleteConversaciónById = async (req, res) => {
