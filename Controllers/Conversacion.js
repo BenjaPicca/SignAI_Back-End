@@ -84,8 +84,7 @@ const updateFeedback = async (req, res) => {
     }
 
     try {
-        await pool.query('UPDATE public."Conversación" SET "Feedback"=$1, "Fecha_Conversación"=$3 WHERE "ID"=$2',
-            [Feedback, id, new Date()]);
+       await Conversacion.updateFeed(id,Feedback)
         return res.status(200).json({ message: 'Se ha actualizado la tabla correctamente' });
     }
     catch (err) {
