@@ -11,15 +11,11 @@ const selectFeedbackById = async (req, res) => {
         res.status(404).json({ message: 'no hay ningun id' })
     }
     try {
-        const { _, rows } = await pool.query(`SELECT "Feedback", "Texto_Devuelto","Fecha_Conversación","Video_Inicial" 
-        FROM public."Conversación" 
-        JOIN public."Usuario" ON public."Usuario"."Mail"= public."Conversación"."Mail_Usuario"
-         WHERE "ID"=$1`,
-            [ID])
-        return res.json(rows)
+        seleccionFeed= await Conversacion.SelectFeedById(ID);
+        return res.status(200).json({message:'Seleccion de Feed exitosa'})
     }
     catch (error) {
-        return res.status(500).json({ message: 'No se pudo seleccionar.' })
+        return res.status(500).json({ message: 'No se pudo seleccionar Feed.' })
     }
 }
 
@@ -68,8 +64,7 @@ const deleteConversaciónById = async (req, res) => {
         return res.status(404).json({ message: 'No hay Id' })
     }
     try {
-        await pool.query('DELETE FROM public."Conversación" WHERE "ID"=$1', [id])
-
+        await Conversacion.deleteConversaciónById(id);
         return res.status(200).json({ message: 'Se ha eliminado correctamente' })
     }
     catch (err) {

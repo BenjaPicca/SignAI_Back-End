@@ -1,7 +1,7 @@
 import pkg from "pg"
 import "dotenv/config"
 const {Pool}= pkg
-import { config } from "../.dbconfig";
+import { pool } from "../.dbconfig.js";
 import { v2 as cloudinary} from "cloudinary";
 
 
@@ -37,7 +37,7 @@ const CreateVideo= async(mailusuario)=>{
         api_key: process.env.API_KEY,
         api_secret: process.env.API_SECRET
     });
-    if (!Mail_Usuario || Mail_Usuario === undefined) {
+    if (!mailusuario || mailusuario === undefined) {
         return res.status(404).json({ message: 'No se encontró el mail.' })
     }
     cloudinary.uploader.upload(req.file.path,
@@ -108,7 +108,7 @@ const deleteConversaciónById= async(id)=>{
     }
 }
 
-const updateFeed = async(id)=>{
+const updateFeed = async(id,Feedback)=>{
     const pool= new Pool(config);
     await pool.connect();
 
@@ -168,7 +168,6 @@ const getTexto= async(id)=>{
 
 export default{
  SelectFeedById,
- CreateFeed,
  CreateVideo,
  deleteConversaciónById,
  updateFeed,
