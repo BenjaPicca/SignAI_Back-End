@@ -1,7 +1,5 @@
 import { pool } from "../.dbconfig.js"
-import { v2 as cloudinary } from 'cloudinary';
 import "dotenv/config"
-import fetch from 'node-fetch';
 import Conversacion from "../Services/Conversacion.js";
 
 const selectFeedbackById = async (req, res) => {

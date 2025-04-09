@@ -3,9 +3,9 @@ POST http://localhost:3000/insertar HTTP/1.1
 Content-Type: application/json
 
 {
-    "nombre": "SETTO",
-    "mail": "SETTO@gmail.com",
-    "Contraseña":"SETTO",
+    "nombre": "arbol",
+    "mail": "arbol@gmail.com",
+    "Contraseña":"arbol",
     "admin": true
 }
 

@@ -1,7 +1,6 @@
 import pkg from "pg"
 import "dotenv/config"
 const {Pool}= pkg
-import { pool } from "../.dbconfig.js";
 import { v2 as cloudinary} from "cloudinary";
 
 

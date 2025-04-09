@@ -1,7 +1,6 @@
 import pkg from "pg";
 import "dotenv/config";
 const {Pool}=pkg
-import { config } from "../.dbconfig";
 
 const insertUsuario = async(usuario)=>{
     const pool= new Pool(config);
@@ -40,6 +39,24 @@ catch(err){
     throw new Error;
 }
 }
+const getAllByMail = async(usuario)=>{
+    const pool= new Pool(config);
+    await pool.connect();
+    
+    try{
+        const rows= await pool.query(`
+        SELECT *
+             FROM public."Usuario" 
+             WHERE "Mail"=$1`,
+             [usuario.mail])
+             await pool.end();
+             return rows;
+    }
+    catch(err){
+        await pool.end();
+        throw new Error;
+    }
+    }
 
 const deleteUsuario= async(mail)=>{
     const pool = new Pool(config);
@@ -58,6 +75,24 @@ const deleteUsuario= async(mail)=>{
         throw new Error;
     }
 }
+const updateUsuario= async(mail)=>{
+    const pool= new Pool(config);
+    await pool.connect();
+
+    try{
+        const rows= await pool.query(`
+        UPDATE public."Usuario"
+         SET "NombreUsuario"=$1, "Contraseña"=$2, admin=$4 
+         WHERE "Mail"=$3 `,[NombreUsuario, Contraseña, mail, admin]);
+
+         await pool.end();
+         return res.status(200).json({message:'Usuario actualizado'})
+    }
+    catch(err){
+        await pool.end();
+        return res.status(500).json({message:'Error al actualizar usuario'})
+    }
+}
 
 
 
@@ -66,6 +101,9 @@ const deleteUsuario= async(mail)=>{
 export default {
 insertUsuario,
 getByMail,
+getAllByMail,
 deleteUsuario,
+updateUsuario,
+
 
 }
