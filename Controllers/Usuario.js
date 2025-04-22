@@ -38,6 +38,7 @@ const selectUsuario = async (req, res) => {
          res.json(rows[0])
     }
     catch (err) {
+        console.log(err)
          res.status(500).json({ message: 'Error en selección de usuario' })
     }
 }

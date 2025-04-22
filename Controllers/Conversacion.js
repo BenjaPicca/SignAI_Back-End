@@ -1,4 +1,4 @@
-import { pool } from "../.dbconfig.js"
+import { pool } from "../dbconfig.js"
 import "dotenv/config"
 import Conversacion from "../Services/Conversacion.js";
 

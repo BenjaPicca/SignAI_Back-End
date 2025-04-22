@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { pool } from "../.dbconfig.js";
+import { pool } from "../dbconfig.js";
 
 export const verifyToken = async (req, res, next) => {
     try {

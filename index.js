@@ -5,7 +5,7 @@ const port = 3000;
 
 import ConversacionRouters from "./Routes/Conversacion.js";
 import UsuarioRouters from "./Routes/Usuario.js";
-import { upload } from "./multer.js";
+import { upload } from "./multer.js"
 
 app.post("/fields/single", upload.single('video'), (req, res) => {
     console.log(req.file)

@@ -1,6 +1,7 @@
 import Router from "express";
-import ConversacionControllers from "../Controllers/Conversacion";
-import { verifyAdmin,verifyToken } from "../middelware/middelware";
+import ConversacionControllers from "../Controllers/Conversacion.js";
+import { verifyAdmin,verifyToken } from "../middelware/middelware.js";
+import { upload } from "../multer.js"
 
 const router = Router();
 
