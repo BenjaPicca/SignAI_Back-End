@@ -4,7 +4,7 @@ import Usuario from "../Services/Usuario.js"
 
 const insertUsuario = async (req, res) => {
 
-    const {usuario} = req.body;
+    const usuario = req.body;
     console.log(usuario);
     if (!usuario.mail || !usuario.nombre || !usuario.contraseña) {
         return res.status(400).json({ message: "Todos los campos tienen que estar completos" });
@@ -13,15 +13,16 @@ const insertUsuario = async (req, res) => {
     try {
 
         const salt = bcrypt.genSaltSync(10)
-        const hash = bcrypt.hashSync(Contraseña, salt)
+        const hash = bcrypt.hashSync(usuario.contraseña, salt)
         console.log(hash)
 
-        Contraseña = hash;
+        usuario.contraseña = hash;
         console.log(usuario.mail, usuario.nombre, usuario.contraseña, usuario.admin)
         await Usuario.insertUsuario(usuario);
          res.status(200).json({ message: "Se ha insertado Correctamente" });
     }
     catch (err) {
+        console.log(err)
          res.status(500).json({ message: 'Error al insertar en base de datos' })
     }
 }
@@ -100,16 +101,16 @@ const login = async (req, res) => {
     const usuario = req.body;
 
     console.log(usuario)
-    console.log(usuario.Mail)
-    console.log(usuario.Contraseña)
+    console.log(usuario.mail)
+    console.log(usuario.contraseña)
 
-    if (!usuario.Mail || !usuario.Contraseña) {
-        return res.status(404).json({ message: error.message })
+    if (!usuario.mail || !usuario.contraseña) {
+        return res.status(404).json({ message: err.message })
     }
 
 
     try {
-        const { rows } = await Usuario.getAllByMail(usuario.mail);
+        const  {rows}  = await Usuario.getAllByMail(usuario.mail);
         console.log(rows);
 
         if (rows.length < 1) {
@@ -123,14 +124,14 @@ const login = async (req, res) => {
 
         const secret = "Holaa"
 
-        const comparison = bcrypt.compareSync(usuario.Contraseña, password)
+        const comparison = bcrypt.compareSync(usuario.contraseña, password)
         console.log(comparison)
         if (comparison) {
             const token = jwt.sign({ id: usuario_db.Mail }, secret, { expiresIn: 30000 * 60000 });
             return res.status(200).json({
                 token: token, usuario: {
-                    Mail: usuario_db.Mail,
-                    Contraseña: usuario_db.Contraseña,
+                    Mail: usuario_db.mail,
+                    Contraseña: usuario_db.contraseña,
                     NombreUsuario: usuario_db.NombreUsuario
                 }
             })

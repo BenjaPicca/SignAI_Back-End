@@ -1,17 +1,13 @@
-import pkg from "pg"
 import "dotenv/config"
 import { pool } from "../dbconfig.js"
-const {Pool}= pkg
 import { v2 as cloudinary} from "cloudinary";
 
 
 
 const SelectFeedById= async(ID)=>{
-    const Client =new Pool(pool);
-    await Client.connect();
 
     try{
-        const rows= await Client.query
+        const rows= await pool.query
         (` SELECT "Feedback", "Texto_Devuelto","Fecha_Conversación","Video_Inicial" 
         FROM public."Conversación" 
         JOIN public."Usuario" ON public."Usuario"."Mail"= public."Conversación"."Mail_Usuario"
@@ -19,18 +15,14 @@ const SelectFeedById= async(ID)=>{
             [ID])
         if (rows.length < 1) throw new Error("Conversación no encontrada.");
 
-        await Client.end();
     }
     catch(error){
-        await Client.end();
         throw new error;
     }
 
 }
 
 const CreateVideo= async(mailusuario)=>{
-    const Client= new Pool(pool);
-    await Client.connect();
 
     cloudinary.config({
         cloud_name: process.env.CLOUD_NAME,
@@ -51,7 +43,7 @@ const CreateVideo= async(mailusuario)=>{
 
                 const url = result.url;
                 try {
-                    const result= await Client.query(`INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación","Mail_Usuario",estado) VALUES ($1,$2,$3,'pendiente') RETURNING "ID"`,
+                    const result= await pool.query(`INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación","Mail_Usuario",estado) VALUES ($1,$2,$3,'pendiente') RETURNING "ID"`,
                         [url, new Date(), mailusuario])
                         console.log(result);
                         const ID=result.rows[0].ID;
@@ -83,7 +75,6 @@ const CreateVideo= async(mailusuario)=>{
                      
                 } catch (err) {
                     console.error(err);
-                    await Client.end();
                     return res.status(500).json({ message: 'Error al agregegar video' });
                 }
             }
@@ -92,76 +83,67 @@ const CreateVideo= async(mailusuario)=>{
 }
 
 const deleteConversaciónById= async(id)=>{
-    const Client= new Pool(pool);
-    await Client.connect();
+   
 
     try{
-        await Client.query(
+        await pool.query(
             `DELETE FROM public."Conversación" WHERE "ID"=$1`, [id]
         )
-        await Client.end();
+       
         return res.status(200).json({ message: 'Se ha eliminado correctamente' })
     }
     catch (err) {
-        await Client.end();
+        
         return res.status(500).json({ message: 'Error al eliminar usuario' })
     }
 }
 
 const updateFeed = async(id,Feedback)=>{
-    const Client= new Pool(pool);
-    await Client.connect();
+   
 
     try{
-        await Client.query(`
+        await pool.query(`
            UPDATE public."Conversación" SET "Feedback"=$1, "Fecha_Conversación"=$3 WHERE "ID"=$2
             `[Feedback, id, new Date()])
 
-        await Client.end();
+
         return res.status(200).json({message:'Se ha actualizado la tabla correctamente'})
     }
     catch(err){
-        await Client.end();
+
         return res.status(500).json({message:'Error al actualizar FeedBack'})
     }
 }
 const textoEntregado= async(id,translation)=>{
-    const Client= new Pool(pool);
-    await Client.connect();
-
+    
     try{
         if (translation === "Error") {
             return res.status(200).json({ message: 'Fail Translator' })
         }
-        await Client.query(`
+        await pool.query(`
            UPDATE public."Conversación" 
         SET "Texto_Devuelto" = $1, "Fecha_Conversación" = $3, estado = 'entregado'
          WHERE "ID" = $2 `[translation, id, new Date()])
-         await Client.end();
+        
          return res.status(200).json({ message: 'Texto entregado' })
     }
     catch(err){
-        await Client.end();
+        
         return res.status(500).json({ message: err.message })
     }
 }
 
 const getTexto= async(id)=>{
-    const Client=new Pool(pool);
-    await Client.connect();
 
     try{
-        const rows= await Client.query(`
-            SELECT "Texto_Devuelto" FROM public."Conversación" WHERE "ID"=$1`[id])
+        const rows= await pool.query(`
+            SELECT "Texto_Devuelto" FROM public."Conversación" WHERE "ID"=$1`,[id])
             if(rows.length<1){
-                await Client.end();
                 return res.status(404).json({message:"No hay ningun texto"})
             }
-             await Client.end();
             return res.status(200).json(rows[0])
     }
     catch(err){
-        await Client.end();
         return res.status(500).json({message:'No se pudo encontrar el texto'})
     }
 }
