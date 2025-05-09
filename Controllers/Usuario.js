@@ -67,17 +67,12 @@ const deleteUsuario = async (req, res) => {
 }
 
 const updateUsuarioByMail = async (req, res) => {
-    const {
-        mail,
-        NombreUsuario,
-        Contraseña,
-        admin
-    } = req.body;
-    if (!mail) {
+    const usuario = req.body;
+    if (!usuario.mail) {
         res.status(400).json({ message: 'No hay un mail ingresado' })
         return;
     }
-    const { rows } = await Usuario.getByMail(mail);
+    const { rows } = await Usuario.getByMail(usuario);
 
     if (rows.length === 0) {
         res.status(404).json({ message: "El mail ingreseado no existe" });
@@ -85,15 +80,16 @@ const updateUsuarioByMail = async (req, res) => {
     }
     try {
         const salt = bcrypt.genSaltSync(10)
-        const hash = bcrypt.hashSync(Contraseña, salt)
+        const hash = bcrypt.hashSync(usuario.contraseña, salt)
         console.log(hash)
 
-        Contraseña = hash;
-        console.log(mail, NombreUsuario, Contraseña, admin)
-        await Usuario.updateUsuario(mail);
+        usuario.contraseña = hash;
+        console.log(usuario.mail, usuario.nombreusuario, usuario.contraseña, usuario.admin)
+        await Usuario.updateUsuario(usuario);
          res.status(200).json({ message: "Se modificó correctamente" })
     }
     catch (err) {
+        console.log(err)
          res.status(500).json({ message: 'Error en actualización de usuario' })
     }
 }
@@ -105,12 +101,12 @@ const login = async (req, res) => {
     console.log(usuario.contraseña)
 
     if (!usuario.mail || !usuario.contraseña) {
-        return res.status(404).json({ message: err.message })
+        return res.status(404).json({ message: "Tienen que estar todos los campos completados." })
     }
 
 
     try {
-        const  {rows}  = await Usuario.getAllByMail(usuario.mail);
+        const  {rows}  = await Usuario.getAllByMail(usuario);
         console.log(rows);
 
         if (rows.length < 1) {

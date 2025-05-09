@@ -9,27 +9,25 @@ const selectFeedbackById = async (req, res) => {
         res.status(404).json({ message: 'no hay ningun id' })
     }
     try {
-        seleccionFeed= await Conversacion.SelectFeedById(ID);
+         await Conversacion.SelectFeedById(ID);
         return res.status(200).json({message:'Seleccion de Feed exitosa'})
     }
-    catch (error) {
+    catch (err) {
+        console.log(err)
         return res.status(500).json({ message: 'No se pudo seleccionar Feed.' })
     }
 }
 
 const insertFeedback = async (req, res) => {
-    const { Feedback,
-        Mail_Usuario
-    } = req.body;
-    console.log(Mail_Usuario)
-    console.log(Feedback);
-    if (!Mail_Usuario) {
+    const conversacion = req.body;
+    console.log(conversacion.mailusuario)
+    console.log(conversacion.mailusuario);
+    if (!conversacion.mailusuario) {
         return res.status(404).json({ message: 'No hay ningun Mail' })
     }
 
     try {
-        await pool.query('INSERT INTO public."Conversación" ("Feedback","Mail_Usuario","Fecha_Conversación") VALUES ($1,$2,$3)',
-            [Feedback, Mail_Usuario, new Date()]);
+        await Conversacion.insertFeedback(conversacion);
         return res.status(200).json({ message: 'Gracias por tu respuesta.' }
         )
     }
@@ -86,6 +84,7 @@ const updateFeedback = async (req, res) => {
         return res.status(200).json({ message: 'Se ha actualizado la tabla correctamente' });
     }
     catch (err) {
+        console.log(err)
         return res.status(500).json({ message: 'Error al actualizar conversación.' })
     }
 

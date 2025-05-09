@@ -1,6 +1,7 @@
 import "dotenv/config"
 import { pool } from "../dbconfig.js"
 import { v2 as cloudinary} from "cloudinary";
+import Conversacion from "../Controllers/Conversacion.js";
 
 
 
@@ -21,7 +22,17 @@ const SelectFeedById= async(ID)=>{
     }
 
 }
-
+const insertFeedback= async (conversacion)=>{
+    
+    try{
+        const rows= await pool.query(`INSERT INTO public."Conversación" ("Feedback","Mail_Usuario","Fecha_Conversación") VALUES ($1,$2,$3)`,
+        [conversacion.feedback, conversacion.mailusuario, new Date()]);
+        return rows
+    }
+    catch(err){
+        throw new Error;
+    }
+}
 const CreateVideo= async(mailusuario)=>{
 
     cloudinary.config({
@@ -86,15 +97,15 @@ const deleteConversaciónById= async(id)=>{
    
 
     try{
-        await pool.query(
+        const rows =await pool.query(
             `DELETE FROM public."Conversación" WHERE "ID"=$1`, [id]
         )
        
-        return res.status(200).json({ message: 'Se ha eliminado correctamente' })
+       return rows
     }
     catch (err) {
         
-        return res.status(500).json({ message: 'Error al eliminar usuario' })
+       throw new Error;
     }
 }
 
@@ -102,16 +113,15 @@ const updateFeed = async(id,Feedback)=>{
    
 
     try{
-        await pool.query(`
+        const rows = await pool.query(`
            UPDATE public."Conversación" SET "Feedback"=$1, "Fecha_Conversación"=$3 WHERE "ID"=$2
             `[Feedback, id, new Date()])
-
-
-        return res.status(200).json({message:'Se ha actualizado la tabla correctamente'})
+            console.log(Feedback,id)
+        return rows
     }
     catch(err){
 
-        return res.status(500).json({message:'Error al actualizar FeedBack'})
+        throw new Error;
     }
 }
 const textoEntregado= async(id,translation)=>{
@@ -154,6 +164,7 @@ export default{
  deleteConversaciónById,
  updateFeed,
  textoEntregado,
- getTexto
+ getTexto,
+ insertFeedback
 
 }

@@ -11,7 +11,6 @@ const insertUsuario = async (usuario) => {
          ("NombreUsuario", "Mail", "Contraseña",admin)
           VALUES ($1, $2, $3,$4)`,
             [usuario.nombre, usuario.mail, usuario.contraseña, usuario.admin])
-
         return rows;
     }
     catch (err) {
@@ -20,7 +19,7 @@ const insertUsuario = async (usuario) => {
     }
 }
 
-const getByMail = async (mail) => {
+const getByMail = async (usuario) => {
 
 
     try {
@@ -28,8 +27,7 @@ const getByMail = async (mail) => {
     SELECT "Mail", "NombreUsuario"
          FROM public."Usuario" 
          WHERE "Mail"=$1`,
-            [mail])
-
+            [usuario.mail])
         return rows;
     }
     catch (err) {
@@ -41,12 +39,13 @@ const getAllByMail = async (usuario) => {
 
 
     try {
-        const rows = await pool.query(`
+        const result = await pool.query(`
         SELECT *
              FROM public."Usuario" 
              WHERE "Mail"=$1`,
             [usuario.mail])
-        return rows;
+        console.log(result)
+        return result;
     }
     catch (err) {
 
@@ -69,21 +68,20 @@ const deleteUsuario = async (mail) => {
         throw new Error;
     }
 }
-const updateUsuario = async (mail) => {
+const updateUsuario = async (usuario) => {
 
 
     try {
         const rows = await pool.query(`
         UPDATE public."Usuario"
          SET "NombreUsuario"=$1, "Contraseña"=$2, admin=$4 
-         WHERE "Mail"=$3 `, [NombreUsuario, Contraseña, mail, admin]);
+         WHERE "Mail"=$3 `, [usuario.nombreusuario, usuario.contraseña, usuario.mail, usuario.admin]);
 
-
-        return res.status(200).json({ message: 'Usuario actualizado' })
+        return rows
     }
     catch (err) {
 
-        return res.status(500).json({ message: 'Error al actualizar usuario' })
+        throw new Error;
     }
 }
 
