@@ -69,15 +69,15 @@ Content-Type: application/json
 
 ###
 
-PUT  http://localhost:3000/50/texto HTTP/1.1
+PUT  http://localhost:3000/conversacion/50/texto HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InNlYW5AZ21haWwuY29tIiwiaWF0IjoxNzQ2ODA5NzMwLCJleHAiOjM1NDY4MDk3MzB9.vb-cUiVv0Ttsel9vhMWsN8kcLOddABTETaUX1ze_YfM
 Content-Type: application/json
 
 {
-  "translation":"Hola soy echu y me gusta mucho la materia"
+  "translation":"Hola soy sean y me gusta mucho la materia"
   
 }
 
 ###
-GET  http://localhost:3000/43/getTexto HTTP/1.1
+GET  http://localhost:3000/conversacion/50/getTexto HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkVDSFVAZ21haWwuY29tIiwiaWF0IjoxNzI5OTc1MDE4LCJleHAiOjM1Mjk5NzUwMTh9.K5U4VM6QT2o0j0OHrlqH48bvyNTwkhqxDOdFxWmH-d8

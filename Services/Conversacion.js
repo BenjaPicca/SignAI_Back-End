@@ -1,7 +1,6 @@
 import "dotenv/config"
 import { pool } from "../dbconfig.js"
 import { v2 as cloudinary} from "cloudinary";
-import Conversacion from "../Controllers/Conversacion.js";
 
 
 
@@ -17,8 +16,8 @@ const SelectFeedById= async(ID)=>{
         if (rows.length < 1) throw new Error("Conversación no encontrada.");
 
     }
-    catch(error){
-        throw new error;
+    catch(err){
+        throw new Error;
     }
 
 }
@@ -110,17 +109,16 @@ const deleteConversaciónById= async(id)=>{
 }
 
 const updateFeed = async(id,Feedback)=>{
-   
-
+   console.log(id,Feedback)
     try{
         const rows = await pool.query(`
            UPDATE public."Conversación" SET "Feedback"=$1, "Fecha_Conversación"=$3 WHERE "ID"=$2
-            `[Feedback, id, new Date()])
-            console.log(Feedback,id)
+            `,[Feedback, id, new Date()])
+            console.log(Feedback,id,"aaa")
         return rows
     }
     catch(err){
-
+        console.log(err)
         throw new Error;
     }
 }
@@ -130,16 +128,16 @@ const textoEntregado= async(id,translation)=>{
         if (translation === "Error") {
             return res.status(200).json({ message: 'Fail Translator' })
         }
-        await pool.query(`
+       const result =  await pool.query(`
            UPDATE public."Conversación" 
         SET "Texto_Devuelto" = $1, "Fecha_Conversación" = $3, estado = 'entregado'
          WHERE "ID" = $2 `[translation, id, new Date()])
         
-         return res.status(200).json({ message: 'Texto entregado' })
+        return result
     }
     catch(err){
-        
-        return res.status(500).json({ message: err.message })
+        console.log(err)
+       throw new Error;
     }
 }
 
@@ -151,10 +149,11 @@ const getTexto= async(id)=>{
             if(rows.length<1){
                 return res.status(404).json({message:"No hay ningun texto"})
             }
-            return res.status(200).json(rows[0])
+            return (rows[0])
     }
     catch(err){
-        return res.status(500).json({message:'No se pudo encontrar el texto'})
+        console.log(err)
+        throw new Error;
     }
 }
 

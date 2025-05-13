@@ -70,17 +70,19 @@ const deleteConversaciónById = async (req, res) => {
 
 const updateFeedback = async (req, res) => {
     const { id } = req.params;
-    const Feedback
-        = req.body.Feedback
+    const Feedback = req.body.Feedback
 
     console.log(id);
     console.log(Feedback);
     if (!id) {
         return res.status(404)({ message: 'No hay ningún Id' })
     }
+    if(!Feedback){
+        return res.status(404)({ message: 'Ingresar Feedback' })
+    }
 
     try {
-       await Conversacion.updateFeed(id,Feedback)
+       const query=await Conversacion.updateFeed(id,Feedback)
         return res.status(200).json({ message: 'Se ha actualizado la tabla correctamente' });
     }
     catch (err) {
@@ -132,7 +134,8 @@ const getTexto= async(req,res)=>{
              
             return res.status(200).json(rows[0])
     }
-    catch(error){
+    catch(err){
+        console.log(err);
         return res.status(500).json({message:error.message})
     }
 }
