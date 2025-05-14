@@ -129,7 +129,7 @@ const login = async (req, res) => {
             const RefreshToken = jwt.sign({id:usuario_db.Mail}, secret, {expiresIn : 30000*60000})
             console.log("accestoken:" + token);
             console.log( "refreshtoken:" +RefreshToken);
-            const agregorefreshtoken= await Sesiones.postToken(usuario.mail,RefreshToken)
+            const agregorefreshtoken= await Sesiones.postToken(usuario.mail,RefreshToken,usuario.estadotoken)
             console.log(agregorefreshtoken)
             return res.status(200).json({
                 token: token, usuario: {
