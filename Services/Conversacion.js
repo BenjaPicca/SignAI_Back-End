@@ -24,7 +24,8 @@ const SelectFeedById= async(ID)=>{
 const insertFeedback= async (conversacion)=>{
     
     try{
-        const rows= await pool.query(`INSERT INTO public."Conversación" ("Feedback","Mail_Usuario","Fecha_Conversación") VALUES ($1,$2,$3)`,
+        const rows= await pool.query(`INSERT INTO public."Conversación"
+             ("Feedback","Mail_Usuario","Fecha_Conversación") VALUES ($1,$2,$3)`,
         [conversacion.feedback, conversacion.mailusuario, new Date()]);
         return rows
     }
