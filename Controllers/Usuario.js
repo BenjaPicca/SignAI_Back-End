@@ -1,6 +1,8 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { pool } from "../dbconfig.js";
 import Usuario from "../Services/Usuario.js"
+import Sesiones from "../Services/sesiones.js"
 
 const insertUsuario = async (req, res) => {
 
@@ -123,7 +125,12 @@ const login = async (req, res) => {
         const comparison = bcrypt.compareSync(usuario.contraseña, password)
         console.log(comparison)
         if (comparison) {
-            const token = jwt.sign({ id: usuario_db.Mail }, secret, { expiresIn: 30000 * 60000 });
+            const token = jwt.sign({ id: usuario_db.Mail }, secret, { expiresIn: 30 * 60 });
+            const RefreshToken = jwt.sign({id:usuario_db.Mail}, secret, {expiresIn : 30000*60000})
+            console.log("accestoken:" + token);
+            console.log( "refreshtoken:" +RefreshToken);
+            const agregorefreshtoken= await Sesiones.postToken(usuario.mail,RefreshToken)
+            console.log(agregorefreshtoken)
             return res.status(200).json({
                 token: token, usuario: {
                     Mail: usuario_db.mail,
@@ -131,6 +138,7 @@ const login = async (req, res) => {
                     NombreUsuario: usuario_db.NombreUsuario
                 }
             })
+           
         }
         if (!comparison) {
             return res.status(400).json({ message: "Contraseña incorrecta" })
