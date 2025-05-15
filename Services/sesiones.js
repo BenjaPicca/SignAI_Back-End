@@ -7,8 +7,8 @@ const postToken = async (body)=>{
     console.log(body.mail)
     try{
         const result= await pool.query(`INSERT INTO public."sesiones"
-        ("mailusuario","refreshtoken","fecha","estadotoken") VALUES ($1,$2,$3,$4)`,
-        [body.mail,Refreshtoken, new Date(), body.estadotoken])
+        ("mailusuario","refreshtoken","fecha") VALUES ($1,$2,$3)`,
+        [body.mail, body.RefreshToken, new Date()])
 
         return result
     }

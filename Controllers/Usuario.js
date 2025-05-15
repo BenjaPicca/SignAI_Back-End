@@ -120,16 +120,17 @@ const login = async (req, res) => {
 
         const password = usuario_db.Contraseña
 
-        const secret = "Holaa"
+        const secret = "Holaa",
+        const secretRefresh= "IGNACIOVIGILANTE"
 
         const comparison = bcrypt.compareSync(usuario.contraseña, password)
         console.log(comparison)
         if (comparison) {
-            const token = jwt.sign({ id: usuario_db.Mail }, secret, { expiresIn: 30 * 60 });
-            const RefreshToken = jwt.sign({id:usuario_db.Mail}, secret, {expiresIn : 30000*60000})
+            const token = jwt.sign({ id: usuario_db.Mail }, secret, { expiresIn: '5m' });
+            const RefreshToken = jwt.sign({id:usuario_db.Mail}, secretRefresh, {expiresIn : '30d'})
             console.log("accestoken:" + token);
             console.log( "refreshtoken:" +RefreshToken);
-            const agregorefreshtoken= await Sesiones.postToken(usuario.mail,RefreshToken,usuario.estadotoken)
+            const agregorefreshtoken= await Sesiones.postToken({mail: usuario_db.Mail, RefreshToken})
             console.log(agregorefreshtoken)
             return res.status(200).json({
                 token: token, usuario: {
