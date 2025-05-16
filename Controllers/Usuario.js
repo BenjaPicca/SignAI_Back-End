@@ -120,8 +120,8 @@ const login = async (req, res) => {
 
         const password = usuario_db.Contraseña
 
-        const secret = "Holaa",
-        const secretRefresh= "IGNACIOVIGILANTE"
+        const secret = "Holaa";
+        const secretRefresh= "IGNACIOVIGILANTE";
 
         const comparison = bcrypt.compareSync(usuario.contraseña, password)
         console.log(comparison)
@@ -132,13 +132,20 @@ const login = async (req, res) => {
             console.log( "refreshtoken:" +RefreshToken);
             const agregorefreshtoken= await Sesiones.postToken({mail: usuario_db.Mail, RefreshToken})
             console.log(agregorefreshtoken)
-            return res.status(200).json({
+            
+            res.cookie('RefreshToken' , RefreshToken, {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'Strict',
+              });
+            res.status(200).json({
                 token: token, usuario: {
                     Mail: usuario_db.mail,
                     Contraseña: usuario_db.contraseña,
                     NombreUsuario: usuario_db.NombreUsuario
                 }
             })
+            return
            
         }
         if (!comparison) {
@@ -146,6 +153,7 @@ const login = async (req, res) => {
         }
     }
     catch (err) {
+        console.log(err);
         return res.status(500).json({ message: err.message })
     }
 }
