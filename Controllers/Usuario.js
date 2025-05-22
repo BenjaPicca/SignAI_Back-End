@@ -1,6 +1,8 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { pool } from "../dbconfig.js";
 import Usuario from "../Services/Usuario.js"
+import Sesiones from "../Services/sesiones.js"
 
 const insertUsuario = async (req, res) => {
 
@@ -118,25 +120,40 @@ const login = async (req, res) => {
 
         const password = usuario_db.Contraseña
 
-        const secret = "Holaa"
+        const secret = "Holaa";
+        const secretRefresh= "IGNACIOVIGILANTE";
 
         const comparison = bcrypt.compareSync(usuario.contraseña, password)
         console.log(comparison)
         if (comparison) {
-            const token = jwt.sign({ id: usuario_db.Mail }, secret, { expiresIn: 30000 * 60000 });
-            return res.status(200).json({
+            const token = jwt.sign({ id: usuario_db.Mail }, secret, { expiresIn: '5m' });
+            const RefreshToken = jwt.sign({id:usuario_db.Mail}, secretRefresh, {expiresIn : '30d'})
+            console.log("accestoken:" + token);
+            console.log( "refreshtoken:" +RefreshToken);
+            const agregorefreshtoken= await Sesiones.postToken({mail: usuario_db.Mail, RefreshToken})
+            console.log(agregorefreshtoken)
+            
+            res.cookie('RefreshToken' , RefreshToken, {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'Strict',
+              });
+            res.status(200).json({
                 token: token, usuario: {
                     Mail: usuario_db.mail,
                     Contraseña: usuario_db.contraseña,
                     NombreUsuario: usuario_db.NombreUsuario
                 }
             })
+            return
+           
         }
         if (!comparison) {
             return res.status(400).json({ message: "Contraseña incorrecta" })
         }
     }
     catch (err) {
+        console.log(err);
         return res.status(500).json({ message: err.message })
     }
 }
