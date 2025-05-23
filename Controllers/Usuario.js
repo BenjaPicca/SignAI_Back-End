@@ -1,6 +1,5 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { pool } from "../dbconfig.js";
 import Usuario from "../Services/Usuario.js"
 import Sesiones from "../Services/sesiones.js"
 
@@ -120,8 +119,8 @@ const login = async (req, res) => {
 
         const password = usuario_db.Contraseña
 
-        const secret = "Holaa";
-        const secretRefresh= "IGNACIOVIGILANTE";
+        const secret = process.env.SECRET_TOKEN;
+        const secretRefresh= process.env.SECRET_REFRESHTOKEN;
 
         const comparison = bcrypt.compareSync(usuario.contraseña, password)
         console.log(comparison)
