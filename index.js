@@ -38,3 +38,4 @@ app.use("/sesiones", SesionesRouters);
 app.listen(port, () => {
     console.log("Escuchando ando")
 })
+export default app;
