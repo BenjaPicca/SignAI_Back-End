@@ -8,7 +8,7 @@ const insertUsuario = async (req, res) => {
     const usuario = req.body;
     console.log(usuario);
     if (!usuario.mail || !usuario.nombre || !usuario.contraseña) {
-        return res.status(400).json({ message: "Todos los campos tienen que estar completos" });
+        return res.status(404).json({ message: "Todos los campos tienen que estar completos" });
     }
 
     try {
@@ -37,7 +37,11 @@ const selectUsuario = async (req, res) => {
     }
     try {
         const { rows } = await Usuario.getByMail(mail);
-         res.json(rows[0])
+        console.log(rows)
+        if(rows === undefined){
+            return res.status(404).json({ message: 'No hay ningún Mail' })
+        }
+         else{res.status(200).json(rows[0])}
     }
     catch (err) {
         console.log(err)

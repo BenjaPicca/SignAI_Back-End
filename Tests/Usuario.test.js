@@ -6,7 +6,7 @@ import app from '../index.js'
 
 
 
-
+//Log In
 it('Tiene que devolver 404 cuando faltan campos por completar', async () => {
     const res = await request(app)
       .post('/usuario/login')
@@ -46,4 +46,44 @@ it('Tiene que devolver 200 si el usuario Inicia sesión exitosamente', async ()=
 
     console.log(res.status)
     expect(res.status).to.equal(200)
+})
+
+// InsertarUsuario
+
+
+it('Tiene que devolver 404 si faltan campos por completar',async()=>{
+  const res= await request(app)
+    .post('/usuario/insertar')
+    .send({nombre: "LULALEVY",
+    mail: "LULALEVY@gmail.com",
+    admin: true})
+
+    console.log(res.status)
+    expect(res.status).to.equal(404)
+    expect(res.body.message).to.equal('Todos los campos tienen que estar completos')
+  })
+
+it('Tiene que devolver 200 si el cliente se registra exitosamente', async ()=>{
+  const res= await request(app)
+    .post('/usuario/insertar')
+    .send({nombre: "LULALEVY",
+    mail: "LULALEVY@gmail.com",
+    contraseña:"LULALEVY",
+    admin: true})
+
+    console.log(res.status)
+    expect(res.status).to.equal(200)
+    expect(res.body.message).to.equal('Se ha insertado Correctamente')
+})
+
+//Select Usuario
+
+it('Tiene que devolver 404 si no hay ningún mail', async ()=>{
+    const res = await request(app)
+      .get('/usuario/Selector')
+
+      console.log
+      console.log(res.status)
+      expect(res.status).to.equal(404)
+      expect(res.body.message).to.equal('No hay ningún Mail')
 })
