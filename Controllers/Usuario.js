@@ -148,7 +148,7 @@ const login = async (req, res) => {
            
         }
         if (!comparison) {
-            return res.status(400).json({ message: "Contraseña incorrecta" })
+            return res.status(401).json({ message: "Contraseña incorrecta" })
         }
     }
     catch (err) {
