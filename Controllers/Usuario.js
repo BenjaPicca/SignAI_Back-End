@@ -143,6 +143,7 @@ const login = async (req, res) => {
                     Contraseña: usuario_db.contraseña,
                     NombreUsuario: usuario_db.NombreUsuario
                 }
+
             })
             return
            
