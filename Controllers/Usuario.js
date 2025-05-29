@@ -32,16 +32,17 @@ const selectUsuario = async (req, res) => {
     const {mail} = req.params;
     console.log(mail)
 
-    if (!mail) {
-        return res.status(404).json({ message: 'No hay ningún Mail' })
+    
+    console.log(req.params.length,"aaa")
+    if(req.params.mail=== undefined){
+        console.log(req.params,"bbbb")
+        return res.status(400).json({message: 'No hay ningún Mail'})
     }
+    
     try {
         const { rows } = await Usuario.getByMail(mail);
-        console.log(rows)
-        if(rows === undefined){
-            return res.status(404).json({ message: 'No hay ningún Mail' })
-        }
-         else{res.status(200).json(rows[0])}
+        console.log(rows[0],"anahbabvavva")
+        res.status(200).json(rows[0])
     }
     catch (err) {
         console.log(err)
