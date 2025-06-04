@@ -98,3 +98,14 @@ it('Tiene que devolver 200 si se selecciona el Mail correctamente', async()=>{
     expect(res.status).to.equal(200)
     
 })
+
+//Delete usuario
+
+it('Tiene que devolver 400 si no hay ningún mail para eliminar', async()=>{
+  const res = await request(app)
+  .delete('/usuario/')
+
+  console.log(res.status)
+  expect(res.status).to.equal(400)
+
+})

@@ -59,8 +59,7 @@ const deleteUsuario = async (mail) => {
         const rows = await pool.query(`
         DELETE FROM public."Usuario" 
         WHERE "Mail"=$1`, [mail])
-
-
+        console.log(rows,"aaaa")
         return rows;
     }
     catch (err) {
