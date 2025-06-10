@@ -52,23 +52,31 @@ const selectUsuario = async (req, res) => {
 
 const deleteUsuario = async (req, res) => {
     const mail = req.params.mail;
-
-    if (!mail|| req.params.length<1) {
+    console.log(mail,"vigi")
+    console.log(req.params.mail.length,"abenha")
+    if (!mail|| req.params.mail.length<1) {
         return res.status(400).json({ message: 'No hay ningún Mail' })
     }
     const  {rows} = await Usuario.getByMail(mail);
-    console.log(rows[0])
-    console.log(mail)
+    console.log(rows)
+    
 
-    if (rows === 0) {
+    if (rows.length<1) {
         res.status(404).json({ message: "El mail ingreseado no existe" });
         return;
     }
 
     try{
-        await Usuario.deleteUsuario(mail);
-         res.status(200).json({ message: "Se ha eliminado el usuario correctamente" })
+       const rest= await Usuario.deleteUsuario(mail);
+
+       console.log(rest)
+       if(rest.rows.length<1){
+           return res.status(404).json({message:"Error al entrar a la eliminación"})
+       }
+       else{
+         return res.status(200).json({ message: "Se ha eliminado el usuario correctamente" })
     }
+}
     catch(err){
          res.status(500).json({message:'No se pudo eliminar al usuario'})
     }

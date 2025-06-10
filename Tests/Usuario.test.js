@@ -101,11 +101,13 @@ it('Tiene que devolver 200 si se selecciona el Mail correctamente', async()=>{
 
 //Delete usuario
 
-it('Tiene que devolver 400 si no hay ningún mail para eliminar', async()=>{
-  const res = await request(app)
-  .delete('/usuario/')
+it('Tiene que devolver 404 si el mail ingresado no existe', function done(){
+  const res = new request(app)
+  .delete('/usuario/delUsuario/a@hotmail.con')
 
-  console.log(res.status)
-  expect(res.status).to.equal(400)
+  console.log(res.status,"asa")
+  console.log("elim")
+  expect(res.status).to.equal(404)
+  res.save(done)
 
 })
