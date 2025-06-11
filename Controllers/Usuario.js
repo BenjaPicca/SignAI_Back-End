@@ -62,11 +62,13 @@ const deleteUsuario = async (req, res) => {
     if (!mail|| req.params.mail.length<1) {
         return res.status(404).json({ message: 'No hay ningún Mail' })
     }
-    const  {rows} = await Usuario.getByMail(mail);
-    console.log(rows)
+    const  result = await Usuario.getByMail(mail);
+    console.log(result)
+    console.log(result.rows)
+    console.log (result.rows.length)
     
 
-    if (rows.length<1) {
+    if (result.rows.length<1) {
         res.status(404).json({ message: "El mail ingreseado no existe" });
         return;
     }
@@ -74,13 +76,8 @@ const deleteUsuario = async (req, res) => {
     try{
        const rest= await Usuario.deleteUsuario(mail);
 
-       console.log(rest)
-       if(rest.rows.length<1){
-           return res.status(404).json({message:"Error al entrar a la eliminación"})
-       }
-       else{
-         return res.status(200).json({ message: "Se ha eliminado el usuario correctamente" })
-    }
+       console.log(rest,"######")
+         return res.status(200).json(result.rows)
 }
     catch(err){
          res.status(500).json({message:'No se pudo eliminar al usuario'})

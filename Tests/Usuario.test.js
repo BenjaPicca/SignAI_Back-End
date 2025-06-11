@@ -90,9 +90,10 @@ it('Tiene que devolver 400 si no hay ningún mail', async ()=>{
       expect(res.status).to.equal(400)
       expect(res.body.message).to.equal('No hay ningún Mail')
 })
-it('Tiene que devolver 404 si no existe', async ()=>{
+it('Tiene que devolver 404 si no existe Mail', async ()=>{
   const res = await request(app)
     .get('/usuario/Selector/asassa')
+    .set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InNlYW5AZ21haWwuY29tIiwiaWF0IjoxNzQ2ODA5NzMwLCJleHAiOjM1NDY4MDk3MzB9.vb-cUiVv0Ttsel9vhMWsN8kcLOddABTETaUX1ze_YfM');
 
     console.log(res.status)
     expect(res.status).to.equal(404)
@@ -101,7 +102,7 @@ it('Tiene que devolver 404 si no existe', async ()=>{
 
 it('Tiene que devolver 200 si se selecciona el Mail correctamente', async()=>{
   const res = await request(app)
-    .get('/usuario/Selector/11@gmail.com')
+    .get('/usuario/Selector/p@gmail.com')
     .set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InNlYW5AZ21haWwuY29tIiwiaWF0IjoxNzQ2ODA5NzMwLCJleHAiOjM1NDY4MDk3MzB9.vb-cUiVv0Ttsel9vhMWsN8kcLOddABTETaUX1ze_YfM');
 
     console.log(res.status)
@@ -141,4 +142,13 @@ it('Tiene que devolver 404 si no hay ningún Mail para Eliminar', async()=>{
   console.log(res.status)
   expect(res.status).to.equal(404)
   expect(res.body.message).to.equal('No hay ningún Mail')
+})
+it('tiene que devolver 200 si el Usuario se elimina exitosamente', async()=>{
+  const res= await request(app)
+  .delete('/usuario/delUsuario/ECHU9v@gmail.com')
+  .set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InNlYW5AZ21haWwuY29tIiwiaWF0IjoxNzQ2ODA5NzMwLCJleHAiOjM1NDY4MDk3MzB9.vb-cUiVv0Ttsel9vhMWsN8kcLOddABTETaUX1ze_YfM');
+
+  console.log(res.status)
+  expect(res.status).to.equal(200)
+  
 })
