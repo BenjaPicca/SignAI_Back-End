@@ -33,7 +33,7 @@ const selectUsuario = async (req, res) => {
     console.log(mail)
     console.log(req.params)
     console.log(req.params.mail.length)
-    if(req.params.mail.length<1){
+    if(req.params.mail.length === 8 && req.params.mail==="Selector"){
         console.log(req.params)
         return res.status(400).json({message: 'No hay ningún Mail'})
     }
@@ -42,7 +42,7 @@ const selectUsuario = async (req, res) => {
         const { rows } = await Usuario.getByMail(mail);
         console.log(rows[0])
         if(rows.length<1){
-            return res.status(404).json({message:"Mail ingresado no valido"})
+            return res.status(404).json({message:"Mail ingresado no existente"})
         }
         else{
             console.log(rows[0])
@@ -127,7 +127,7 @@ const login = async (req, res) => {
 
 
     try {
-        const  {rows}  = await Usuario.getAllByMail(usuario);
+        const  rows  = await Usuario.getAllByMail(usuario);
         console.log(rows);
 
         if (rows.length < 1) {

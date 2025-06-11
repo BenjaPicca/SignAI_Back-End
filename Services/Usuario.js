@@ -45,7 +45,7 @@ const getAllByMail = async (usuario) => {
              WHERE "Mail"=$1`,
             [usuario.mail])
         console.log(result)
-        return result;
+        return result.rows;
     }
     catch (err) {
 

@@ -18,19 +18,20 @@ it('Tiene que devolver 404 cuando faltan campos por completar', async () => {
     expect(res.body.message).to.equal('Tienen que estar todos los campos completados.');
   });
 
-  it('Tiene que devolver 400 si el Mail no está asociado', async()=> {
-    const res= await request(app)
-      .post('/usuario/login')
-      .send({ mail: 'asadaas@gmail.com', contraseña: "123" })
-  
-        
+it('Tiene que devolver 400 si el Mail no está asociado',  (done)=> {
+    request(app)
+    .post('/usuario/login')
+    .send({ mail: 'asadaas@gmail.com', contraseña: "123" })
+    .end((err, res) => {
+      if (err) return done(err);
         console.log(res.status)
-          expect(res.status).to.equal(400);
-          expect(res.body.message).to.equal("No hay un usuario asociado a ese mail");
-           
-       
-      });
-  
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal("No hay un usuario asociado a ese mail");
+        done()
+      
+    })
+  })
+
 
 it('Tiene que devolver 401 si la contraseña esta mal', async()=>{
   const res = await request(app)
@@ -81,13 +82,21 @@ it('Tiene que devolver 200 si el cliente se registra exitosamente', async ()=>{
 
 //Select Usuario
 
-it('Tiene que devolver 404 si no hay ningún mail', async ()=>{
+it('Tiene que devolver 400 si no hay ningún mail', async ()=>{
     const res = await request(app)
       .get('/usuario/Selector/')
 
       console.log(res.status)
-      expect(res.status).to.equal(404)
-      expect(res.body.message).to.equal('Mail ingresado no valido')
+      expect(res.status).to.equal(400)
+      expect(res.body.message).to.equal('No hay ningún Mail')
+})
+it('Tiene que devolver 404 si no existe', async ()=>{
+  const res = await request(app)
+    .get('/usuario/Selector/asassa')
+
+    console.log(res.status)
+    expect(res.status).to.equal(404)
+    expect(res.body.message).to.equal('Mail ingresado no existente')
 })
 
 it('Tiene que devolver 200 si se selecciona el Mail correctamente', async()=>{
@@ -102,16 +111,18 @@ it('Tiene que devolver 200 si se selecciona el Mail correctamente', async()=>{
 
 //Delete usuario
 
-it('Tiene que devolver 404 si el mail ingresado no existe',  async ()=>{
-  const res = await request(app)
+it('Tiene que devolver 404 si el mail ingresado no existe',   (done) =>{
+  request(app)
   .delete('/usuario/delUsuario/a@hotmail.con')
-  .set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InNlYW5AZ21haWwuY29tIiwiaWF0IjoxNzQ2ODA5NzMwLCJleHAiOjM1NDY4MDk3MzB9.vb-cUiVv0Ttsel9vhMWsN8kcLOddABTETaUX1ze_YfM');
+  .set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InNlYW5AZ21haWwuY29tIiwiaWF0IjoxNzQ2ODA5NzMwLCJleHAiOjM1NDY4MDk3MzB9.vb-cUiVv0Ttsel9vhMWsN8kcLOddABTETaUX1ze_YfM')
+  .end((err, res) => {
+      if (err) return done(err);
 
-
-  console.log(res.status,"asa")
-  expect(res.status).to.equal(404)
-    expect(res.body.message).to.equal('El mail ingreseado no existe')
-
+    console.log(res.status,"asa")
+    expect(res.status).to.equal(404)
+    expect(res.body.message).to.equal('El mail ingreseado no existe');
+    done();
+  })
 })
 
 it('Tiene que devolver 401 si no hay ningún Token ingresado', async ()=>{
