@@ -31,18 +31,23 @@ const insertUsuario = async (req, res) => {
 const selectUsuario = async (req, res) => {
     const {mail} = req.params;
     console.log(mail)
-
-    
-    console.log(req.params.length,"aaa")
-    if(req.params.mail=== undefined){
-        console.log(req.params,"bbbb")
+    console.log(req.params)
+    console.log(req.params.mail.length)
+    if(req.params.mail.length<1){
+        console.log(req.params)
         return res.status(400).json({message: 'No hay ningún Mail'})
     }
     
     try {
         const { rows } = await Usuario.getByMail(mail);
-        console.log(rows[0],"anahbabvavva")
-        res.status(200).json(rows[0])
+        console.log(rows[0])
+        if(rows.length<1){
+            return res.status(404).json({message:"Mail ingresado no valido"})
+        }
+        else{
+            console.log(rows[0])
+            return res.status(200).json(rows[0])
+        }
     }
     catch (err) {
         console.log(err)
@@ -55,7 +60,7 @@ const deleteUsuario = async (req, res) => {
     console.log(mail,"vigi")
     console.log(req.params.mail.length,"abenha")
     if (!mail|| req.params.mail.length<1) {
-        return res.status(400).json({ message: 'No hay ningún Mail' })
+        return res.status(404).json({ message: 'No hay ningún Mail' })
     }
     const  {rows} = await Usuario.getByMail(mail);
     console.log(rows)

@@ -19,7 +19,7 @@ const insertUsuario = async (usuario) => {
     }
 }
 
-const getByMail = async (usuario) => {
+const getByMail = async (mail) => {
 
 
     try {
@@ -27,7 +27,7 @@ const getByMail = async (usuario) => {
     SELECT "Mail", "NombreUsuario"
          FROM public."Usuario" 
          WHERE "Mail"=$1`,
-            [usuario.mail])
+            [mail])
         return rows;
     }
     catch (err) {

@@ -8,7 +8,7 @@ export const verifyToken = async (req, res, next) => {
         const header_token = req.headers['authorization']
         console.log(header_token)
         if(!header_token){
-            return res.status(400).json({ message : "Token necesario" })
+            return res.status(401).json({ message : "Token necesario" })
         }
         const tokenPartsAcess = header_token.split(' ');
         const refreshToken = req.headers['x-refresh-token'];

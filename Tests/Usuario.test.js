@@ -81,18 +81,19 @@ it('Tiene que devolver 200 si el cliente se registra exitosamente', async ()=>{
 
 //Select Usuario
 
-it('Tiene que devolver 400 si no hay ningún mail', async ()=>{
+it('Tiene que devolver 404 si no hay ningún mail', async ()=>{
     const res = await request(app)
-      .get('/usuario/Selector')
+      .get('/usuario/Selector/')
 
       console.log(res.status)
-      expect(res.status).to.equal(400)
-      expect(res.body.message).to.equal('No hay ningún Mail')
+      expect(res.status).to.equal(404)
+      expect(res.body.message).to.equal('Mail ingresado no valido')
 })
 
 it('Tiene que devolver 200 si se selecciona el Mail correctamente', async()=>{
   const res = await request(app)
-    .get('/usuario/Selector/i@gmail.com')
+    .get('/usuario/Selector/11@gmail.com')
+    .set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InNlYW5AZ21haWwuY29tIiwiaWF0IjoxNzQ2ODA5NzMwLCJleHAiOjM1NDY4MDk3MzB9.vb-cUiVv0Ttsel9vhMWsN8kcLOddABTETaUX1ze_YfM');
 
     console.log(res.status)
     expect(res.status).to.equal(200)
@@ -101,13 +102,32 @@ it('Tiene que devolver 200 si se selecciona el Mail correctamente', async()=>{
 
 //Delete usuario
 
-it('Tiene que devolver 404 si el mail ingresado no existe', function done(){
-  const res = new request(app)
+it('Tiene que devolver 404 si el mail ingresado no existe',  async ()=>{
+  const res = await request(app)
+  .delete('/usuario/delUsuario/a@hotmail.con')
+  .set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InNlYW5AZ21haWwuY29tIiwiaWF0IjoxNzQ2ODA5NzMwLCJleHAiOjM1NDY4MDk3MzB9.vb-cUiVv0Ttsel9vhMWsN8kcLOddABTETaUX1ze_YfM');
+
+
+  console.log(res.status,"asa")
+  expect(res.status).to.equal(404)
+    expect(res.body.message).to.equal('El mail ingreseado no existe')
+
+})
+
+it('Tiene que devolver 401 si no hay ningún Token ingresado', async ()=>{
+  const res = await request(app)
   .delete('/usuario/delUsuario/a@hotmail.con')
 
   console.log(res.status,"asa")
-  console.log("elim")
-  expect(res.status).to.equal(404)
-  res.save(done)
+  expect(res.status).to.equal(401)
+})
 
+it('Tiene que devolver 404 si no hay ningún Mail para Eliminar', async()=>{
+  const res= await request(app)
+  .delete('/usuario/delUsuario/')
+  .set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InNlYW5AZ21haWwuY29tIiwiaWF0IjoxNzQ2ODA5NzMwLCJleHAiOjM1NDY4MDk3MzB9.vb-cUiVv0Ttsel9vhMWsN8kcLOddABTETaUX1ze_YfM');
+
+  console.log(res.status)
+  expect(res.status).to.equal(404)
+  expect(res.body.message).to.equal('No hay ningún Mail')
 })
