@@ -59,9 +59,6 @@ const deleteUsuario = async (req, res) => {
     const mail = req.params.mail;
     console.log(mail,"vigi")
     console.log(req.params.mail.length,"abenha")
-    if (!mail|| req.params.mail.length<1) {
-        return res.status(404).json({ message: 'No hay ningún Mail' })
-    }
     const  result = await Usuario.getByMail(mail);
     console.log(result)
     console.log(result.rows)
@@ -86,13 +83,16 @@ const deleteUsuario = async (req, res) => {
 
 const updateUsuarioByMail = async (req, res) => {
     const usuario = req.body;
+    console.log(usuario.mail)
     if (!usuario.mail) {
         res.status(400).json({ message: 'No hay un mail ingresado' })
         return;
     }
-    const { rows } = await Usuario.getByMail(usuario);
+    const result = await Usuario.getByMail(usuario);
+    console.log(result)
+    console.log(result.rows)
 
-    if (rows.length === 0) {
+    if (result.rows.length === 0) {
         res.status(404).json({ message: "El mail ingreseado no existe" });
         return;
     }

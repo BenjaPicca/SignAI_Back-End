@@ -4,7 +4,7 @@ import "dotenv/config";
 const { Pool } = pkg
 
 const insertUsuario = async (usuario) => {
-
+console.log(usuario,"aasgab")
     try {
         const rows = await pool.query(`
         INSERT INTO public."Usuario"
@@ -19,7 +19,7 @@ const insertUsuario = async (usuario) => {
     }
 }
 
-const getByMail = async (mail) => {
+const getByMail = async (usuario) => {
 
 
     try {
@@ -27,7 +27,7 @@ const getByMail = async (mail) => {
     SELECT "Mail", "NombreUsuario"
          FROM public."Usuario" 
          WHERE "Mail"=$1`,
-            [mail])
+            [usuario.mail])
         return rows;
     }
     catch (err) {
