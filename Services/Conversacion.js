@@ -63,8 +63,8 @@ const CreateVideo= async(mailusuario)=>{
                         id: ID,
                         url: url
                     } //Aca va el node-fetch
-                    fetch('http://127.0.0.1:8000/translate', {
-                        method: 'POST',
+                    fetch(`https://signai.fdiaznem.com.ar/predict?=${url}`, {
+                        method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
                         },
