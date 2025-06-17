@@ -37,7 +37,7 @@ const insertFeedback = async (req, res) => {
 }
 
 const CrearVideo = async (req, res) => {
-    const { mailusuario } = req.body;
+    const  mailusuario  = req.body.mailusuario;
     console.log("mail usuario", mailusuario);
     if(!mailusuario){
         return res.status(404).json({message:'Inicia sesión'})
