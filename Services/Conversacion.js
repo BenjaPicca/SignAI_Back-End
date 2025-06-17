@@ -1,10 +1,10 @@
-import { Pool } from "pg"
 import "dotenv/config"
-import { pool } from "../.dbconfig";
+import { pool } from "../dbconfig.js"
+import { v2 as cloudinary} from "cloudinary";
+
+
 
 const SelectFeedById= async(ID)=>{
-    const pool =new Pool(config);
-    await pool.connect();
 
     try{
         const rows= await pool.query
@@ -15,32 +15,156 @@ const SelectFeedById= async(ID)=>{
             [ID])
         if (rows.length < 1) throw new Error("Conversación no encontrada.");
 
-        await pool.end();
     }
-    catch(error){
-        await pool.end();
-        throw new error;
+    catch(err){
+        throw new Error;
     }
 
 }
+const insertFeedback= async (conversacion)=>{
+    
+    try{
+        const rows= await pool.query(`INSERT INTO public."Conversación"
+             ("Feedback","Mail_Usuario","Fecha_Conversación") VALUES ($1,$2,$3)`,
+        [conversacion.feedback, conversacion.mailusuario, new Date()]);
+        return rows
+    }
+    catch(err){
+        throw new Error;
+    }
+}
+const CreateVideo= async(mailusuario)=>{
 
-const CreateFeed= async(mailusuario,feedback)=>{
-    const pool= new Pool(config);
-    await pool.connect();
+    cloudinary.config({
+        cloud_name: process.env.CLOUD_NAME,
+        api_key: process.env.API_KEY,
+        api_secret: process.env.API_SECRET
+    });
+    if (!mailusuario || mailusuario === undefined) {
+        return res.status(404).json({ message: 'No se encontró el mail.' })
+    }
+    cloudinary.uploader.upload(req.file.path,
+        { resource_type: "video" },
+        async function (error, result) {
+            if (error) {
+                console.error("Error al subir el video:", error);
+            } else {
+                console.log(result);
+                console.log("Video subido correctamente:", result.url, result.public_id);
+
+                const url = result.url;
+                try {
+                    const result= await pool.query(`INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación","Mail_Usuario",estado) VALUES ($1,$2,$3,'pendiente') RETURNING "ID"`,
+                        [url, new Date(), mailusuario])
+                        console.log(result);
+                        const ID=result.rows[0].ID;
+                       
+                    const body = {
+                        id: ID,
+                        url: url
+                    } //Aca va el node-fetch
+                    fetch(`https://signai.fdiaznem.com.ar/predict?=${url}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(body),
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(data);
+
+                            if (data.message === "received") {
+                                console.log("Video enviado:", data);
+                            } else {
+                                // Muestra un mensaje de error
+                                console.log("Error: " + data.message);
+                            }
+                            res.status(200).json({ message: 'Video agregado.',ID})
+                        })
+
+                     
+                } catch (err) {
+                    console.error(err);
+                    return res.status(500).json({ message: 'Error al agregegar video' });
+                }
+            }
+        }
+    );
+}
+
+const deleteConversaciónById= async(id)=>{
+   
 
     try{
-        const rows= await pool.query
-        (
-            `INSERT INTO public."Conversación" ("Feedback","Mail_Usuario","Fecha_Conversación") VALUES ($1,$2,$3)`,
-            [feedback, mailusuario, new Date()]);
-           
-            if (rows.length<1) throw new Error("Error al crear feed")
-
-            
-            return res.status(200).json({message:"Gracias por responder."})
-
+        const rows =await pool.query(
+            `DELETE FROM public."Conversación" WHERE "ID"=$1`, [id]
+        )
+       
+       return rows
     }
-    catch(error){
-        return res.status(500)
+    catch (err) {
+        
+       throw new Error;
     }
+}
+
+const updateFeed = async(id,Feedback)=>{
+   console.log(id,Feedback)
+    try{
+        const rows = await pool.query(`
+           UPDATE public."Conversación" SET "Feedback"=$1, "Fecha_Conversación"=$3 WHERE "ID"=$2
+            `,[Feedback, id, new Date()])
+            console.log(Feedback,id,"aaa")
+        return rows
+    }
+    catch(err){
+        console.log(err)
+        throw new Error;
+    }
+}
+const textoEntregado= async(id,translation)=>{
+    
+    try{
+        if (translation === "Error") {
+            return res.status(200).json({ message: 'Fail Translator' })
+        }
+       const result =  await pool.query(`
+           UPDATE public."Conversación" 
+        SET "Texto_Devuelto" = $1, "Fecha_Conversación" = $3, estado = 'entregado'
+         WHERE "ID" = $2 `[translation, id, new Date()])
+        
+        return result
+    }
+    catch(err){
+        console.log(err)
+       throw new Error;
+    }
+}
+
+const getTexto= async(id)=>{
+
+    try{
+        const rows= await pool.query(`
+            SELECT "Texto_Devuelto" FROM public."Conversación" WHERE "ID"=$1`,[id])
+            if(rows.length<1){
+                return res.status(404).json({message:"No hay ningun texto"})
+            }
+            return (rows[0])
+    }
+    catch(err){
+        console.log(err)
+        throw new Error;
+    }
+}
+
+export default{
+ SelectFeedById,
+ CreateVideo,
+ deleteConversaciónById,
+ updateFeed,
+ textoEntregado,
+ getTexto,
+ insertFeedback
+
 }

@@ -10,5 +10,4 @@ export const pool = new Pool({
     password: "dqLgAMT0B2NZ",
     port: 5432,
     ssl: true,
-    max:20
 });

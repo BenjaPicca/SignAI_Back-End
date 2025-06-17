@@ -6,21 +6,29 @@
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "dev": "npx nodemon index.js"
+    "dev": "npx nodemon index.js",
+    "test": "mocha ./Tests/*.test.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "cloudinary": "^2.4.0",
+    "chai": "^5.2.0",
+    "cloudinary": "^2.6.0",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
     "node-fetch": "^3.3.2",
     "nodemon": "^3.1.4",
     "pg": "^8.12.0",
-    "pg-pool": "^3.6.2"
+    "pg-pool": "^3.6.2",
+    "sinon": "^20.0.0",
+    "supertest": "^7.1.1"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.11.14",
+    "mocha": "^11.5.0"
   }
 }

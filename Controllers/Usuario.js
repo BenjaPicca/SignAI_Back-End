@@ -1,138 +1,130 @@
 import bcrypt from "bcryptjs";
-import { pool } from "../.dbconfig.js"
 import jwt from "jsonwebtoken";
+import Usuario from "../Services/Usuario.js"
+import Sesiones from "../Services/sesiones.js"
 
 const insertUsuario = async (req, res) => {
 
-    let {
-        Mail,
-        NombreUsuario,
-        Contraseña,
-        admin
-    } = req.body;
-    console.log(req.body);
-    if (!Mail || !NombreUsuario || !Contraseña) {
-        return res.status(400).json({ message: "Todos los campos tienen que estar completos" });
+    const usuario = req.body;
+    console.log(usuario);
+    if (!usuario.mail || !usuario.nombre || !usuario.contraseña) {
+        return res.status(404).json({ message: "Todos los campos tienen que estar completos" });
     }
 
     try {
 
         const salt = bcrypt.genSaltSync(10)
-        const hash = bcrypt.hashSync(Contraseña, salt)
+        const hash = bcrypt.hashSync(usuario.contraseña, salt)
         console.log(hash)
 
-        Contraseña = hash;
-        console.log(Mail, NombreUsuario, Contraseña, admin)
-        await pool.query(`INSERT INTO public."Usuario"
-         ("NombreUsuario", "Mail", "Contraseña",admin)
-          VALUES ($1, $2, $3,$4)`,
-         [NombreUsuario, Mail, Contraseña, admin]);
-        return res.status(200).json({ message: "Se ha insertado Correctamente" });
+        usuario.contraseña = hash;
+        console.log(usuario.mail, usuario.nombre, usuario.contraseña, usuario.admin)
+        await Usuario.insertUsuario(usuario);
+         res.status(200).json({ message: "Se ha insertado Correctamente" });
     }
     catch (err) {
-        return res.status(500).json({ message: 'Error al insertar en base de datos' })
+        console.log(err)
+         res.status(500).json({ message: 'Error al insertar en base de datos' })
     }
 }
 
 const selectUsuario = async (req, res) => {
     const {mail} = req.params;
     console.log(mail)
-
-    if (!mail) {
-        return res.status(404).json({ message: 'No hay ningún Mail' })
+    console.log(req.params)
+    console.log(req.params.mail.length)
+    if(req.params.mail.length === 8 && req.params.mail==="Selector"){
+        console.log(req.params)
+        return res.status(400).json({message: 'No hay ningún Mail'})
     }
+    
     try {
-        const { rows } = await pool.query(`SELECT "Mail", "NombreUsuario"
-         FROM public."Usuario" 
-         WHERE "Mail"=$1`,
-         [mail])
-        return res.json(rows[0])
+        const { rows } = await Usuario.getByMail(mail);
+        console.log(rows[0])
+        if(rows.length<1){
+            return res.status(404).json({message:"Mail ingresado no existente"})
+        }
+        else{
+            console.log(rows[0])
+            return res.status(200).json(rows[0])
+        }
     }
     catch (err) {
-        return res.status(500).json({ message: 'Error en selección de usuario' })
+        console.log(err)
+         res.status(500).json({ message: 'Error en selección de usuario' })
     }
 }
 
 const deleteUsuario = async (req, res) => {
     const mail = req.params.mail;
+    console.log(mail,"vigi")
+    console.log(req.params.mail.length,"abenha")
+    const  result = await Usuario.getByMail(mail);
+    console.log(result)
+    console.log(result.rows)
+    console.log (result.rows.length)
+    
 
-    if (!mail) {
-        return res.status(404).json({ message: 'No hay ningún Mail' })
-    }
-    const { rows } = await pool.query(`SELECT "Mail" 
-    FROM public."Usuario"
-     WHERE "Mail"=$1`,
-     [mail])
-
-    if (rows.length === 0) {
+    if (result.rows.length<1) {
         res.status(404).json({ message: "El mail ingreseado no existe" });
         return;
     }
 
     try{
-        await pool.query(`DELETE FROM public."Usuario" 
-        WHERE "Mail"=$1`,
-         [mail])
-    return res.status(200).json({ message: "Se ha eliminado el usuario correctamente" })
-    }catch(err){
-        return res.status(500).json({message:'No se pudo eliminar al usuario'})
+       const rest= await Usuario.deleteUsuario(mail);
+
+       console.log(rest,"######")
+         return res.status(200).json(result.rows)
+}
+    catch(err){
+         res.status(500).json({message:'No se pudo eliminar al usuario'})
     }
 }
 
 const updateUsuarioByMail = async (req, res) => {
-    let {
-        Mail,
-        NombreUsuario,
-        Contraseña,
-        admin
-    } = req.body;
-    if (!Mail) {
+    const usuario = req.body;
+    console.log(usuario.mail)
+    if (!usuario.mail) {
         res.status(400).json({ message: 'No hay un mail ingresado' })
         return;
     }
-    const { rows } = await pool.query(`SELECT "Mail" FROM public."Usuario"
-     WHERE "Mail"=$1`, 
-     [Mail])
+    const result = await Usuario.getByMail(usuario);
+    console.log(result)
+    console.log(result.rows)
 
-    if (rows.length === 0) {
+    if (result.rows.length === 0) {
         res.status(404).json({ message: "El mail ingreseado no existe" });
         return;
     }
     try {
         const salt = bcrypt.genSaltSync(10)
-        const hash = bcrypt.hashSync(Contraseña, salt)
+        const hash = bcrypt.hashSync(usuario.contraseña, salt)
         console.log(hash)
 
-        Contraseña = hash;
-        console.log(Mail, NombreUsuario, Contraseña, admin)
-        await pool.query(`UPDATE public."Usuario"
-         SET "NombreUsuario"=$1, "Contraseña"=$2, admin=$4 
-         WHERE "Mail"=$3 `,
-         [NombreUsuario, Contraseña, Mail, admin])
-        return res.status(200).json({ message: "Se modificó correctamente" })
+        usuario.contraseña = hash;
+        console.log(usuario.mail, usuario.nombreusuario, usuario.contraseña, usuario.admin)
+        await Usuario.updateUsuario(usuario);
+         res.status(200).json({ message: "Se modificó correctamente" })
     }
     catch (err) {
-        return res.status(500).json({ message: 'Error en actualización de usuario' })
+        console.log(err)
+         res.status(500).json({ message: 'Error en actualización de usuario' })
     }
 }
 const login = async (req, res) => {
     const usuario = req.body;
 
     console.log(usuario)
-    console.log(usuario.Mail)
-    console.log(usuario.Contraseña)
+    console.log(usuario.mail)
+    console.log(usuario.contraseña)
 
-    if (!usuario.Mail || !usuario.Contraseña) {
-        return res.status(404).json({ message: error.message })
+    if (!usuario.mail || !usuario.contraseña) {
+        return res.status(404).json({ message: "Tienen que estar todos los campos completados." })
     }
 
 
     try {
-        const { rows } = await pool.query(
-            `SELECT * FROM public."Usuario" WHERE "Mail" = $1`,
-            [usuario.Mail])
-
-
+        const  rows  = await Usuario.getAllByMail(usuario);
         console.log(rows);
 
         if (rows.length < 1) {
@@ -144,25 +136,41 @@ const login = async (req, res) => {
 
         const password = usuario_db.Contraseña
 
-        const secret = "Holaa"
+        const secret = process.env.SECRET_TOKEN;
+        const secretRefresh= process.env.SECRET_REFRESHTOKEN;
 
-        const comparison = bcrypt.compareSync(usuario.Contraseña, password)
+        const comparison = bcrypt.compareSync(usuario.contraseña, password)
         console.log(comparison)
         if (comparison) {
-            const token = jwt.sign({ id: usuario_db.Mail }, secret, { expiresIn: 30000 * 60000 });
-            return res.status(200).json({
+            const token = jwt.sign({ id: usuario_db.Mail }, secret, { expiresIn: '5m' });
+            const RefreshToken = jwt.sign({id:usuario_db.Mail}, secretRefresh, {expiresIn : '30d'})
+            console.log("accestoken:" + token);
+            console.log( "refreshtoken:" +RefreshToken);
+            const agregorefreshtoken= await Sesiones.postToken({mail: usuario_db.Mail, RefreshToken})
+            console.log(agregorefreshtoken)
+            
+            res.cookie('RefreshToken' , RefreshToken, {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'Strict',
+              });
+            res.status(200).json({
                 token: token, usuario: {
-                    Mail: usuario_db.Mail,
-                    Contraseña: usuario_db.Contraseña,
+                    Mail: usuario_db.mail,
+                    Contraseña: usuario_db.contraseña,
                     NombreUsuario: usuario_db.NombreUsuario
                 }
+
             })
+            return
+           
         }
         if (!comparison) {
-            return res.status(400).json({ message: "Contraseña incorrecta" })
+            return res.status(401).json({ message: "Contraseña incorrecta" })
         }
     }
     catch (err) {
+        console.log(err);
         return res.status(500).json({ message: err.message })
     }
 }

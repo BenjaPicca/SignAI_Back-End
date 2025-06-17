@@ -1,18 +1,21 @@
 import jwt from "jsonwebtoken";
-import { pool } from "../.dbconfig.js";
+import { pool } from "../dbconfig.js";
+import Usuario from "../Services/Usuario.js"
+import bcrypt from "bcryptjs/dist/bcrypt.js";
 
 export const verifyToken = async (req, res, next) => {
     try {
         const header_token = req.headers['authorization']
         console.log(header_token)
         if(!header_token){
-            return res.status(400).json({ message : "Token necesario" })
+            return res.status(401).json({ message : "Token necesario" })
         }
-        const tokenParts = header_token.split(' ');
-        if (tokenParts[0] !== 'Bearer' || tokenParts.length !== 2) {
+        const tokenPartsAcess = header_token.split(' ');
+        const refreshToken = req.headers['x-refresh-token'];
+        if (tokenPartsAcess[0] !== 'Bearer' || tokenPartsAcess.length !== 2) {
             return res.status(400).json({ message: "Formato del token no válido" });
         }
-        const token = tokenParts[1];
+        const token = tokenPartsAcess[1];
     
         const secret="Holaa"
         console.log(token);

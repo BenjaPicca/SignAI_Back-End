@@ -1,7 +1,6 @@
-import { pool } from "../.dbconfig.js"
-import { v2 as cloudinary } from 'cloudinary';
+import { pool } from "../dbconfig.js"
 import "dotenv/config"
-import fetch from 'node-fetch';
+import Conversacion from "../Services/Conversacion.js";
 
 const selectFeedbackById = async (req, res) => {
     const ID = req.params.id;
@@ -10,31 +9,25 @@ const selectFeedbackById = async (req, res) => {
         res.status(404).json({ message: 'no hay ningun id' })
     }
     try {
-        const { _, rows } = await pool.query(`SELECT "Feedback", "Texto_Devuelto","Fecha_Conversación","Video_Inicial" 
-        FROM public."Conversación" 
-        JOIN public."Usuario" ON public."Usuario"."Mail"= public."Conversación"."Mail_Usuario"
-         WHERE "ID"=$1`,
-            [ID])
-        return res.json(rows)
+         await Conversacion.SelectFeedById(ID);
+        return res.status(200).json({message:'Seleccion de Feed exitosa'})
     }
-    catch (error) {
-        return res.status(500).json({ message: 'No se pudo seleccionar.' })
+    catch (err) {
+        console.log(err)
+        return res.status(500).json({ message: 'No se pudo seleccionar Feed.' })
     }
 }
 
 const insertFeedback = async (req, res) => {
-    const { Feedback,
-        Mail_Usuario
-    } = req.body;
-    console.log(Mail_Usuario)
-    console.log(Feedback);
-    if (!Mail_Usuario) {
+    const conversacion = req.body;
+    console.log(conversacion.mailusuario)
+    console.log(conversacion.mailusuario);
+    if (!conversacion.mailusuario) {
         return res.status(404).json({ message: 'No hay ningun Mail' })
     }
 
     try {
-        await pool.query('INSERT INTO public."Conversación" ("Feedback","Mail_Usuario","Fecha_Conversación") VALUES ($1,$2,$3)',
-            [Feedback, Mail_Usuario, new Date()]);
+        await Conversacion.insertFeedback(conversacion);
         return res.status(200).json({ message: 'Gracias por tu respuesta.' }
         )
     }
@@ -44,64 +37,20 @@ const insertFeedback = async (req, res) => {
 }
 
 const CrearVideo = async (req, res) => {
-    const { Mail_Usuario } = req.body;
-    console.log("mail usuario", Mail_Usuario);
-    cloudinary.config({
-        cloud_name: process.env.CLOUD_NAME,
-        api_key: process.env.API_KEY,
-        api_secret: process.env.API_SECRET
-    });
-    if (!Mail_Usuario || Mail_Usuario === undefined) {
-        return res.status(404).json({ message: 'No se encontró el mail.' })
+    const  mailusuario  = req.body.mailusuario;
+    console.log("mail usuario", mailusuario);
+    if(!mailusuario){
+        return res.status(404).json({message:'Inicia sesión'})
     }
-    cloudinary.uploader.upload(req.file.path,
-        { resource_type: "video" },
-        async function (error, result) {
-            if (error) {
-                console.error("Error al subir el video:", error);
-            } else {
-                console.log(result);
-                console.log("Video subido correctamente:", result.url, result.public_id);
-
-                const url = result.url;
-                try {
-                    const result= await pool.query(`INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación","Mail_Usuario",estado) VALUES ($1,$2,$3,'pendiente') RETURNING "ID"`,
-                        [url, new Date(), Mail_Usuario])
-                        console.log(result);
-                        const ID=result.rows[0].ID;
-                       
-                    const body = {
-                        id: ID,
-                        url: url
-                    } //Aca va el node-fetch
-                    fetch('http://127.0.0.1:8000/translate', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(body),
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            console.log(data);
-
-                            if (data.message === "received") {
-                                console.log("Video enviado:", data);
-                            } else {
-                                // Muestra un mensaje de error
-                                console.log("Error: " + data.message);
-                            }
-                            res.status(200).json({ message: 'Video agregado.',ID})
-                        })
-
-                     
-                } catch (err) {
-                    console.error(err);
-                    return res.status(500).json({ message: 'Error al agregegar video' });
-                }
-            }
-        }
-    );
+    try{
+        await Conversacion.CreateVideo(mailusuario)
+        return res.status(200).json({message:'Video subid con exito.'})
+    }
+    catch(err){
+        return res.status(500).json({message:'Error al subir video.'})
+    }
+    
+   
 }
 
 const deleteConversaciónById = async (req, res) => {
@@ -111,8 +60,7 @@ const deleteConversaciónById = async (req, res) => {
         return res.status(404).json({ message: 'No hay Id' })
     }
     try {
-        await pool.query('DELETE FROM public."Conversación" WHERE "ID"=$1', [id])
-
+        await Conversacion.deleteConversaciónById(id);
         return res.status(200).json({ message: 'Se ha eliminado correctamente' })
     }
     catch (err) {
@@ -122,21 +70,23 @@ const deleteConversaciónById = async (req, res) => {
 
 const updateFeedback = async (req, res) => {
     const { id } = req.params;
-    const Feedback
-        = req.body.Feedback
+    const Feedback = req.body.Feedback
 
     console.log(id);
     console.log(Feedback);
     if (!id) {
         return res.status(404)({ message: 'No hay ningún Id' })
     }
+    if(!Feedback){
+        return res.status(404)({ message: 'Ingresar Feedback' })
+    }
 
     try {
-        await pool.query('UPDATE public."Conversación" SET "Feedback"=$1, "Fecha_Conversación"=$3 WHERE "ID"=$2',
-            [Feedback, id, new Date()]);
+       const query=await Conversacion.updateFeed(id,Feedback)
         return res.status(200).json({ message: 'Se ha actualizado la tabla correctamente' });
     }
     catch (err) {
+        console.log(err)
         return res.status(500).json({ message: 'Error al actualizar conversación.' })
     }
 
@@ -184,7 +134,8 @@ const getTexto= async(req,res)=>{
              
             return res.status(200).json(rows[0])
     }
-    catch(error){
+    catch(err){
+        console.log(err);
         return res.status(500).json({message:error.message})
     }
 }

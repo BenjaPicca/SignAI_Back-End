@@ -3,10 +3,10 @@ import cors from "cors";
 const app = express();
 const port = 3000;
 
-import Conversacion from "./Controllers/Conversacion.js";
-import Usuario from "./Controllers/Usuario.js";
-import { upload } from "./multer.js";
-import { verifyAdmin, verifyToken } from "./middelware/middelware.js";
+import ConversacionRouters from "./Routes/Conversacion.js";
+import UsuarioRouters from "./Routes/Usuario.js";
+import SesionesRouters from "./Routes/sesiones.js"
+import { upload } from "./multer.js"
 
 app.post("/fields/single", upload.single('video'), (req, res) => {
     console.log(req.file)
@@ -27,21 +27,15 @@ app.get("/", (req, res) => {
 })
 
 //Usuario
-app.post("/insertar", Usuario.insertUsuario)
-app.post("/login", Usuario.login)
-app.get("/Selector/:mail", verifyToken, verifyAdmin, Usuario.selectUsuario)
-app.delete("/delUsuario/:mail", verifyToken,verifyAdmin, Usuario.deleteUsuario)
-app.put("/Update", Usuario.updateUsuarioByMail)
+app.use("/usuario" , UsuarioRouters);
 
 //Conversación
-app.get("/GetFeedback/:id", verifyToken, verifyAdmin, Conversacion.selectFeedbackById)
-app.post("/CrearFeedback", verifyToken, Conversacion.insertFeedback)
-app.post("/CrearVideo", verifyToken, upload.single("video"), Conversacion.CrearVideo)
-app.delete("/EliminarConver/:id", verifyToken, Conversacion.deleteConversaciónById)
-app.put("/:id/UpdateFeed", verifyToken, Conversacion.updateFeedback)
-app.put("/:id/texto", Conversacion.textoEntregado)
-app.get("/:id/getTexto",verifyToken,Conversacion.getTexto)
+app.use("/conversacion" , ConversacionRouters);
+
+//Sesiones
+app.use("/sesiones", SesionesRouters);
 
 app.listen(port, () => {
     console.log("Escuchando ando")
 })
+export default app;
