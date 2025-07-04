@@ -85,7 +85,7 @@ const updateUsuarioByMail = async (req, res) => {
     const usuario = req.body;
     console.log(usuario.mail)
     if (!usuario.mail) {
-        res.status(400).json({ message: 'No hay un mail ingresado' })
+        res.status(404).json({ message: 'No hay un mail ingresado' })
         return;
     }
     const result = await Usuario.getByMail(usuario);
