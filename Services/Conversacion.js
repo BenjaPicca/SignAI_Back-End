@@ -13,6 +13,7 @@ const SelectFeedById= async(ID)=>{
         JOIN public."Usuario" ON public."Usuario"."Mail"= public."Conversación"."Mail_Usuario"
          WHERE "ID"=$1`,
             [ID])
+        console.log(rows)
         if (rows.length < 1) throw new Error("Conversación no encontrada.");
 
     }

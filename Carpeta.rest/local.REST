@@ -3,9 +3,9 @@ POST http://localhost:3000/usuario/insertar HTTP/1.1
 Content-Type: application/json
 
 {
-    "nombre": "add",
-    "mail": "add@gmail.com",
-    "contraseña":"add",
+    "nombre": "Milena",
+    "mail": "milenovich@gmail.com",
+    "contraseña":"Milena",
     "admin": true
 }
 
@@ -15,8 +15,8 @@ Content-Type: application/json
 
 {
     
-    "mail": "add@gmail.com",
-    "contraseña":"add"
+    "mail": "milenovich@gmail.com",
+    "contraseña":"Milena"
 }
 
 ###
@@ -42,7 +42,7 @@ Content-Type: application/json
 }
 //Conversación
 ###
-GET http://localhost:3000/conversacion/GetFeedback/10 HTTP/1.1
+GET http://localhost:3000/conversacion/GetFeedback/5 HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InNlYW5AZ21haWwuY29tIiwiaWF0IjoxNzQ2ODA5NzMwLCJleHAiOjM1NDY4MDk3MzB9.vb-cUiVv0Ttsel9vhMWsN8kcLOddABTETaUX1ze_YfM
 ###
 POST http://localhost:3000/conversacion/CrearFeedback HTTP/1.1

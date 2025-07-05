@@ -4,12 +4,17 @@ import Conversacion from "../Services/Conversacion.js";
 
 const selectFeedbackById = async (req, res) => {
     const ID = req.params.id;
+    console.log(ID)
 
     if (!ID) {
         res.status(404).json({ message: 'no hay ningun id' })
     }
+    
     try {
-         await Conversacion.SelectFeedById(ID);
+         const rows = await Conversacion.SelectFeedById(ID);
+         console.log(rows[0],'aa')
+         
+            
         return res.status(200).json({message:'Seleccion de Feed exitosa'})
     }
     catch (err) {
