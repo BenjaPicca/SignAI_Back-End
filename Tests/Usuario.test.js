@@ -102,7 +102,7 @@ it('Tiene que devolver 404 si no existe Mail', async ()=>{
 
 it('Tiene que devolver 200 si se selecciona el Mail correctamente', async()=>{
   const res = await request(app)
-    .get('/usuario/Selector/p@gmail.com')
+    .get('/usuario/Selector/benjapiccagli@gmail.com')
     .set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InNlYW5AZ21haWwuY29tIiwiaWF0IjoxNzQ2ODA5NzMwLCJleHAiOjM1NDY4MDk3MzB9.vb-cUiVv0Ttsel9vhMWsN8kcLOddABTETaUX1ze_YfM');
 
     console.log(res.status)

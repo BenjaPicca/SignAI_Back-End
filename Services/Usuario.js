@@ -11,6 +11,7 @@ console.log(usuario,"aasgab")
          ("NombreUsuario", "Mail", "Contraseña",admin)
           VALUES ($1, $2, $3,$4)`,
             [usuario.nombre, usuario.mail, usuario.contraseña, usuario.admin])
+            console.log(rows)
         return rows;
     }
     catch (err) {
@@ -19,15 +20,17 @@ console.log(usuario,"aasgab")
     }
 }
 
-const getByMail = async (usuario) => {
+const getByMail = async (mail) => {
 
+    console.log(mail,'lkj')
 
     try {
         const rows = await pool.query(`
     SELECT "Mail", "NombreUsuario"
          FROM public."Usuario" 
          WHERE "Mail"=$1`,
-            [usuario.mail])
+            [mail])
+            console.log(rows)
         return rows;
     }
     catch (err) {

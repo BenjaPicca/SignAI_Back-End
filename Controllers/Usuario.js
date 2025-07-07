@@ -40,13 +40,13 @@ const selectUsuario = async (req, res) => {
     
     try {
         const { rows } = await Usuario.getByMail(mail);
-        console.log(rows[0])
+        console.log(rows,'aavcx')
         if(rows.length<1){
             return res.status(404).json({message:"Mail ingresado no existente"})
         }
         else{
-            console.log(rows[0])
-            return res.status(200).json(rows[0])
+            console.log(rows)
+            return res.status(200).json(rows)
         }
     }
     catch (err) {
@@ -83,12 +83,13 @@ const deleteUsuario = async (req, res) => {
 
 const updateUsuarioByMail = async (req, res) => {
     const usuario = req.body;
+    const {mail} = req.body
     console.log(usuario.mail)
-    if (!usuario.mail) {
+    if (!mail) {
         res.status(404).json({ message: 'No hay un mail ingresado' })
         return;
     }
-    const result = await Usuario.getByMail(usuario);
+    const result = await Usuario.getByMail(mail);
     console.log(result)
     console.log(result.rows)
 
@@ -102,7 +103,7 @@ const updateUsuarioByMail = async (req, res) => {
         console.log(hash)
 
         usuario.contraseña = hash;
-        console.log(usuario.mail, usuario.nombreusuario, usuario.contraseña, usuario.admin)
+        console.log(mail, usuario.nombreusuario, usuario.contraseña, usuario.admin)
         await Usuario.updateUsuario(usuario);
          res.status(200).json({ message: "Se modificó correctamente" })
     }
