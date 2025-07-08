@@ -44,10 +44,7 @@ const CreateVideo= async(mailusuario,url)=>{
         console.log(result);
         const ID = result.rows[0].ID;
     
-        const body = {
-            id: ID,
-            url: url
-        };
+        
     
         fetch(`https://signai.fdiaznem.com.ar/predict_gemini?video_url=${url}`, {
             method: 'GET',

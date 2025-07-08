@@ -50,7 +50,7 @@ const insertFeedback = async (req, res) => {
 
 const CrearVideo = async (req, res) => {
     const mailusuario = req.body.mailusuario;
-    console.log("mail usuario", mailusuario);
+    console.log("mail usuario: ", mailusuario);
     console.log(req.file)
     cloudinary.config({
         cloud_name: process.env.CLOUD_NAME,
