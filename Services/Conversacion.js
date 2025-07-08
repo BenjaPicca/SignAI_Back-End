@@ -36,65 +36,44 @@ const insertFeedback= async (conversacion)=>{
     }
 }
 const CreateVideo= async(mailusuario)=>{
-
-    cloudinary.config({
-        cloud_name: process.env.CLOUD_NAME,
-        api_key: process.env.API_KEY,
-        api_secret: process.env.API_SECRET
-    });
-    if (!mailusuario || mailusuario === undefined) {
-        return res.status(404).json({ message: 'No se encontró el mail.' })
-    }
-    cloudinary.uploader.upload(req.file.path,
-        { resource_type: "video" },
-        async function (error, result) {
-            if (error) {
-                console.error("Error al subir el video:", error);
-            } else {
-                console.log(result);
-                console.log("Video subido correctamente:", result.url, result.public_id);
-
-                const url = result.url;
-                try {
-                    const result= await pool.query(`INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación","Mail_Usuario",estado) VALUES ($1,$2,$3,'pendiente') RETURNING "ID"`,
-                        [url, new Date(), mailusuario])
-                        console.log(result);
-                        const ID=result.rows[0].ID;
-                       
-                    const body = {
-                        id: ID,
-                        url: url
-                    } //Aca va el node-fetch
-                    fetch(`https://signai.fdiaznem.com.ar/predict_gemini?video_url=${url}`, {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(body),
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            console.log(data);
-
-                            if (data.message === "received") {
-                                console.log("Video enviado:", data);
-                            } else {
-                                // Muestra un mensaje de error
-                                console.log("Error: " + data.message);
-                            }
-                            res.status(200).json({ message: 'Video agregado.',ID})
-                        })
-
-                     
-                } catch (err) {
-                    console.error(err);
-                    return res.status(500).json({ message: 'Error al agregegar video' });
-                }
+    try {
+        const result = await pool.query(
+            `INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación","Mail_Usuario",estado) 
+             VALUES ($1,$2,$3,'pendiente') RETURNING "ID"`,
+            [url, new Date(), mailusuario]
+        );
+        console.log(result);
+        const ID = result.rows[0].ID;
+    
+        const body = {
+            id: ID,
+            url: url
+        };
+    
+        fetch(`https://signai.fdiaznem.com.ar/predict_gemini?video_url=${url}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
             }
-        }
-    );
-}
-
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+    
+            if (data.message === "received") {
+                console.log("Video enviado:", data);
+            } else {
+                console.log("Error: " + data.message);
+            }
+    
+            res.status(200).json({ message: 'Video agregado.', ID });
+        });
+    
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: 'Error al agregar video' });
+    }
+}    
 const deleteConversaciónById= async(id)=>{
    
 
