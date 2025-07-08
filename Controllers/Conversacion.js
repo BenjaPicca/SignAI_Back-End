@@ -51,7 +51,7 @@ const insertFeedback = async (req, res) => {
 const CrearVideo = async (req, res) => {
     const mailusuario = req.body.mailusuario;
     console.log("mail usuario", mailusuario);
-
+    console.log(req.file)
     cloudinary.config({
         cloud_name: process.env.CLOUD_NAME,
         api_key: process.env.API_KEY,
@@ -60,6 +60,9 @@ const CrearVideo = async (req, res) => {
 
     if (!mailusuario || mailusuario === undefined) {
         return res.status(404).json({ message: 'No se encontró el mail.' });
+    }
+    if (!req.file) {
+        return res.status(400).json({ message: 'No se recibió ningún archivo.' });
     }
 
     cloudinary.uploader.upload(
