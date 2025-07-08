@@ -36,50 +36,52 @@ const insertFeedback= async (conversacion)=>{
         throw new Error;
     }
 }
-const CreateVideo= async(mailusuario,url)=>{
+const CreateVideo = async (mailusuario, url) => {
     try {
-        const result = await pool.query(
-            `INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación","Mail_Usuario",estado) 
-             VALUES ($1,$2,$3,'pendiente') RETURNING "ID"`,
-            [url, new Date(), mailusuario]
-        );
-        console.log(result);
-        const ID = result.rows[0].ID;
-    
-        
-    
-        fetch(`https://signai.fdiaznem.com.ar/predict_gemini?video_url=${url}`, {
+      const result = await pool.query(
+        `INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación","Mail_Usuario",estado) 
+         VALUES ($1,$2,$3,'pendiente') RETURNING "ID"`,
+        [url, new Date(), mailusuario]
+      );
+      console.log(result);
+      const ID = result.rows[0].ID;
+  
+      async function esperarResponse() {
+        try {
+          const response = await fetch(`https://signai.fdiaznem.com.ar/predict_gemini?video_url=${url}`, {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json',
+              'Content-Type': 'application/json',
             }
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-    
-            if (data.message === "received") {
-                console.log("Video enviado:", data);
-            } else {
-                console.log("Error: " + data.message);
-            }
-            const translation= await response.json();
-
-            
-            return translation
-        });
-        fetch(`https://sign-ai-web.vercel.app/conversacion/${ID}/texto`, {
+          });
+  
+          const data = await response.json();
+  
+          const translation = data.translation;
+  
+           fetch(`https://sign-ai-web.vercel.app/conversacion/${ID}/texto`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ translation })
-  });
-    
-    
+          });
+  
+         
+          console.log("Texto actualizado:", translation);
+  
+        } catch (err) {
+          console.error("Error en esperarResponse:", err);
+        }
+      }
+  
+      
+      await esperarResponse();
+  
     } catch (err) {
-        console.error(err);
-        throw new error;
+      console.error(err);
+      throw err;
     }
-}    
+  };
+  
 const deleteConversaciónById= async(id)=>{
    
 
