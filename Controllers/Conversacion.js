@@ -58,6 +58,7 @@ const CrearVideo = async (req, res) => {
         return res.status(200).json({message:'Video subido con exito.'})
     }
     catch(err){
+        console.log(err)
         return res.status(500).json({message:'Error al subir video.'})
     }
     

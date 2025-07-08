@@ -65,7 +65,7 @@ const CreateVideo= async(mailusuario)=>{
                         id: ID,
                         url: url
                     } //Aca va el node-fetch
-                    fetch(`https://signai.fdiaznem.com.ar/predict?=${url}`, {
+                    fetch(`https://signai.fdiaznem.com.ar/predict_gemini?video_url=${url}`, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
