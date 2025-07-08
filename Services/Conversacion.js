@@ -34,7 +34,7 @@ const insertFeedback= async (conversacion)=>{
         throw new Error;
     }
 }
-const CreateVideo= async(mailusuario)=>{
+const CreateVideo= async(mailusuario,url)=>{
     try {
         const result = await pool.query(
             `INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación","Mail_Usuario",estado) 

@@ -81,7 +81,7 @@ const CrearVideo = async (req, res) => {
                 }
 
                 try {
-                    await Conversacion.CreateVideo(mailusuario);
+                    await Conversacion.CreateVideo(mailusuario,url);
                     return res.status(200).json({ message: 'Video subido con exito.' });
                 } catch (err) {
                     console.log(err);
