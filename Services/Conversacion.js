@@ -1,6 +1,5 @@
 import "dotenv/config"
 import { pool } from "../dbconfig.js"
-import { v2 as cloudinary} from "cloudinary";
 
 
 
