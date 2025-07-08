@@ -1,5 +1,7 @@
 import "dotenv/config"
 import { pool } from "../dbconfig.js"
+import fetch from "node-fetch"
+import { response } from "express"
 
 
 
@@ -61,13 +63,21 @@ const CreateVideo= async(mailusuario,url)=>{
             } else {
                 console.log("Error: " + data.message);
             }
-    
-            res.status(200).json({ message: 'Video agregado.', ID });
+            const translation= await response.json();
+
+            
+            return translation
         });
+        fetch(`https://sign-ai-web.vercel.app/conversacion/${ID}/texto`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ translation })
+  });
+    
     
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ message: 'Error al agregar video' });
+        throw new error;
     }
 }    
 const deleteConversaciónById= async(id)=>{

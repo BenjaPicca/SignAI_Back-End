@@ -52,6 +52,12 @@ const CrearVideo = async (req, res) => {
     const mailusuario = req.body.mailusuario;
     console.log("mail usuario: ", mailusuario);
     console.log(req.file)
+    console.log("✅ ENV CHECK", {
+        API_KEY: process.env.API_KEY,
+        API_SECRET: process.env.API_SECRET ? 'CARGADA' : '❌',
+        CLOUD_NAME: process.env.CLOUD_NAME
+      });
+      
     cloudinary.config({
         cloud_name: process.env.CLOUD_NAME,
         api_key: process.env.API_KEY,
