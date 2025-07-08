@@ -4,12 +4,23 @@ import Conversacion from "../Services/Conversacion.js";
 
 const selectFeedbackById = async (req, res) => {
     const ID = req.params.id;
+    console.log(ID)
 
     if (!ID) {
         res.status(404).json({ message: 'no hay ningun id' })
     }
+    
     try {
-         await Conversacion.SelectFeedById(ID);
+         const {rows} = await Conversacion.SelectFeedById(ID);
+         console.log(rows)
+         console.log(rows[0])
+         
+
+         if(rows<1){
+            return res.status(404).json({message:'Ese feedback no existe'})
+         }
+         
+            
         return res.status(200).json({message:'Seleccion de Feed exitosa'})
     }
     catch (err) {
@@ -44,7 +55,7 @@ const CrearVideo = async (req, res) => {
     }
     try{
         await Conversacion.CreateVideo(mailusuario)
-        return res.status(200).json({message:'Video subid con exito.'})
+        return res.status(200).json({message:'Video subido con exito.'})
     }
     catch(err){
         return res.status(500).json({message:'Error al subir video.'})
@@ -126,17 +137,18 @@ const getTexto= async(req,res)=>{
     }
 
     try{
-        const {_,rows} = await pool.query('SELECT "Texto_Devuelto" FROM public."Conversación" WHERE "ID"=$1',
-            [id])
-            if(rows.length<1){
-                return res.status(404).json({message:"No hay ningun texto"})
-            }
-             
+        const {rows} = await Conversacion.getTexto(id);
+           
+        if(rows.length<1){
+            return res.status(404).json({message:"No hay ningun texto"})
+        }
+             console.log(rows)
+             console.log(rows[0])
             return res.status(200).json(rows[0])
     }
     catch(err){
         console.log(err);
-        return res.status(500).json({message:error.message})
+        return res.status(500).json({message:err.message})
     }
 }
 

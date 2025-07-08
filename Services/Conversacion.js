@@ -5,7 +5,7 @@ import { v2 as cloudinary} from "cloudinary";
 
 
 const SelectFeedById= async(ID)=>{
-
+console.log(ID)
     try{
         const rows= await pool.query
         (` SELECT "Feedback", "Texto_Devuelto","Fecha_Conversación","Video_Inicial" 
@@ -13,7 +13,9 @@ const SelectFeedById= async(ID)=>{
         JOIN public."Usuario" ON public."Usuario"."Mail"= public."Conversación"."Mail_Usuario"
          WHERE "ID"=$1`,
             [ID])
-        if (rows.length < 1) throw new Error("Conversación no encontrada.");
+        console.log(rows,'asw')
+        if (rows[0].length < 1) throw new Error("Conversación no encontrada.");
+        return rows
 
     }
     catch(err){
@@ -145,12 +147,14 @@ const textoEntregado= async(id,translation)=>{
 const getTexto= async(id)=>{
 
     try{
-        const rows= await pool.query(`
+        const rows = await pool.query(`
             SELECT "Texto_Devuelto" FROM public."Conversación" WHERE "ID"=$1`,[id])
             if(rows.length<1){
                 return res.status(404).json({message:"No hay ningun texto"})
             }
-            return (rows[0])
+            console.log(rows)
+            console.log(rows[0])
+            return (rows)
     }
     catch(err){
         console.log(err)

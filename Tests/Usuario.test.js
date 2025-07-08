@@ -102,7 +102,7 @@ it('Tiene que devolver 404 si no existe Mail', async ()=>{
 
 it('Tiene que devolver 200 si se selecciona el Mail correctamente', async()=>{
   const res = await request(app)
-    .get('/usuario/Selector/p@gmail.com')
+    .get('/usuario/Selector/benjapiccagli@gmail.com')
     .set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InNlYW5AZ21haWwuY29tIiwiaWF0IjoxNzQ2ODA5NzMwLCJleHAiOjM1NDY4MDk3MzB9.vb-cUiVv0Ttsel9vhMWsN8kcLOddABTETaUX1ze_YfM');
 
     console.log(res.status)
@@ -150,3 +150,45 @@ it('tiene que devolver 200 si el Usuario se elimina exitosamente', async()=>{
   expect(res.status).to.equal(200)
   
 })
+
+//Update Usuario
+
+it('Tiene que devolver 404 si no hay ningún Mail ingresado,(Upd)', async()=>{
+  const res = await request(app)
+  .put('/usuario/Update')
+  .send({mail:''})
+  .set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InNlYW5AZ21haWwuY29tIiwiaWF0IjoxNzQ2ODA5NzMwLCJleHAiOjM1NDY4MDk3MzB9.vb-cUiVv0Ttsel9vhMWsN8kcLOddABTETaUX1ze_YfM')
+
+  console.log(res.status)
+  expect(res.status).to.equal(404)
+})
+
+it('Tiene que devolver 404 si el Mail ingresado no existe,(Upd)', async()=>{
+  const res = await request(app)
+  .put('/usuario/Update')
+  .send({nombreusuario: " sean",
+  mail: "jmnb@gmail.com",
+  contraseña:"sean",
+  admin: true})
+  .set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InNlYW5AZ21haWwuY29tIiwiaWF0IjoxNzQ2ODA5NzMwLCJleHAiOjM1NDY4MDk3MzB9.vb-cUiVv0Ttsel9vhMWsN8kcLOddABTETaUX1ze_YfM')
+
+  console.log(res.status)
+  expect(res.status).to.equal(404)
+  expect(res.body.message).to.equal("El mail ingreseado no existe")
+
+})
+
+it('Tiene que devolver 200 si el mail ingresado existe y se actualiza correctamente, (Upd)', async()=>{
+  const res= await request(app)
+  .put('/usuario/Update')
+  .send({nombreusuario: " LENCG",
+  mail: "LENTES@gmail.com",
+  contraseña:"LENCG",
+  admin: true})
+  .set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InNlYW5AZ21haWwuY29tIiwiaWF0IjoxNzQ2ODA5NzMwLCJleHAiOjM1NDY4MDk3MzB9.vb-cUiVv0Ttsel9vhMWsN8kcLOddABTETaUX1ze_YfM')
+
+  console.log(res.status)
+  expect(res.status).to.equal(200)
+  
+})
+
