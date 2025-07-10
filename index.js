@@ -6,6 +6,7 @@ const port = 3000;
 import ConversacionRouters from "./Routes/Conversacion.js";
 import UsuarioRouters from "./Routes/Usuario.js";
 import SesionesRouters from "./Routes/sesiones.js"
+import datasetRouters from "./Routes/dataset.js"
 import { upload } from "./multer.js"
 
 app.post("/fields/single", upload.single('video'), (req, res) => {
@@ -34,6 +35,9 @@ app.use("/conversacion" , ConversacionRouters);
 
 //Sesiones
 app.use("/sesiones", SesionesRouters);
+
+//Dataset
+app.use("/dataset",datasetRouters);
 
 app.listen(port, () => {
     console.log("Escuchando ando")

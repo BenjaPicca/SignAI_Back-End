@@ -21,12 +21,13 @@ const insertImage = async (image, palabra) => {
 
 const getImagebyPalabra = async(palabra)=>{
     try{
-        const rows= (` SELECT "image"
+        const result= (` SELECT "image"
         FROM public."dataset" 
          WHERE "palabra"=$1`,
             [palabra]
         );
-        return rows
+        console.log(result)
+        return result;
     }
     catch(err){
         console.log(err);
@@ -34,23 +35,23 @@ const getImagebyPalabra = async(palabra)=>{
     }
 }
 
-const getImagebyID= async(id)=>{
-    try{
-         const rows= (` SELECT "image"
-        FROM public."dataset" 
-         WHERE "id"=$1`,
-            [id]
-        );
-        return rows
-    }
-    catch(err){
-        console.log(err);
-        throw new Error;
-    }
-}
+const getImagebyId = async (id) => {
+  try {
+    const result = await pool.query(
+      `SELECT "image" FROM public."dataset" WHERE "id" = $1`,
+      [id]
+    );
+    console.log(result.rows[0], 'aa');
+    return result.rows[0]; 
+  } 
+  catch (err) {
+    console.log(err);
+    throw new Error('Error al obtener la imagen');
+  }
+};
 
 export default{
-    getImagebyID,
+    getImagebyId,
     getImagebyPalabra,
     insertImage
 }
