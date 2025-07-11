@@ -37,50 +37,44 @@ const insertFeedback= async (conversacion)=>{
     }
 }
 const CreateVideo = async (mailusuario, url) => {
+  try {
+    const result = await pool.query(
+      `INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación","Mail_Usuario",estado) 
+       VALUES ($1,$2,$3,'pendiente') RETURNING "ID"`,
+      [url, new Date(), mailusuario]
+    );
+
+    console.log(result);
+    const ID = result.rows[0].ID;
+
     try {
-      const result = await pool.query(
-        `INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación","Mail_Usuario",estado) 
-         VALUES ($1,$2,$3,'pendiente') RETURNING "ID"`,
-        [url, new Date(), mailusuario]
-      );
-      console.log(result);
-      const ID = result.rows[0].ID;
-  
-      async function esperarResponse() {
-        try {
-          const response = await fetch(`https://signai.fdiaznem.com.ar/predict_gemini?video_url=${url}`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            }
-          });
-  
-          const data = await response.json();
-  
-          const translation = data.translation;
-  
-           fetch(`https://sign-ai-web.vercel.app/conversacion/${ID}/texto`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ translation })
-          });
-  
-         
-          console.log("Texto actualizado:", translation);
-  
-        } catch (err) {
-          console.error("Error en esperarResponse:", err);
-        }
-      }
-  
-      
-      await esperarResponse();
-  
+      const response = await fetch(`https://signai.fdiaznem.com.ar/predict_gemini?video_url=${url}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      const data = await response.json();
+      const translation = data.translation;
+
+      const updateResponse = await fetch(`https://sign-ai-web.vercel.app/conversacion/${ID}/texto`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ translation })
+      });
+
+      const updateResult = await updateResponse.json();
+      console.log("Texto actualizado:", updateResult);
+
     } catch (err) {
-      console.error(err);
-      throw err;
+      console.error("Error en fetch:", err);
     }
-  };
+
+  } catch (err) {
+    console.error("Error general:", err);
+    throw err;
+  }
+};
+
   
 const deleteConversaciónById= async(id)=>{
    
