@@ -158,7 +158,7 @@ const textoEntregado = async (req, res) => {
         SET "Texto_Devuelto" = $1, "Fecha_Conversación" = $3, estado = 'entregado'
          WHERE "ID" = $2 `,
          [translation, id, new Date()])
-        return res.status(200).json({ message: 'Texto entregado' })
+        return res.status(200).json({ message: 'Texto entregado', translation })
     }
     catch (err) {
         return res.status(500).json({ message: err.message })
