@@ -64,6 +64,7 @@ const CreateVideo = async (mailusuario, url) => {
 
       const updateResult = await updateResponse.json();
       console.log("Texto actualizado:", updateResult);
+      return translation
 
     } catch (err) {
       console.error("Error en fetch:", err);
