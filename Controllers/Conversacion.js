@@ -2,6 +2,7 @@ import { pool } from "../dbconfig.js"
 import "dotenv/config"
 import Conversacion from "../Services/Conversacion.js";
 import { v2 as cloudinary} from "cloudinary";
+import { Query } from "pg";
 
 const selectFeedbackById = async (req, res) => {
     const ID = req.params.id;
@@ -12,17 +13,16 @@ const selectFeedbackById = async (req, res) => {
     }
     
     try {
-         const {rows} = await Conversacion.SelectFeedById(ID);
+         const rows = await Conversacion.SelectFeedById(ID);
          console.log(rows)
-         console.log(rows[0])
-         
-
          if(rows<1){
             return res.status(404).json({message:'Ese feedback no existe'})
          }
          
-            
-        return res.status(200).json({message:'Seleccion de Feed exitosa'})
+        else{
+            return res.status(200).json({message:'Seleccion de Feed exitosa'})
+        }
+        
     }
     catch (err) {
         console.log(err)
@@ -32,10 +32,10 @@ const selectFeedbackById = async (req, res) => {
 
 const insertFeedback = async (req, res) => {
     const conversacion = req.body;
-    console.log(conversacion.mailusuario)
     console.log(conversacion.mailusuario);
-    if (!conversacion.mailusuario) {
-        return res.status(404).json({ message: 'No hay ningun Mail' })
+    if (!conversacion.mailusuario|| !conversacion.feedback) {
+        console.log(conversacion.mailusuario,conversacion.feedback)
+        return res.status(404).json({ message: 'No hay ningun Mail o Feedback' })
     }
 
     try {
@@ -57,6 +57,9 @@ const CrearVideo = async (req, res) => {
         API_SECRET: process.env.API_SECRET ? 'CARGADA' : '❌',
         CLOUD_NAME: process.env.CLOUD_NAME
       });
+      if (req.file.mimetype !== 'video/mp4') {
+  return res.status(400).json({ message: 'Archivo no válido, debe ser obligatoriamente un .mp4' });
+}
       
     cloudinary.config({
         cloud_name: process.env.CLOUD_NAME,
@@ -107,9 +110,17 @@ const deleteConversaciónById = async (req, res) => {
     if (!id) {
         return res.status(404).json({ message: 'No hay Id' })
     }
+    const result = await Conversacion.SelectallById(id)
+    console.log(result)
+        if(!result){
+            return res.status(404).json({message:'No existe feedback con es ID'})
+        }
+    
     try {
-        await Conversacion.deleteConversaciónById(id);
-        return res.status(200).json({ message: 'Se ha eliminado correctamente' })
+            await Conversacion.deleteConversaciónById(id);
+            return res.status(200).json({ message: 'Se ha eliminado correctamente' })
+        
+       
     }
     catch (err) {
         return res.status(500).json({ message: 'Error al eliminar usuario' })
@@ -122,16 +133,22 @@ const updateFeedback = async (req, res) => {
 
     console.log(id);
     console.log(Feedback);
-    if (!id) {
-        return res.status(404)({ message: 'No hay ningún Id' })
-    }
-    if(!Feedback){
-        return res.status(404)({ message: 'Ingresar Feedback' })
-    }
 
+    const result = await Conversacion.SelectallById(id)
+
+   
+    
+
+    if(result.length<1){
+        return res.status(404).json({message:'Id ingresado no existe'})
+    }
+    if (!id || !Feedback) {
+        return res.status(404)({ message: 'No hay ningún Id o ningún feed' })
+    }
     try {
-       const query=await Conversacion.updateFeed(id,Feedback)
-        return res.status(200).json({ message: 'Se ha actualizado la tabla correctamente' });
+       const rows=await Conversacion.updateFeed(id,Feedback)
+       console.log(rows)
+        return res.status(200).json({ message: 'Se ha actualizado la Feed correctamente' });
     }
     catch (err) {
         console.log(err)

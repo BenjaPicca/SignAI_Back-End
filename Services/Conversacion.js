@@ -8,18 +8,40 @@ import { response } from "express"
 const SelectFeedById= async(ID)=>{
 console.log(ID)
     try{
-        const rows= await pool.query
-        (` SELECT "Feedback", "Texto_Devuelto","Fecha_Conversación","Video_Inicial" 
-        FROM public."Conversación" 
-        JOIN public."Usuario" ON public."Usuario"."Mail"= public."Conversación"."Mail_Usuario"
-         WHERE "ID"=$1`,
-            [ID])
-        console.log(rows,'asw')
-        if (rows[0].length < 1) throw new Error("Conversación no encontrada.");
-        return rows
+         const result = await pool.query(
+        `SELECT "Feedback"
+        FROM public."Conversación"
+        WHERE "ID" = $1`,
+        [ID]
+    );
+        console.log(result.rows)
+        return result.rows;
+
 
     }
     catch(err){
+        console.log(err)
+        throw new Error;
+    }
+
+}
+
+const SelectallById= async(id)=>{
+console.log(id)
+    try{
+         const result = await pool.query(
+        `SELECT *
+        FROM public."Conversación"
+        WHERE "ID" = $1`,
+        [id]
+    );
+        console.log(result.rows,'gg')
+        return result.rows;
+
+
+    }
+    catch(err){
+        console.log(err)
         throw new Error;
     }
 
@@ -84,7 +106,7 @@ const deleteConversaciónById= async(id)=>{
         const rows =await pool.query(
             `DELETE FROM public."Conversación" WHERE "ID"=$1`, [id]
         )
-       
+       console.log(rows)
        return rows
     }
     catch (err) {
@@ -151,6 +173,7 @@ export default{
  updateFeed,
  textoEntregado,
  getTexto,
- insertFeedback
+ insertFeedback,
+ SelectallById
 
 }
