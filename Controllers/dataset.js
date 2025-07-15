@@ -59,17 +59,19 @@ const getImagebyID = (req,res)=>{
         return res.status(404).json({message: 'No hay id'})
     }
 
-   
+    async function esperorta() {
          try{
         const result= await dataset.getImagebyId(id);
         return res.status(200).json({result})
     }
     catch(err){
         console.log(err);
-        return res.status(500).json({message:'eRROR '})
+        return res.status(500).json({message:'eRROR'})
     }
     }
-  
+    esperorta();
+   
+}
 
 
 const getImagebyPalabra = (req,res)=>{
