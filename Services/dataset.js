@@ -38,7 +38,7 @@ const getImagebyPalabra = async(palabra)=>{
 const getImagebyId = async (id) => {
   try {
     const result = await pool.query(
-      `SELECT "image",""palabra FROM public."dataset" WHERE "id" = $1`,
+      `SELECT "image","palabra" FROM public."dataset" WHERE "id" = $1`,
       [id]
     );
     console.log(result.rows[0], 'aa');
