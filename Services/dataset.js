@@ -21,7 +21,7 @@ const insertImage = async (image, palabra) => {
 
 const getImagebyPalabra = async(palabra)=>{
     try{
-        const result= (` SELECT "image"
+        const result= (` SELECT "image","palabra"
         FROM public."dataset" 
          WHERE "palabra"=$1`,
             [palabra]
@@ -38,7 +38,7 @@ const getImagebyPalabra = async(palabra)=>{
 const getImagebyId = async (id) => {
   try {
     const result = await pool.query(
-      `SELECT "image" FROM public."dataset" WHERE "id" = $1`,
+      `SELECT "image",""palabra FROM public."dataset" WHERE "id" = $1`,
       [id]
     );
     console.log(result.rows[0], 'aa');

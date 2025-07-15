@@ -39,7 +39,7 @@ const insertImage = (req, res) => {
         try {
           const dbResult = await dataset.insertImage(url, palabra);
           console.log(dbResult);
-          return res.status(200).json({ message: 'Imagen subida con éxito' });
+          return res.status(200).json({ message: 'Imagen subida con éxito',url,palabra });
         } catch (err) {
           console.log(err);
           return res.status(500).json({ message: 'Error al insertar en la base de datos' });
