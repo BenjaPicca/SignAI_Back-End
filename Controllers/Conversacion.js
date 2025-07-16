@@ -189,21 +189,27 @@ const getTexto= async(req,res)=>{
     if(!id){
         return res.status(404).json({message:"No se encuentra ningún id ingresado."})
     }
+    try {
+        const { rows } = await Conversacion.getTexto(id);
 
-    try{
-        const {rows} = await Conversacion.getTexto(id);
-           
-        if(rows.length<1){
-            return res.status(404).json({message:"No hay ningun texto"})
+        console.log(rows[0],'kaka')
+        console.log(rows.length)
+        console.log(rows.Texto_devuelto)
+
+
+        if (!rows[0] || rows.length === 0) {
+            return res.status(404).json({ message: "No hay ningún texto" });
         }
-             console.log(rows)
-             console.log(rows[0])
-            return res.status(200).json(rows[0])
+
+        console.log(rows);
+        console.log(rows[0], 'asdcv');
+        return res.status(200).json(rows[0]);
+    
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Error en el servidor" });
     }
-    catch(err){
-        console.log(err);
-        return res.status(500).json({message:err.message})
-    }
+    
 }
 
 

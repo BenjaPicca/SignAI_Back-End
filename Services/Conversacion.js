@@ -151,14 +151,12 @@ const textoEntregado= async(id,translation)=>{
 const getTexto= async(id)=>{
 
     try{
-        const rows = await pool.query(`
+        const result = await pool.query(`
             SELECT "Texto_Devuelto" FROM public."Conversación" WHERE "ID"=$1`,[id])
-            if(rows.length<1){
-                return res.status(404).json({message:"No hay ningun texto"})
-            }
-            console.log(rows)
-            console.log(rows[0])
-            return (rows)
+            console.log(result,'bvc')
+            console.log(result.rows.Texto_devuelto,'lok')
+            
+            return (result)
     }
     catch(err){
         console.log(err)
