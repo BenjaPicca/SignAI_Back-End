@@ -57,9 +57,7 @@ const CrearVideo = async (req, res) => {
         API_SECRET: process.env.API_SECRET ? 'CARGADA' : '❌',
         CLOUD_NAME: process.env.CLOUD_NAME
       });
-      if (req.file.mimetype !== 'video/mp4') {
-  return res.status(400).json({ message: 'Archivo no válido, debe ser obligatoriamente un .mp4' });
-}
+    
       
     cloudinary.config({
         cloud_name: process.env.CLOUD_NAME,
