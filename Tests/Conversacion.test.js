@@ -86,7 +86,17 @@ it('Tiene que devolver 404 si id ingresado no existe, (UpdFeed)', async()=>{
     expect(res.status).to.equal(404)
     expect(res.body.message).to.equal('Id ingresado no existe')
 })
-it('Tiene que devolver 404 si no hay ingresado o feed o id, (UpdFeed)', async()=>{
+it('Tiene que devolver 404 si no hay ingresado id, (UpdFeed)', async()=>{
+    const res = await request(app)
+    .put('/conversacion//UpdateFeed')
+    .send({Feedback:'aaa'})
+    .set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InNlYW5AZ21haWwuY29tIiwiaWF0IjoxNzQ2ODA5NzMwLCJleHAiOjM1NDY4MDk3MzB9.vb-cUiVv0Ttsel9vhMWsN8kcLOddABTETaUX1ze_YfM')
+
+    console.log(res.status)
+    expect(res.status).to.equal(404)
+})
+
+it('Tiene que devolver 404 si no hay ingresado Feedback, (UpdFeed)', async()=>{
     const res = await request(app)
     .put('/conversacion/197/UpdateFeed')
     .send({Feedback:''})
@@ -94,9 +104,8 @@ it('Tiene que devolver 404 si no hay ingresado o feed o id, (UpdFeed)', async()=
 
     console.log(res.status)
     expect(res.status).to.equal(404)
-    expect(res.body.message).to.equal('No hay ningún Id o ningún feed')
+    expect(res.body.message).to.equal('No hay ningún Feedback.')
 })
-
 it('Tiene que devolver 200 si se actualiza bien el Feed,(UpdFeed)', async()=>{
     const res = await request(app)
     .put('/conversacion/194/UpdateFeed')
@@ -108,13 +117,13 @@ it('Tiene que devolver 200 si se actualiza bien el Feed,(UpdFeed)', async()=>{
 })
 //GetTexto
 
-it('Tiene que devolver 404 si no se encuentra el id ingresado,(GetTexto)',async()=>{
+it('Tiene que devolver 400 si no se encuentra el id ingresado,(GetTexto)',async()=>{
     const res = await request(app)
-    .get('/conversacion/298/getTexto')
+    .get('/conversacion/797997/getTexto')
     .set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InNlYW5AZ21haWwuY29tIiwiaWF0IjoxNzQ2ODA5NzMwLCJleHAiOjM1NDY4MDk3MzB9.vb-cUiVv0Ttsel9vhMWsN8kcLOddABTETaUX1ze_YfM')
 
     console.log(res.status)
-    expect(res.status).to.equal(404)
+    expect(res.status).to.equal(400)
 })
 
 it('Tiene que devolver 404 si no hay ningún texto,(GetTexto)',async()=>{

@@ -4,9 +4,14 @@ import Usuario from "../Services/Usuario.js"
 import Sesiones from "../Services/sesiones.js"
 
 const insertUsuario = async (req, res) => {
-
+    
     const usuario = req.body;
     console.log(usuario);
+    const rta = await Usuario.getAllByMail(usuario.mail)
+    
+    if(rta.length){
+        return res.status(404).json({message:'Ya existe un usuario con ese mail'})
+    }
     if (!usuario.mail || !usuario.nombre || !usuario.contraseña) {
         return res.status(404).json({ message: "Todos los campos tienen que estar completos" });
     }
@@ -22,10 +27,13 @@ const insertUsuario = async (req, res) => {
         await Usuario.insertUsuario(usuario);
          res.status(200).json({ message: "Se ha insertado Correctamente" });
     }
-    catch (err) {
-        console.log(err)
-         res.status(500).json({ message: 'Error al insertar en base de datos' })
+   catch (err) {
+    if (err.message === 'Ya existe un usuario con ese mail') {
+      return res.status(409).json({ message: err.message });
     }
+    console.log(err);
+    res.status(500).json({ message: 'Error al insertar en base de datos' });
+  }
 }
 
 const selectUsuario = async (req, res) => {
@@ -33,6 +41,8 @@ const selectUsuario = async (req, res) => {
     console.log(mail)
     console.log(req.params)
     console.log(req.params.mail.length)
+
+
     if(req.params.mail.length === 8 && req.params.mail==="Selector"){
         console.log(req.params)
         return res.status(400).json({message: 'No hay ningún Mail'})
@@ -138,6 +148,7 @@ const login = async (req, res) => {
         const password = usuario_db.Contraseña
 
         const secret = process.env.SECRET_TOKEN;
+        console.log(secret)
         const secretRefresh= process.env.SECRET_REFRESHTOKEN;
 
         const comparison = bcrypt.compareSync(usuario.contraseña, password)

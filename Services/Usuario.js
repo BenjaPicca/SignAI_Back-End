@@ -4,21 +4,22 @@ import "dotenv/config";
 const { Pool } = pkg
 
 const insertUsuario = async (usuario) => {
-console.log(usuario,"aasgab")
-    try {
-        const rows = await pool.query(`
-        INSERT INTO public."Usuario"
-         ("NombreUsuario", "Mail", "Contraseña",admin)
-          VALUES ($1, $2, $3,$4)`,
-            [usuario.nombre, usuario.mail, usuario.contraseña, usuario.admin])
-            console.log(rows)
-        return rows;
+  try {
+    const rows = await pool.query(`
+      INSERT INTO public."Usuario"
+      ("NombreUsuario", "Mail", "Contraseña", admin)
+      VALUES ($1, $2, $3, $4)`,
+      [usuario.nombre, usuario.mail, usuario.contraseña, usuario.admin]);
+    return rows;
+  } catch (err) {
+    if (err.code === '23505') {
+      
+      throw new Error('Ya existe un usuario con ese mail');
     }
-    catch (err) {
+    throw err; 
+  }
+};
 
-        throw new Error;
-    }
-}
 
 const getByMail = async (mail) => {
 

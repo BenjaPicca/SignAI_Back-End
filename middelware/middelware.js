@@ -17,7 +17,7 @@ export const verifyToken = async (req, res, next) => {
         }
         const token = tokenPartsAcess[1];
     
-        const secret="Holaa"
+        const secret= process.env.SECRET_TOKEN
         console.log(token);
         const decoded = jwt.verify(token,secret)
         const {id} = decoded

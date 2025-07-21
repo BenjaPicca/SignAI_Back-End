@@ -19,9 +19,9 @@ const selectFeedbackById = async (req, res) => {
             return res.status(404).json({message:'Ese feedback no existe'})
          }
          
-        else{
+        
             return res.status(200).json({message:'Seleccion de Feed exitosa'})
-        }
+        
         
     }
     catch (err) {
@@ -140,8 +140,12 @@ const updateFeedback = async (req, res) => {
     if(result.length<1){
         return res.status(404).json({message:'Id ingresado no existe'})
     }
-    if (!id || !Feedback) {
-        return res.status(404)({ message: 'No hay ningún Id o ningún feed' })
+    if (!id ) {
+        return res.status(404).json({ message: 'No hay ningún Id.' })
+       
+    }
+    if(!Feedback){
+        return res.status(404).json({ message: 'No hay ningún Feedback.' })
     }
     try {
        const rows=await Conversacion.updateFeed(id,Feedback)
@@ -182,33 +186,34 @@ const textoEntregado = async (req, res) => {
     }
 }
 
-const getTexto= async(req,res)=>{
-    const {id}= req.params;
-    if(!id){
-        return res.status(404).json({message:"No se encuentra ningún id ingresado."})
+const getTexto = async (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({ message: "Falta el parámetro ID." });
+  }
+
+  const rta = await Conversacion.SelectallById(id);
+
+  if (!rta.length) {
+    return res.status(400).json({ message: "El ID no existe en la base de datos." });
+  }
+
+  try {
+    const { rows } = await Conversacion.getTexto(id);
+
+    if (!rows.length || rows[0].Texto_Devuelto === null) {
+      return res.status(404).json({ message: `No se encontró texto para el ID ${id}` });
     }
-    try {
-        const { rows } = await Conversacion.getTexto(id);
 
-        console.log(rows[0],'kaka')
-        console.log(rows.length)
-        console.log(rows.Texto_devuelto)
+    return res.status(200).json(rows[0]);
 
+  } catch (error) {
+    console.error('Error en getTexto:', error);
+    return res.status(500).json({ message: "Error interno del servidor" });
+  }
+};
 
-        if (!rows[0] || rows.length === 0) {
-            return res.status(404).json({ message: "No hay ningún texto" });
-        }
-
-        console.log(rows);
-        console.log(rows[0], 'asdcv');
-        return res.status(200).json(rows[0]);
-    
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: "Error en el servidor" });
-    }
-    
-}
 
 
 

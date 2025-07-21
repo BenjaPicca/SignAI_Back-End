@@ -66,13 +66,25 @@ it('Tiene que devolver 404 si faltan campos por completar',async()=>{
     expect(res.status).to.equal(404)
     expect(res.body.message).to.equal('Todos los campos tienen que estar completos')
   })
-
-it('Tiene que devolver 200 si el cliente se registra exitosamente', async ()=>{
-  const res= await request(app)
+  
+  it('Tiene que devolver 409 si el mail que se quiere registrar ya existe,(InsUs)', async()=>{
+    const res= await request(app)
     .post('/usuario/insertar')
-    .send({nombre: "TARTA",
-    mail: "TARTA@gmail.com",
-    contraseña:"TARTA",
+    .send({nombre: "Mica",
+    mail: "Mica@gmail.com",
+    contraseña:'vv',
+    admin: true})
+  
+    console.log(res.status)
+    expect(res.status).to.equal(409)
+  })
+  
+  it('Tiene que devolver 200 si el cliente se registra exitosamente', async ()=>{
+    const res= await request(app)
+    .post('/usuario/insertar')
+    .send({nombre: "lalala",
+    mail: "lalal@gmail.com",
+    contraseña:"lala",
     admin: true})
 
     console.log(res.status)
@@ -114,7 +126,7 @@ it('Tiene que devolver 200 si se selecciona el Mail correctamente', async()=>{
 
 it('Tiene que devolver 404 si el mail ingresado no existe',   (done) =>{
   request(app)
-  .delete('/usuario/delUsuario/a@hotmail.con')
+  .delete('/usuario/delUsuario/Cachini123@gmail.con')
   .set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InNlYW5AZ21haWwuY29tIiwiaWF0IjoxNzQ2ODA5NzMwLCJleHAiOjM1NDY4MDk3MzB9.vb-cUiVv0Ttsel9vhMWsN8kcLOddABTETaUX1ze_YfM')
   .end((err, res) => {
       if (err) return done(err);
