@@ -4,6 +4,7 @@ import "dotenv/config";
 const { Pool } = pkg
 
 const insertUsuario = async (usuario) => {
+<<<<<<< Updated upstream
 console.log(usuario,"aasgab")
     try {
         const rows = await pool.query(`
@@ -15,10 +16,24 @@ console.log(usuario,"aasgab")
         return rows;
     }
     catch (err) {
+=======
+  try {
+    const rows = await pool.query(`
+      INSERT INTO public."Usuario"
+      ("NombreUsuario", "Mail", "Contraseña", admin)
+      VALUES ($1, $2, $3, $4)`,
+      [usuario.nombre, usuario.mail, usuario.contraseña, usuario.admin]);
+    return rows;
+  } catch (err) {
+    throw err; 
+  }
+};
+>>>>>>> Stashed changes
 
         throw new Error;
     }
 }
+
 
 const getByMail = async (mail) => {
 

@@ -6,6 +6,11 @@ const port = 3000;
 import ConversacionRouters from "./Routes/Conversacion.js";
 import UsuarioRouters from "./Routes/Usuario.js";
 import SesionesRouters from "./Routes/sesiones.js"
+<<<<<<< Updated upstream
+=======
+import datasetRouters from "./Routes/dataset.js"
+import googleRouters from "./Routes/google.js"
+>>>>>>> Stashed changes
 import { upload } from "./multer.js"
 
 app.post("/fields/single", upload.single('video'), (req, res) => {
@@ -35,6 +40,15 @@ app.use("/conversacion" , ConversacionRouters);
 //Sesiones
 app.use("/sesiones", SesionesRouters);
 
+<<<<<<< Updated upstream
+=======
+//Dataset
+app.use("/dataset",datasetRouters);
+
+//Google
+app.use('/api/auth', googleRouters);
+
+>>>>>>> Stashed changes
 app.listen(port, () => {
     console.log("Escuchando ando")
 })

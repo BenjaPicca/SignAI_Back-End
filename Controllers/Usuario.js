@@ -2,21 +2,39 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import Usuario from "../Services/Usuario.js"
 import Sesiones from "../Services/sesiones.js"
+import { generarJWT } from "../middelware/middelware.js";
 
 const insertUsuario = async (req, res) => {
+<<<<<<< Updated upstream
 
     const usuario = req.body;
     console.log(usuario);
     if (!usuario.mail || !usuario.nombre || !usuario.contraseña) {
         return res.status(404).json({ message: "Todos los campos tienen que estar completos" });
+=======
+  const usuario = req.body;
+
+  if (!usuario.mail || !usuario.nombre || !usuario.contraseña) {
+    return res.status(400).json({ message: 'Todos los campos tienen que estar completos' });
+  }
+
+  try {
+    const rta = await Usuario.getAllByMail(usuario.mail);
+
+    console.log(rta);
+    console.log(rta.length);
+    if (rta.length) {
+      return res.status(409).json({ message: 'Ya existe un usuario con ese mail' });
+>>>>>>> Stashed changes
     }
 
-    try {
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(usuario.contraseña, salt);
+    usuario.contraseña = hash;
 
-        const salt = bcrypt.genSaltSync(10)
-        const hash = bcrypt.hashSync(usuario.contraseña, salt)
-        console.log(hash)
+    await Usuario.insertUsuario(usuario);
 
+<<<<<<< Updated upstream
         usuario.contraseña = hash;
         console.log(usuario.mail, usuario.nombre, usuario.contraseña, usuario.admin)
         await Usuario.insertUsuario(usuario);
@@ -27,6 +45,22 @@ const insertUsuario = async (req, res) => {
          res.status(500).json({ message: 'Error al insertar en base de datos' })
     }
 }
+=======
+    const token = generarJWT({ id: usuario.mail, admin: usuario.admin || false });
+
+    res.status(201).json({ message: 'Se ha insertado correctamente', token });
+  } catch (err) {
+    console.log(err);
+    if (err.code === '23505') {
+      return res.status(409).json({ message: 'Ya existe un usuario con ese mail' });
+    }
+    res.status(500).json({ message: 'Error al insertar en base de datos' });
+  }
+};
+
+
+
+>>>>>>> Stashed changes
 
 const selectUsuario = async (req, res) => {
     const {mail} = req.params;
