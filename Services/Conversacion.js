@@ -66,14 +66,22 @@ const CreateVideo = async (mailusuario, url) => {
       [url, new Date(), mailusuario]
     );
 
-    console.log(result);
+    if (!result || !result.rows || result.rows.length === 0) {
+      console.error(" Error al insertar en la base", result);
+      throw new Error("Fallo en INSERT de conversación");
+    }
+
     const ID = result.rows[0].ID;
+    console.log("Video insertado con ID:", ID);
 
     try {
-      const response = await fetch(`https://signai.fdiaznem.com.ar/predict_gemini?video_url=${url}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-      });
+      const response = await fetch(`https://signai.fdiaznem.com.ar/predict_gemini?video_url=${url}`);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(" Error en predict_gemini:", response.status, errorText);
+        throw new Error(`predict_gemini falló: ${response.status}`);
+      }
 
       const data = await response.json();
       const translation = data.translation;
@@ -86,17 +94,19 @@ const CreateVideo = async (mailusuario, url) => {
 
       const updateResult = await updateResponse.json();
       console.log("Texto actualizado:", updateResult);
-      return translation
+      return translation;
 
     } catch (err) {
-      console.error("Error en fetch:", err);
+      console.error("Error en fetch predict_gemini o update:", err);
+      throw err;
     }
 
   } catch (err) {
-    console.error("Error general:", err);
+    console.error("Error general en CreateVideo:", err);
     throw err;
   }
 };
+
 
   
 const deleteConversaciónById= async(id)=>{

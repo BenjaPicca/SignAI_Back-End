@@ -20,6 +20,8 @@
       const chunkSize = 1024 * 1024; // 1 MB
       const totalChunks = Math.ceil(file.size / chunkSize);
       const fileName = `${Date.now()}_${file.name}`;
+      const mailusuario = "benjapiccagli@gmail.com";
+
 
       status.innerHTML = `Subiendo ${file.name} en ${totalChunks} partes...`;
 
@@ -33,6 +35,7 @@
         formData.append("fileName", fileName);
         formData.append("chunkIndex", i);
         formData.append("totalChunks", totalChunks);
+        formData.append("mailusuario",mailusuario)
 
         try {
           const res = await fetch("http://localhost:3000/api/upload-chunk", {

@@ -3,6 +3,8 @@ import fs from "fs";
 import { fileURLToPath } from "url";
 import { v2 as cloudinary } from "cloudinary";
 import streamifier from "streamifier";
+import Conversacion from "../Services/Conversacion.js";
+
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -33,7 +35,7 @@ const uploadFromBuffer = (buffer) => {
 };
 
 export const recibirChunk = async (req, res) => {
-  const { fileName, chunkIndex, totalChunks } = req.body;
+  const { fileName, chunkIndex, totalChunks, mailusuario } = req.body;
 
   console.log(`Recibiendo chunk ${chunkIndex} de ${totalChunks} para archivo ${fileName}`);
   console.log("req.file:", req.file);
@@ -114,10 +116,19 @@ export const recibirChunk = async (req, res) => {
           }
         }
 
-        return res.status(200).json({
+        const url = result.secure_url
+
+        console.log(mailusuario,url)
+        const rta = await Conversacion.CreateVideo(mailusuario,url);
+        console.log(rta,'aaa')
+       
+
+        if(rta){
+          return res.status(200).json({
           message: "Upload exitoso",
-          url: result.secure_url,
-        });
+          url: url,
+        });}
+        
       } catch (err) {
         console.error("Error Cloudinary:", err);
         return res.status(500).json({ error: "Fallo al subir a Cloudinary" });
