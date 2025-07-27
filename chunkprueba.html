@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Chunked Upload</title>
+</head>
+<body>
+  <h2>Seleccioná un archivo</h2>
+  <input type="file" id="fileInput" />
+  <div id="status"></div>
+
+  <script>
+    const input = document.getElementById("fileInput");
+    const status = document.getElementById("status");
+
+    input.addEventListener("change", async (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const chunkSize = 1024 * 1024; // 1 MB
+      const totalChunks = Math.ceil(file.size / chunkSize);
+      const fileName = `${Date.now()}_${file.name}`;
+
+      status.innerHTML = `Subiendo ${file.name} en ${totalChunks} partes...`;
+
+      for (let i = 0; i < totalChunks; i++) {
+        const start = i * chunkSize;
+        const end = Math.min(file.size, start + chunkSize);
+        const chunk = file.slice(start, end);
+
+        const formData = new FormData();
+        formData.append("chunk", chunk);
+        formData.append("fileName", fileName);
+        formData.append("chunkIndex", i);
+        formData.append("totalChunks", totalChunks);
+
+        try {
+          const res = await fetch("http://localhost:3000/api/upload-chunk", {
+            method: "POST",
+            body: formData,
+          });
+          const data = await res.json();
+          console.log(`✅ Chunk ${i + 1}/${totalChunks}:`, data);
+        } catch (error) {
+          console.error(`❌ Error en chunk ${i + 1}:`, error);
+          status.innerHTML = `Error al subir chunk ${i + 1}`;
+          return;
+        }
+      }
+
+      status.innerHTML = "✅ Subida completa. Esperá la respuesta de Cloudinary.";
+    });
+  </script>
+</body>
+</html>
