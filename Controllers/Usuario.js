@@ -6,8 +6,9 @@ import Sesiones from "../Services/sesiones.js"
 const insertUsuario = async (req, res) => {
     
     const usuario = req.body;
+    const mail = req.body.mail
     console.log(usuario);
-    const rta = await Usuario.getAllByMail(usuario.mail)
+    const rta = await Usuario.getAllByMail(mail)
     
     if(rta.length){
         return res.status(404).json({message:'Ya existe un usuario con ese mail'})
@@ -124,18 +125,18 @@ const updateUsuarioByMail = async (req, res) => {
 }
 const login = async (req, res) => {
     const usuario = req.body;
+    const mail= req.body.mail
 
     console.log(usuario)
-    console.log(usuario.mail)
-    console.log(usuario.contraseña)
+   
 
-    if (!usuario.mail || !usuario.contraseña) {
+    if (!mail || !usuario.contraseña) {
         return res.status(404).json({ message: "Tienen que estar todos los campos completados." })
     }
 
 
     try {
-        const  rows  = await Usuario.getAllByMail(usuario);
+        const  rows  = await Usuario.getAllByMail(mail);
         console.log(rows);
 
         if (rows.length < 1) {

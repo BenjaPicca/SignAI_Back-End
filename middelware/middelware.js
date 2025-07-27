@@ -1,7 +1,5 @@
 import jwt from "jsonwebtoken";
-import { pool } from "../dbconfig.js";
 import Usuario from "../Services/Usuario.js"
-import bcrypt from "bcryptjs/dist/bcrypt.js";
 
 
 export const generarJWT = (payload) => {

@@ -30,7 +30,8 @@ export const googleAuth = async (req, res) => {
     let usuarios = await Usuario.getAllByMail(mail);
     let usuario = usuarios.length ? usuarios[0] : null;
 
-    
+    console.log(usuario)
+
     if (!usuario) {
       usuario = {
         mail: mail,

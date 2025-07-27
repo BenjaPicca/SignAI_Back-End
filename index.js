@@ -5,45 +5,42 @@ const port = 3000;
 
 import ConversacionRouters from "./Routes/Conversacion.js";
 import UsuarioRouters from "./Routes/Usuario.js";
-import SesionesRouters from "./Routes/sesiones.js"
-import datasetRouters from "./Routes/dataset.js"
-import googleRouters from "./Routes/google.js"
-import { upload } from "./multer.js"
+import SesionesRouters from "./Routes/sesiones.js";
+import datasetRouters from "./Routes/dataset.js";
+import googleRouters from "./Routes/google.js";
+import ChunkedUploadsRouters from './Routes/chunkedUploads.js';
+import { upload } from "./multer.js";
 
-app.post("/fields/single", upload.single('video'), (req, res) => {
-    console.log(req.file)
-    res.send('Termino')
-})
 
-app.use(express.json())
+app.use(express.json());
 
 app.use(cors({
-    origin: '*', // Origen permitido
-    methods: ['GET', 'POST','PUT', 'OPTIONS'], // Métodos permitidos
-     allowedHeaders : ['Content-Type','Authorization'], // Cabeceras permitidas
-     credentials : true // Permitir credenciales
-}))
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+}));
+
+
+app.post("/fields/single", upload.single('video'), (req, res) => {
+    console.log(req.file);
+    res.send('Termino');
+});
 
 app.get("/", (req, res) => {
     res.send("API working");
-})
+});
 
-//Usuario
-app.use("/usuario" , UsuarioRouters);
 
-//Conversación
-app.use("/conversacion" , ConversacionRouters);
-
-//Sesiones
+app.use("/usuario", UsuarioRouters);
+app.use("/conversacion", ConversacionRouters);
 app.use("/sesiones", SesionesRouters);
-
-//Dataset
-app.use("/dataset",datasetRouters);
-
-//Google
+app.use("/dataset", datasetRouters);
 app.use('/api/auth', googleRouters);
+app.use("/api", ChunkedUploadsRouters);
 
 app.listen(port, () => {
-    console.log("Escuchando ando")
-})
+    console.log("Escuchando ando");
+});
+
 export default app;

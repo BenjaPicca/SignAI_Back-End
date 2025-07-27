@@ -39,7 +39,7 @@ const getByMail = async (mail) => {
         throw new Error;
     }
 }
-const getAllByMail = async (usuario) => {
+const getAllByMail = async (mail) => {
 
 
     try {
@@ -47,8 +47,8 @@ const getAllByMail = async (usuario) => {
         SELECT *
              FROM public."Usuario" 
              WHERE "Mail"=$1`,
-            [usuario.mail])
-        console.log(result)
+            [mail])
+        console.log(result.rows)
         return result.rows;
     }
     catch (err) {
