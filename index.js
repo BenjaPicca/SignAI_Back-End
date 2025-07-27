@@ -7,6 +7,7 @@ import ConversacionRouters from "./Routes/Conversacion.js";
 import UsuarioRouters from "./Routes/Usuario.js";
 import SesionesRouters from "./Routes/sesiones.js"
 import datasetRouters from "./Routes/dataset.js"
+import googleRouters from "./Routes/google.js"
 import { upload } from "./multer.js"
 
 app.post("/fields/single", upload.single('video'), (req, res) => {
@@ -38,6 +39,9 @@ app.use("/sesiones", SesionesRouters);
 
 //Dataset
 app.use("/dataset",datasetRouters);
+
+//Google
+app.use('/api/auth', googleRouters);
 
 app.listen(port, () => {
     console.log("Escuchando ando")
