@@ -1,0 +1,77 @@
+📝 1. Registro de usuario (Sign Up)
+📍 URL
+POST https://sign-ai-web.vercel.app/insertar
+
+💡 Qué hace
+Registra un nuevo usuario con email, nombre de usuario y contraseña.
+
+📤 Qué enviar (JSON body)
+json
+{
+  "mail": "ejemplo@gmail.com",
+  "nombreusuario": "ejemplo",
+  "contraseña": "123"
+}
+📥 Respuesta esperada
+json
+{
+  "message": "Se ha insertado Correctamente",
+  "usuario": {
+    "nombre": "ejemplo",
+    "mail": "ejemplo@gmail.com",
+    "contraseña": "$2a$10$Ow3Q0Y4F3FH/M80cVH1arOaRNTvsoJn8fbXbwKSsfKH6ZB2.KPCje",
+    "admin": true
+  }
+}
+⚠️ La contraseña que recibís está en formato hash (no en texto plano).
+El campo admin indica si el usuario es administrador, pero por ahora no se usa.
+
+🔐 2. Inicio de sesión (Login)
+📍 URL
+POST https://sign-ai-web.vercel.app/login
+
+💡 Qué hace
+Valida usuario y contraseña, y devuelve un token JWT para autenticación.
+
+📤 Qué enviar (JSON body)
+json
+{
+  "mail": "ejemplo@gmail.com",
+  "contraseña": "123"
+}
+📥 Respuesta esperada
+json
+Copiar
+Editar
+{
+  "token": "eyJhbGc...qH7E",
+  "usuario": {
+    "NombreUsuario": "ejemplo"
+  }
+}
+✅ Guardá este token para usarlo en las siguientes peticiones protegidas.
+Lo vas a enviar en el header así:
+Authorization: Bearer <tu_token_aquí>
+
+🎥 3. Subir video para conversación
+📍 URL
+POST https://sign-ai-web.vercel.app/conversacion/CrearVideo
+
+💡 Qué hace
+Sube un archivo de video para que la API lo procese.
+
+📋 Headers importantes
+Authorization: Bearer <token_obtenido_del_login>
+Content-Type: multipart/form-data
+📤 Qué enviar (FormData)
+video: archivo de video (tipo File o Blob en JS)
+
+mailusuario: el mail del usuario que sube el video (ejemplo: "ejemplo@gmail.com")
+
+📥 Respuesta esperada
+json
+{
+  "message": "Video subido con éxito.",
+  "translation": "That's why especially warm air can dissolve and cause thunderstorms."
+}
+🎉 translation es el texto que devuelve la API procesando el video.

@@ -26,7 +26,7 @@ const insertUsuario = async (req, res) => {
         usuario.contraseña = hash;
         console.log(usuario.mail, usuario.nombre, usuario.contraseña, usuario.admin)
         await Usuario.insertUsuario(usuario);
-         res.status(200).json({ message: "Se ha insertado Correctamente" });
+         res.status(200).json({ message: "Se ha insertado Correctamente",usuario });
     }
    catch (err) {
     if (err.message === 'Ya existe un usuario con ese mail') {
