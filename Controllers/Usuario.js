@@ -9,6 +9,10 @@ const insertUsuario = async (req, res) => {
     const mail = req.body.mail
     console.log(usuario);
     const rta = await Usuario.getAllByMail(mail)
+    console.log(usuario)
+    console.log(usuario.mail)
+    console.log(usuario.contraseña)
+    console.log(usuario.nombre)
     
     if(rta.length){
         return res.status(404).json({message:'Ya existe un usuario con ese mail'})

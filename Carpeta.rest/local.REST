@@ -4,7 +4,7 @@ Content-Type: application/json
 
 {
     "nombre": "matambre",
-    "mail": "asado@gmail.com",
+    "mail": "asa@gmail.com",
     "contraseña":"morci",
     "admin": true
 }
