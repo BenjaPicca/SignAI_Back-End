@@ -43,7 +43,7 @@ export const refreshToken = (req, res) => {
   }
 
   try {
-    const decoded = jwt.verify(refreshToken, process.env.SECRTE_REFRESHTOKEN);
+    const decoded = jwt.verify(refreshToken, process.env.SECRET_RT);
 
     const newAccessToken = jwt.sign(
       { id: decoded.id },
