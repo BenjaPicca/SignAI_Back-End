@@ -150,7 +150,7 @@ const login = async (req, res) => {
 
         const secret = process.env.SECRET_TOKEN;
         console.log(secret)
-        const secretRefresh= process.env.SECRET_REFRESHTOKEN;
+        const secretRefresh= process.env.SECRET_RT;
 
         const comparison = bcrypt.compareSync(usuario.contraseña, password)
         console.log(comparison)
