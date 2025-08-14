@@ -60,46 +60,25 @@ const insertFeedback= async (conversacion)=>{
 }
 const CreateVideo = async (mailusuario, url) => {
   try {
+    // 1. Insertar video
     const result = await pool.query(
-      `INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación","Mail_Usuario",estado) 
-       VALUES ($1,$2,$3,'pendiente') RETURNING "ID"`,
+      `INSERT INTO public."Conversación"("Video_Inicial","Fecha_Conversación","Mail_Usuario", estado) 
+       VALUES ($1, $2, $3, 'pendiente') RETURNING "ID"`,
       [url, new Date(), mailusuario]
     );
 
-    if (!result || !result.rows || result.rows.length === 0) {
-      console.error(" Error al insertar en la base", result);
+    if (!result.rows.length) {
       throw new Error("Fallo en INSERT de conversación");
     }
 
     const ID = result.rows[0].ID;
     console.log("Video insertado con ID:", ID);
 
-    try {
-      const response = await fetch(`https://signai.fdiaznem.com.ar/predict_gemini?video_url=${url}`);
+    // 2. Procesar traducción en segundo plano
+    procesarTraduccion(url, ID);
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error(" Error en predict_gemini:", response.status, errorText);
-        throw new Error(`predict_gemini falló: ${response.status}`);
-      }
-
-      const data = await response.json();
-      const translation = data.translation;
-
-      const updateResponse = await fetch(`https://sign-ai-web.vercel.app/conversacion/${ID}/texto`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ translation })
-      });
-
-      const updateResult = await updateResponse.json();
-      console.log("Texto actualizado:", updateResult);
-      return translation;
-
-    } catch (err) {
-      console.error("Error en fetch predict_gemini o update:", err);
-      throw err;
-    }
+    // 3. Retornar datos básicos al controlador
+    return { ID, url };
 
   } catch (err) {
     console.error("Error general en CreateVideo:", err);
@@ -107,7 +86,49 @@ const CreateVideo = async (mailusuario, url) => {
   }
 };
 
+// --- Traducción y actualización ---
+async function procesarTraduccion(url, ID) {
+  try {
+    console.log(`Iniciando traducción para ID ${ID}...`);
 
+    const response = await fetch(`https://signai.fdiaznem.com.ar/predict_gemini?video_url=${url}`);
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Error en predict_gemini:", response.status, errorText);
+      return;
+    }
+
+    const data = await response.json();
+    const translation = data.translation;
+
+    // Actualizar texto y estado
+    await pool.query(
+      `UPDATE public."Conversación"
+       SET "Texto_Devuelto" = $1, estado = 'traducido'
+       WHERE "ID" = $2`,
+      [translation, ID]
+    );
+
+    console.log(`Traducción actualizada para ID ${ID}`);
+  } catch (err) {
+    console.error(`Error procesando traducción para ID ${ID}:`, err);
+  }
+}
+
+const GetTraduccion = async (id) => {
+  const result = await pool.query(
+    `SELECT "Texto_Devuelto", estado 
+     FROM public."Conversación" 
+     WHERE "ID" = $1`,
+    [id]
+  );
+
+  if (!result.rows.length) {
+    throw new Error("Conversación no encontrada");
+  }
+
+  return result.rows[0];
+};
   
 const deleteConversaciónById= async(id)=>{
    
@@ -183,6 +204,7 @@ export default{
  textoEntregado,
  getTexto,
  insertFeedback,
- SelectallById
+ SelectallById,
+ GetTraduccion
 
 }

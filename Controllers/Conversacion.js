@@ -49,58 +49,72 @@ const insertFeedback = async (req, res) => {
 }
 
 const CrearVideo = async (req, res) => {
-    const mailusuario = req.body.mailusuario;
-    console.log("mail usuario: ", mailusuario);
-    console.log(req.file)
-    console.log("✅ ENV CHECK", {
-        API_KEY: process.env.API_KEY,
-        API_SECRET: process.env.API_SECRET ? 'CARGADA' : '❌',
-        CLOUD_NAME: process.env.CLOUD_NAME
-      });
-    
-      
-    cloudinary.config({
-        cloud_name: process.env.CLOUD_NAME,
-        api_key: process.env.API_KEY,
-        api_secret: process.env.API_SECRET
-    });
+  const { mailusuario } = req.body;
 
-    if (!mailusuario || mailusuario === undefined) {
-        return res.status(404).json({ message: 'No se encontró el mail.' });
+  console.log("mail usuario: ", mailusuario);
+  console.log(req.file);
+  console.log("✅ ENV CHECK", {
+    API_KEY: process.env.API_KEY,
+    API_SECRET: process.env.API_SECRET ? 'CARGADA' : '❌',
+    CLOUD_NAME: process.env.CLOUD_NAME
+  });
+
+  // Config Cloudinary
+  cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY,
+    api_secret: process.env.API_SECRET
+  });
+
+  if (!mailusuario) {
+    return res.status(404).json({ message: 'No se encontró el mail.' });
+  }
+  if (!req.file) {
+    return res.status(400).json({ message: 'No se recibió ningún archivo.' });
+  }
+
+  cloudinary.uploader.upload(
+    req.file.path,
+    { resource_type: "video" },
+    async (error, result) => {
+      if (error) {
+        console.error("Error al subir el video:", error);
+        return res.status(500).json({ message: "Error al subir el video a Cloudinary" });
+      }
+
+      console.log("Video subido correctamente:", result.url);
+
+      try {
+        const { ID } = await Conversacion.CreateVideo(mailusuario, result.url);
+
+        // Responder al cliente sin esperar traducción
+        return res.status(200).json({
+          message: "Video subido con éxito, traducción en proceso",
+          id: ID
+        });
+
+      } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: 'Error al registrar video en la base' });
+      }
     }
-    if (!req.file) {
-        return res.status(400).json({ message: 'No se recibió ningún archivo.' });
-    }
-
-    cloudinary.uploader.upload(
-        req.file.path,
-        { resource_type: "video" },
-        async function (error, result) {
-            if (error) {
-                console.error("Error al subir el video:", error);
-            } else {
-                console.log(result);
-                console.log("Video subido correctamente:", result.url, result.public_id);
-
-                const url = result.url;
-                if (!mailusuario) {
-                    return res.status(404).json({ message: 'Inicia sesión' });
-                }
-
-                try {
-                    const translation = await Conversacion.CreateVideo(mailusuario, url);
-                    return res.status(200).json({message: 'Video subido con éxito.',
-                        translation: translation});
-
-                } catch (err) {
-                    console.log(err);
-                    return res.status(500).json({ message: 'Error al subir video.' });
-                }
-            }
-        }
-    );
+  );
 };
 
+const obtenerTraduccion = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const data = await Conversacion.GetTraduccion(id);
+    return res.status(200).json(data);
+  } catch (err) {
+    console.error("Error obteniendo traducción:", err);
+    if (err.message === "Conversación no encontrada") {
+      return res.status(404).json({ message: err.message });
+    }
+    return res.status(500).json({ message: "Error interno del servidor" });
+  }
+};
 
 const deleteConversaciónById = async (req, res) => {
     const { id } = req.params;
@@ -224,5 +238,6 @@ export default {
     selectFeedbackById,
     CrearVideo,
     textoEntregado,
-    getTexto
+    getTexto,
+    obtenerTraduccion
 }

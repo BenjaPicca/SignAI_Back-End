@@ -10,7 +10,7 @@ const insertUsuario = async (req, res) => {
     console.log(usuario);
     const rta = await Usuario.getAllByMail(mail)
     console.log(usuario)
-    console.log(usuario.mail)
+    console.log(mail)
     console.log(usuario.contraseña)
     console.log(usuario.nombre)
     
@@ -159,7 +159,7 @@ const login = async (req, res) => {
         const comparison = bcrypt.compareSync(usuario.contraseña, password)
         console.log(comparison)
         if (comparison) {
-            const token = jwt.sign({ id: usuario_db.Mail }, secret, { expiresIn: '5m' });
+            const token = jwt.sign({ id: usuario_db.Mail }, secret, { expiresIn: '30m' });
             const RefreshToken = jwt.sign({id:usuario_db.Mail}, secretRefresh, {expiresIn : '30d'})
             console.log("accestoken:" + token);
             console.log( "refreshtoken:" +RefreshToken);
