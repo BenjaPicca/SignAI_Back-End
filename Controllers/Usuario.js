@@ -159,7 +159,7 @@ const login = async (req, res) => {
         const comparison = bcrypt.compareSync(usuario.contraseña, password)
         console.log(comparison)
         if (comparison) {
-            const token = jwt.sign({ id: usuario_db.Mail }, secret, { expiresIn: '30m' });
+            const token = jwt.sign({ id: usuario_db.Mail }, secret, { expiresIn: '300m' });
             const RefreshToken = jwt.sign({id:usuario_db.Mail}, secretRefresh, {expiresIn : '30d'})
             console.log("accestoken:" + token);
             console.log( "refreshtoken:" +RefreshToken);
