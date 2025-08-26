@@ -129,12 +129,12 @@ const updateUsuarioByMail = async (req, res) => {
 }
 const login = async (req, res) => {
     const usuario = req.body;
-    const mail= req.body.mail
+    
 
     console.log(usuario)
    
 
-    if (!mail || !usuario.contraseña) {
+    if (!usuario.mail || !usuario.contraseña) {
         return res.status(404).json({ message: "Tienen que estar todos los campos completados." })
     }
 
