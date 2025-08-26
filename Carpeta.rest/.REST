@@ -14,8 +14,8 @@ Content-Type: application/json
 
 {
     
-    "Mail": "benjapiccagli@gmail.com",
-    "Contraseña":"labruna9"
+    "mail": "benjapiccagli@gmail.com",
+    "contraseña":"labruna9"
 }
 
 ###
