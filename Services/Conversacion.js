@@ -86,7 +86,6 @@ const CreateVideo = async (mailusuario, url) => {
   }
 };
 
-// --- Traducción y actualización ---
 async function procesarTraduccion(url, ID) {
   try {
     console.log(`Iniciando traducción para ID ${ID}...`);
@@ -117,8 +116,7 @@ async function procesarTraduccion(url, ID) {
 
 const GetTraduccion = async (id) => {
   const result = await pool.query(
-    `SELECT "Texto_Devuelto", estado 
-     FROM public."Conversación" 
+    `SELECT * FROM public."Conversación" 
      WHERE "ID" = $1`,
     [id]
   );
