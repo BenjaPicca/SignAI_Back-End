@@ -12,5 +12,6 @@ router.delete("/EliminarConver/:id", verifyToken, ConversacionControllers.delete
 router.put("/:id/UpdateFeed", verifyToken, ConversacionControllers.updateFeedback)
 router.put("/:id/texto", ConversacionControllers.textoEntregado)
 router.get("/:id/getTexto",verifyToken,ConversacionControllers.getTexto)
+router.get("/tradByMail/:mail",verifyToken,ConversacionControllers.obtenerTraduccionesByMail)
 
 export default router;

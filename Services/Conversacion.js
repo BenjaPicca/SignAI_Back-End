@@ -127,7 +127,24 @@ const GetTraduccion = async (id) => {
 
   return result.rows[0];
 };
-  
+
+
+const GetTraduccionesByMail = async (mailusuario) => {
+  const result = await pool.query(
+    `SELECT "Texto_Devuelto","Video_Inicial","Fecha_Conversación"
+FROM public."Conversación"
+WHERE "Mail_Usuario" = $1`,
+    [mailusuario]
+  );
+
+  console.log(result)
+  console.log(result.rows[0])
+  if (!result.rows.length) {
+    throw new Error("Conversación no encontrada");
+  }
+
+  return result.rows;
+};
 const deleteConversaciónById= async(id)=>{
    
 
@@ -203,6 +220,7 @@ export default{
  getTexto,
  insertFeedback,
  SelectallById,
- GetTraduccion
+ GetTraduccion,
+ GetTraduccionesByMail
 
 }

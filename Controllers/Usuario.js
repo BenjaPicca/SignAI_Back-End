@@ -42,7 +42,7 @@ const insertUsuario = async (req, res) => {
 }
 
 const selectUsuario = async (req, res) => {
-    const {mail} = req.params;
+    const mail = req.params;
     console.log(mail)
     console.log(req.params)
     console.log(req.params.mail.length)

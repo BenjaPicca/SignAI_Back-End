@@ -15,8 +15,8 @@ Content-Type: application/json
 
 {
     
-    "mail": "benjapiccagli@gmail.com",
-    "contraseña":"labruna9"
+    "mail": "sean@gmail.com",
+    "contraseña":"sean"
 }
 
 ###
@@ -82,6 +82,14 @@ Content-Type: application/json
 
 GET  http://localhost:3000/conversacion/1/getTexto HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkVDSFVAZ21haWwuY29tIiwiaWF0IjoxNzI5OTc1MDE4LCJleHAiOjM1Mjk5NzUwMTh9.K5U4VM6QT2o0j0OHrlqH48bvyNTwkhqxDOdFxWmH-d8
+
+
+
+###
+
+GET  http://localhost:3000/conversacion/tradByMail/benjapiccagli@gmail.com HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InNlYW5AZ21haWwuY29tIiwiaWF0IjoxNzU2NDk3MDExLCJleHAiOjE3NjE2ODEwMTF9.4VCop7K8DSb36CXTHu1HI6-CNArQ31tpTdlFbQyVq7M
+
 
 ###
 //Sesiones

@@ -116,6 +116,27 @@ const obtenerTraduccion = async (req, res) => {
   }
 };
 
+const obtenerTraduccionesByMail = async (req, res) => {
+  const { mail } = req.params;
+
+  
+  try {
+    const data = await Conversacion.GetTraduccionesByMail(mail);
+
+    if(!data|| data === null){
+      return res.status(400).json({message:'no hay ninguna traduccion'})
+    }
+    return res.status(200).json(data)
+    
+  } catch (err) {
+    console.error("Error obteniendo traducciones:", err);
+    if (err.message === "Conversación no encontrada") {
+      return res.status(404).json({ message: err.message });
+    }
+    return res.status(500).json({ message: "Error interno del servidor" });
+  }
+};
+
 const deleteConversaciónById = async (req, res) => {
     const { id } = req.params;
     console.log(id);
@@ -239,5 +260,6 @@ export default {
     CrearVideo,
     textoEntregado,
     getTexto,
-    obtenerTraduccion
+    obtenerTraduccion,
+    obtenerTraduccionesByMail
 }
