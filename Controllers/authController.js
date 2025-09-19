@@ -1,6 +1,9 @@
 import { OAuth2Client } from 'google-auth-library';
 import { generarJWT } from '../middelware/middelware.js'; 
 import Usuario from '../Services/Usuario.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -17,7 +20,8 @@ export const googleAuth = async (req, res) => {
     
     const ticket = await client.verifyIdToken({
       idToken: id_token,
-      audience:'407408718192.apps.googleusercontent.com', // SOLO PARA TESTEO,
+      //audience: process.env.GOOGLE_CLIENT_ID, 
+      audience :  "407408718192.apps.googleusercontent.com" // SOLO PARA TESTEAR(HASTA CONECTAR CON FRONT)
     });
 
     
