@@ -2,7 +2,8 @@ import { pool } from "../dbconfig.js"
 import "dotenv/config"
 import Conversacion from "../Services/Conversacion.js";
 import { v2 as cloudinary} from "cloudinary";
-import { Query } from "pg";
+import { uploadLargeFromFsPath, uploadLargeFromBuffer } from "./Cloudinary-helpers.js"
+import fs from "fs";
 
 const selectFeedbackById = async (req, res) => {
     const ID = req.params.id;
@@ -47,59 +48,60 @@ const insertFeedback = async (req, res) => {
         return res.status(500).json({ message: 'Error al insertar feedback' })
     }
 }
-
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
+});
 const CrearVideo = async (req, res) => {
   const { mailusuario } = req.body;
 
-  console.log("mail usuario: ", mailusuario);
-  console.log(req.file);
-  console.log("✅ ENV CHECK", {
-    API_KEY: process.env.API_KEY,
-    API_SECRET: process.env.API_SECRET ? 'CARGADA' : '❌',
-    CLOUD_NAME: process.env.CLOUD_NAME
-  });
-
-  // Config Cloudinary
-  cloudinary.config({
-    cloud_name: process.env.CLOUD_NAME,
-    api_key: process.env.API_KEY,
-    api_secret: process.env.API_SECRET
-  });
-
   if (!mailusuario) {
-    return res.status(404).json({ message: 'No se encontró el mail.' });
+    return res.status(400).json({ message: "Falta mailusuario" });
   }
-  if (!req.file) {
-    return res.status(400).json({ message: 'No se recibió ningún archivo.' });
-  }
-
-  cloudinary.uploader.upload(
-    req.file.path,
-    { resource_type: "video" },
-    async (error, result) => {
-      if (error) {
-        console.error("Error al subir el video:", error);
-        return res.status(500).json({ message: "Error al subir el video a Cloudinary" });
-      }
-
-      console.log("Video subido correctamente:", result.url);
-
-      try {
-        const { ID } = await Conversacion.CreateVideo(mailusuario, result.url);
-
-        // Responder al cliente sin esperar traducción
-        return res.status(200).json({
-          message: "Video subido con éxito, traducción en proceso",
-          id: ID
-        });
-
-      } catch (err) {
-        console.error(err);
-        return res.status(500).json({ message: 'Error al registrar video en la base' });
-      }
+  if (!req.file){
+    return res.status(400).json({ message: "No se recibió ningún archivo" })
     }
-  );
+
+  try {
+    const cloudinaryOpts = {
+      folder: "signai/videos", 
+    };
+
+    let result;
+
+    if (req.file.path) {
+      
+      result = await uploadLargeFromFsPath(req.file.path, cloudinaryOpts);
+
+    
+      try { fs.unlinkSync(req.file.path); } catch {}
+
+    } else if (req.file.buffer) {
+     
+      result = await uploadLargeFromBuffer(req.file.buffer, cloudinaryOpts);
+
+    } else {
+      return res.status(400).json({ message: "Formato de archivo no soportado" });
+    }
+
+    const url = result.secure_url;
+
+   
+    const { ID } = await Conversacion.CreateVideo(mailusuario, url);
+
+    return res.status(200).json({
+      message: "Video subido con éxito en modo chunked; traducción en proceso",
+      id: ID,
+      url,
+    });
+
+  } catch (error) {
+    console.error("Error en CrearVideo (chunked):", error);
+    return res.status(500).json({ message: "Error al subir el video a Cloudinary" });
+  }
 };
+
 
 const obtenerTraduccion = async (req, res) => {
   const { id } = req.params;
