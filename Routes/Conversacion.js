@@ -16,6 +16,7 @@ router.put("/:id/UpdateFeed", verifyToken, ConversacionControllers.updateFeedbac
 router.put("/:id/texto", ConversacionControllers.textoEntregado);
 router.get("/:id/getTexto", verifyToken, ConversacionControllers.getTexto);
 router.get("/tradByMail/:mail", verifyToken, ConversacionControllers.obtenerTraduccionesByMail);
+router.post("/RegisterVideo", verifyToken, ConversacionControllers.RegisterVideo);
 
 //CHUNK
 const __filename = fileURLToPath(import.meta.url);

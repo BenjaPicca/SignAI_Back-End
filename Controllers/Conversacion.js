@@ -102,6 +102,27 @@ const CrearVideo = async (req, res) => {
   }
 };
 
+const RegisterVideo = async (req, res) => {
+  const { mailusuario, url } = req.body;
+
+  if (!mailusuario || !url) {
+    return res.status(400).json({ message: "Falta mailusuario o url" });
+  }
+
+  try {
+    // Registrás el video en tu base de datos y disparás el proceso de traducción
+    const { ID } = await Conversacion.CreateVideo(mailusuario, url);
+
+    return res.status(200).json({
+      message: "Video registrado correctamente; traducción en proceso",
+      id: ID,
+      url,
+    });
+  } catch (e) {
+    console.error("Error en RegisterVideo:", e);
+    return res.status(500).json({ message: "Error registrando video" });
+  }
+};
 
 const obtenerTraduccion = async (req, res) => {
   const { id } = req.params;
@@ -263,5 +284,6 @@ export default {
     textoEntregado,
     getTexto,
     obtenerTraduccion,
-    obtenerTraduccionesByMail
+    obtenerTraduccionesByMail,
+    RegisterVideo
 }
