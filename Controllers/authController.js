@@ -20,8 +20,8 @@ export const googleAuth = async (req, res) => {
     
     const ticket = await client.verifyIdToken({
       idToken: id_token,
-      //audience: process.env.GOOGLE_CLIENT_ID, 
-      audience :  "407408718192.apps.googleusercontent.com" // SOLO PARA TESTEAR(HASTA CONECTAR CON FRONT)
+      audience: process.env.GOOGLE_CLIENT_ID, 
+      //audience :  "407408718192.apps.googleusercontent.com" // SOLO PARA TESTEAR(HASTA CONECTAR CON FRONT)
     });
 
     

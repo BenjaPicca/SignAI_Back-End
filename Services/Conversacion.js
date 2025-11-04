@@ -74,10 +74,8 @@ const CreateVideo = async (mailusuario, url) => {
     const ID = result.rows[0].ID;
     console.log("Video insertado con ID:", ID);
 
-    // 2. Procesar traducción en segundo plano
     procesarTraduccion(url, ID);
 
-    // 3. Retornar datos básicos al controlador
     return { ID, url };
 
   } catch (err) {

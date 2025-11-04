@@ -174,7 +174,6 @@ const login = async (req, res) => {
             res.status(200).json({
                 token: token, usuario: {
                     Mail: usuario_db.mail,
-                    Contraseña: usuario_db.contraseña,
                     NombreUsuario: usuario_db.NombreUsuario
                 }
 
