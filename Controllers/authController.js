@@ -1,31 +1,32 @@
+// Controller: auth/google
 import { OAuth2Client } from 'google-auth-library';
 import { generarJWT } from '../middelware/middelware.js';
 import Usuario from '../Services/Usuario.js';
 import dotenv from 'dotenv';
 dotenv.config();
 
-// Podés aceptar uno o varios client IDs
+// ✅ aceptar ambos
 const allowedAudiences = [
-  process.env.GOOGLE_CLIENT_ID_WEB,  // Web client ID (principal)
-  // process.env.GOOGLE_CLIENT_ID_IOS, // iOS client ID (opcional)
+  process.env.GOOGLE_CLIENT_ID_WEB,
+  process.env.GOOGLE_CLIENT_ID_IOS,
 ].filter(Boolean);
 
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID_WEB);
+// ✅ no fijar clientId acá
+const client = new OAuth2Client();
 
 export const googleAuth = async (req, res) => {
   const { id_token } = req.body;
-  if (!id_token) {
-    return res.status(400).json({ message: 'id_token es requerido' });
-  }
+  if (!id_token) return res.status(400).json({ message: 'id_token es requerido' });
 
   try {
     const ticket = await client.verifyIdToken({
       idToken: id_token,
-      // podés pasar string o array:
-      audience: allowedAudiences.length === 1 ? allowedAudiences[0] : allowedAudiences,
+      audience: allowedAudiences, // ✅ acepta iOS y Web
     });
 
     const payload = ticket.getPayload();
+    // console.log('Google payload aud:', payload.aud, 'iss:', payload.iss);
+
     const mail = payload.email;
     const nombre = payload.name;
 
@@ -33,12 +34,7 @@ export const googleAuth = async (req, res) => {
     let usuario = usuarios.length ? usuarios[0] : null;
 
     if (!usuario) {
-      usuario = {
-        mail,
-        nombre,
-        contraseña: null,
-        admin: false,
-      };
+      usuario = { mail, nombre, contraseña: null, admin: false };
       await Usuario.insertUsuario(usuario);
     }
 
