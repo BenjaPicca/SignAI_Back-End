@@ -5,14 +5,12 @@ import Usuario from '../Services/Usuario.js';
 import dotenv from 'dotenv';
 dotenv.config();
 
-// ✅ Aceptar múltiples client IDs (Web, iOS, Android)
 const allowedAudiences = [
   process.env.GOOGLE_CLIENT_ID_WEB,
   process.env.GOOGLE_CLIENT_ID_IOS,
   process.env.GOOGLE_CLIENT_ID_ANDROID,
 ].filter(Boolean);
 
-// ✅ No fijar clientId acá
 const client = new OAuth2Client();
 
 export const googleAuth = async (req, res) => {
@@ -21,12 +19,17 @@ export const googleAuth = async (req, res) => {
     return res.status(400).json({ message: 'id_token es requerido' });
 
   try {
-    const ticket = await client.verifyIdToken({
-      idToken: id_token,
-      audience: allowedAudiences, // ✅ acepta iOS, Android y Web
-    });
-
+    // ✅ Verificamos sin pasar audience
+    const ticket = await client.verifyIdToken({ idToken: id_token });
     const payload = ticket.getPayload();
+
+    // 🔍 Validar manualmente si el aud está entre los permitidos
+    if (!allowedAudiences.includes(payload.aud)) {
+      console.error('❌ aud no permitido:', payload.aud);
+      return res
+        .status(401)
+        .json({ message: 'Token de Google con audiencia no válida' });
+    }
 
     const mail = payload.email;
     const nombre = payload.name;
@@ -50,7 +53,6 @@ export const googleAuth = async (req, res) => {
   } catch (error) {
     console.error('❌ googleAuth error:', error?.message || error);
 
-    // 🔍 Mostrar el aud real del token recibido
     try {
       const parts = id_token.split('.');
       const payload = JSON.parse(Buffer.from(parts[1], 'base64').toString());
