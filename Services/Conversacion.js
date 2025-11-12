@@ -88,7 +88,9 @@ async function procesarTraduccion(url, ID) {
   try {
     console.log(`Iniciando traducción para ID ${ID}...`);
 
-    const response = await fetch(`https://signai.fdiaznem.com.ar/predict_gemini?video_url=${url}`);
+    const baseurl = "https://aiapi.signai.ar/v2"
+
+    const response = await fetch(`${baseurl}/slowfast/predict_gemini?video_url=${url}`);
     if (!response.ok) {
       const errorText = await response.text();
       console.error("Error en predict_gemini:", response.status, errorText);
