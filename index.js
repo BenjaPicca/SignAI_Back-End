@@ -30,7 +30,6 @@ app.get("/", (req, res) => {
     res.send("API working");
 });
 
-
 app.use("/usuario", UsuarioRouters);
 app.use("/conversacion", ConversacionRouters);
 app.use("/sesiones", SesionesRouters);
