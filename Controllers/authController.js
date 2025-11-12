@@ -13,21 +13,22 @@ export const googleAuth = async (req, res) => {
     return res.status(400).json({ message: 'id_token es requerido' });
 
   try {
-    // ✅ Verificar el token sin especificar audience aún
-    const ticket = await client.verifyIdToken({
-  idToken: id_token,
-  audience: allowedAudiences,
-});
-    const payload = ticket.getPayload();
-
-    console.log('👉 aud del token recibido:', payload.aud);
-
-    // ✅ Lista de client IDs válidos
+    // ✅ Lista de client IDs válidos (de tu .env)
     const allowedAudiences = [
       process.env.GOOGLE_CLIENT_ID_WEB,
       process.env.GOOGLE_CLIENT_ID_IOS,
       process.env.GOOGLE_CLIENT_ID_ANDROID,
     ].filter(Boolean);
+
+    // ✅ Verificar el token contra esas audiencias
+    const ticket = await client.verifyIdToken({
+      idToken: id_token,
+      audience: allowedAudiences,
+    });
+
+    const payload = ticket.getPayload();
+
+    console.log('👉 aud del token recibido:', payload.aud);
 
     // ✅ Verificamos manualmente que el aud sea uno permitido
     if (!allowedAudiences.includes(payload.aud)) {
