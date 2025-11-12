@@ -5,13 +5,13 @@ import Usuario from '../Services/Usuario.js';
 import dotenv from 'dotenv';
 dotenv.config();
 
-// ✅ aceptar ambos
+// ✅ aceptar web, iOS y Android
 const allowedAudiences = [
   process.env.GOOGLE_CLIENT_ID_WEB,
   process.env.GOOGLE_CLIENT_ID_IOS,
+  process.env.GOOGLE_CLIENT_ID_ANDROID,
 ].filter(Boolean);
 
-// ✅ no fijar clientId acá
 const client = new OAuth2Client();
 
 export const googleAuth = async (req, res) => {
@@ -21,12 +21,10 @@ export const googleAuth = async (req, res) => {
   try {
     const ticket = await client.verifyIdToken({
       idToken: id_token,
-      audience: allowedAudiences, // ✅ acepta iOS y Web
+      audience: allowedAudiences, // ✅ acepta los tres
     });
 
     const payload = ticket.getPayload();
-    // console.log('Google payload aud:', payload.aud, 'iss:', payload.iss);
-
     const mail = payload.email;
     const nombre = payload.name;
 
@@ -45,7 +43,7 @@ export const googleAuth = async (req, res) => {
       token,
     });
   } catch (error) {
-    console.error('googleAuth error:', error?.message || error);
+    console.error('❌ googleAuth error:', error?.message || error);
     return res.status(401).json({ message: 'Token de Google inválido' });
   }
 };
