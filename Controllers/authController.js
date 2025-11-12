@@ -1,4 +1,3 @@
-// Controller: auth/google
 import { OAuth2Client } from 'google-auth-library';
 import { generarJWT } from '../middelware/middelware.js';
 import Usuario from '../Services/Usuario.js';
@@ -12,34 +11,39 @@ export const googleAuth = async (req, res) => {
   if (!id_token)
     return res.status(400).json({ message: 'id_token es requerido' });
 
+  // ✅ Todos los posibles client IDs
+  const allowedAudiences = [
+    process.env.GOOGLE_CLIENT_ID_WEB,
+    process.env.GOOGLE_CLIENT_ID_IOS,
+    process.env.GOOGLE_CLIENT_ID_ANDROID,
+  ].filter(Boolean);
+
+  console.log('✅ allowedAudiences =', allowedAudiences);
+
+  let payload = null;
+
   try {
-    // ✅ Lista de client IDs válidos (de tu .env)
-    const allowedAudiences = [
-      process.env.GOOGLE_CLIENT_ID_WEB,
-      process.env.GOOGLE_CLIENT_ID_IOS,
-      process.env.GOOGLE_CLIENT_ID_ANDROID,
-    ].filter(Boolean);
+    for (const aud of allowedAudiences) {
+      try {
+        const ticket = await client.verifyIdToken({
+          idToken: id_token,
+          audience: aud,
+        });
+        payload = ticket.getPayload();
+        console.log('✅ Token válido con audience =', aud);
+        break; // sale del loop
+      } catch (err) {
 
-    // ✅ Verificar el token contra esas audiencias
-    const ticket = await client.verifyIdToken({ idToken: id_token });
-const payload = ticket.getPayload();
-
-// Log para depurar
-console.log('👉 aud del token recibido:', payload.aud);
-console.log('✅ allowedAudiences =', allowedAudiences);
-
-// Validamos manualmente
-if (!allowedAudiences.includes(payload.aud)) {
-  console.error('❌ aud no permitido:', payload.aud);
-  return res.status(401).json({ message: 'audiencia no válida' });
-}
-    console.log('👉 aud del token recibido:', payload.aud);
-
-    // ✅ Verificamos manualmente que el aud sea uno permitido
-    if (!allowedAudiences.includes(payload.aud)) {
-      console.error('❌ aud no permitido:', payload.aud);
-      return res.status(401).json({ message: 'audiencia no válida' });
+        console.log(`❌ Token no válido para audience: ${aud}`);
+      }
     }
+
+    
+    if (!payload) {
+      return res.status(401).json({ message: 'Token de Google con audiencia no válida' });
+    }
+
+    console.log('👉 aud del token recibido:', payload.aud);
 
     const mail = payload.email;
     const nombre = payload.name;
@@ -61,7 +65,7 @@ if (!allowedAudiences.includes(payload.aud)) {
       token,
     });
   } catch (error) {
-    console.error('googleAuth error:', error?.message || error);
+    console.error('googleAuth error:', error.message || error);
     return res.status(401).json({ message: 'Token de Google inválido' });
   }
 };
