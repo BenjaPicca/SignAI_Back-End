@@ -17,7 +17,9 @@ export const googleAuth = async (req, res) => {
     process.env.GOOGLE_CLIENT_ID_IOS,
     process.env.GOOGLE_CLIENT_ID_ANDROID,
   ].filter(Boolean);
-
+  console.log('🟢 GOOGLE_CLIENT_ID_WEB:', process.env.GOOGLE_CLIENT_ID_WEB);
+  console.log('🟢 GOOGLE_CLIENT_ID_IOS:', process.env.GOOGLE_CLIENT_ID_IOS);
+  console.log('🟢 GOOGLE_CLIENT_ID_ANDROID:', process.env.GOOGLE_CLIENT_ID_ANDROID);
   console.log('✅ allowedAudiences =', allowedAudiences);
 
   let payload = null;
