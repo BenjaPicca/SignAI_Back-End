@@ -5,26 +5,29 @@ import Usuario from '../Services/Usuario.js';
 import dotenv from 'dotenv';
 dotenv.config();
 
-// ✅ aceptar web, iOS y Android
+// ✅ Aceptar múltiples client IDs (Web, iOS, Android)
 const allowedAudiences = [
   process.env.GOOGLE_CLIENT_ID_WEB,
   process.env.GOOGLE_CLIENT_ID_IOS,
   process.env.GOOGLE_CLIENT_ID_ANDROID,
 ].filter(Boolean);
 
+// ✅ No fijar clientId acá
 const client = new OAuth2Client();
 
 export const googleAuth = async (req, res) => {
   const { id_token } = req.body;
-  if (!id_token) return res.status(400).json({ message: 'id_token es requerido' });
+  if (!id_token)
+    return res.status(400).json({ message: 'id_token es requerido' });
 
   try {
     const ticket = await client.verifyIdToken({
       idToken: id_token,
-      audience: allowedAudiences, // ✅ acepta los tres
+      audience: allowedAudiences, // ✅ acepta iOS, Android y Web
     });
 
     const payload = ticket.getPayload();
+
     const mail = payload.email;
     const nombre = payload.name;
 
@@ -39,11 +42,23 @@ export const googleAuth = async (req, res) => {
     const token = generarJWT({ id: usuario.mail, admin: !!usuario.admin });
 
     return res.status(200).json({
-      message: usuarios.length ? 'Login con Google exitoso' : 'Registro con Google exitoso',
+      message: usuarios.length
+        ? 'Login con Google exitoso'
+        : 'Registro con Google exitoso',
       token,
     });
   } catch (error) {
     console.error('❌ googleAuth error:', error?.message || error);
+
+    // 🔍 Mostrar el aud real del token recibido
+    try {
+      const parts = id_token.split('.');
+      const payload = JSON.parse(Buffer.from(parts[1], 'base64').toString());
+      console.log('👉 aud del token recibido:', payload.aud);
+    } catch (e) {
+      console.error('No se pudo leer el aud del token:', e.message);
+    }
+
     return res.status(401).json({ message: 'Token de Google inválido' });
   }
 };
