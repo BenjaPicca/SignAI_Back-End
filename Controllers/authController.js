@@ -21,13 +21,18 @@ export const googleAuth = async (req, res) => {
     ].filter(Boolean);
 
     // ✅ Verificar el token contra esas audiencias
-    const ticket = await client.verifyIdToken({
-      idToken: id_token,
-      audience: allowedAudiences,
-    });
+    const ticket = await client.verifyIdToken({ idToken: id_token });
+const payload = ticket.getPayload();
 
-    const payload = ticket.getPayload();
+// Log para depurar
+console.log('👉 aud del token recibido:', payload.aud);
+console.log('✅ allowedAudiences =', allowedAudiences);
 
+// Validamos manualmente
+if (!allowedAudiences.includes(payload.aud)) {
+  console.error('❌ aud no permitido:', payload.aud);
+  return res.status(401).json({ message: 'audiencia no válida' });
+}
     console.log('👉 aud del token recibido:', payload.aud);
 
     // ✅ Verificamos manualmente que el aud sea uno permitido
