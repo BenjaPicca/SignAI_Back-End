@@ -1,6 +1,6 @@
 📝 1. Registro de usuario (Sign Up)
 📍 URL
-POST https://sign-ai-web.vercel.app/insertar
+POST https://sign-ai-web.vercel.app/usuario/insertar
 
 💡 Qué hace
 Registra un nuevo usuario con email, nombre de usuario y contraseña.
@@ -28,7 +28,7 @@ El campo admin indica si el usuario es administrador, pero por ahora no se usa.
 
 🔐 2. Inicio de sesión (Login)
 📍 URL
-POST https://sign-ai-web.vercel.app/login
+POST https://sign-ai-web.vercel.app/usuario/login
 
 💡 Qué hace
 Valida usuario y contraseña, y devuelve un token JWT para autenticación.
