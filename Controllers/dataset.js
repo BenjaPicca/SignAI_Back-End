@@ -93,10 +93,21 @@ async function esperortaa(){
 }
     esperortaa();
 }
+const getAll = async (req,res) =>{
+  
+  try{
+    const data = await dataset.getAllPalabras();
+    return res.status(200).json({data})
+  }
+  catch(err){
+    return res.status(500).json({message:err})
+  }
+}
 
 
 export default{
     insertImage,
     getImagebyID,
-    getImagebyPalabra
+    getImagebyPalabra,
+    getAll
 }

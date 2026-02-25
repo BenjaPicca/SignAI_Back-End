@@ -114,3 +114,7 @@ Content-Type: application/json
 {
   "palabra":"avion"
 }
+###
+
+GET http://localhost:3000/dataset/all HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkVDSFVAZ21haWwuY29tIiwiaWF0IjoxNzI5OTc1MDE4LCJleHAiOjM1Mjk5NzUwMTh9.K5U4VM6QT2o0j0OHrlqH48bvyNTwkhqxDOdFxWmH-d8

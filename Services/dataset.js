@@ -49,9 +49,21 @@ const getImagebyId = async (id) => {
     throw new Error('Error al obtener la imagen');
   }
 };
-
+const getAllPalabras = async () => {
+   try{
+    const {rows} = await pool.query(
+      `SELECT * FROM public."dataset" `
+    )
+     console.log(rows);
+     return rows;
+   }
+   catch(err){
+    console.log(err)
+   }
+}
 export default{
     getImagebyId,
     getImagebyPalabra,
-    insertImage
+    insertImage,
+    getAllPalabras
 }

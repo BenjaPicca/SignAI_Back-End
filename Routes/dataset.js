@@ -9,5 +9,6 @@ const router = Router();
 router.get("/getimagebyId/:id",verifyToken,datasetControllers.getImagebyID)
 router.post("/insertimage",upload.single('image'), verifyToken, datasetControllers.insertImage)
 router.get("/getimagebyPalabra",verifyToken,datasetControllers.getImagebyPalabra)
+router.get("/all", verifyToken, datasetControllers.getAll)
 
 export default router;
