@@ -61,10 +61,13 @@ export const googleAuth = async (req, res) => {
     const token = generarJWT({ id: usuario.mail, admin: !!usuario.admin });
 
     return res.status(200).json({
-      message: usuarios.length
-        ? 'Login con Google exitoso'
-        : 'Registro con Google exitoso',
-      token,
+  message: usuarios.length
+    ? 'Login con Google exitoso'
+    : 'Registro con Google exitoso',
+  token,
+  usuario: {
+    NombreUsuario: usuarios[0]?.NombreUsuario
+  }
     });
   } catch (error) {
     console.error('googleAuth error:', error.message || error);
