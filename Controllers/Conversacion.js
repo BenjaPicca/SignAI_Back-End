@@ -1,9 +1,12 @@
 import { pool } from "../dbconfig.js"
 import "dotenv/config"
 import Conversacion from "../Services/Conversacion.js";
+import Puntaje from "../Services/Puntaje.js";
 import { v2 as cloudinary} from "cloudinary";
 import { uploadLargeFromFsPath, uploadLargeFromBuffer } from "./Cloudinary-helpers.js"
 import fs from "fs";
+
+const PUNTOS_POR_TRADUCCION = 10;
 
 const selectFeedbackById = async (req, res) => {
     const ID = req.params.id;
@@ -237,6 +240,17 @@ const textoEntregado = async (req, res) => {
         SET "Texto_Devuelto" = $1, "Fecha_Conversación" = $3, estado = 'entregado'
          WHERE "ID" = $2 `,
          [translation, id, new Date()])
+
+        try {
+            const conversacion = await Conversacion.SelectallById(id);
+            const mailusuario = conversacion?.[0]?.Mail_Usuario;
+            if (mailusuario) {
+                await Puntaje.insertPuntaje(mailusuario, PUNTOS_POR_TRADUCCION, 'traduccion');
+            }
+        } catch (puntajeErr) {
+            console.log('Error al asignar puntaje:', puntajeErr);
+        }
+
         return res.status(200).json({ message: 'Texto entregado', translation })
     }
     catch (err) {

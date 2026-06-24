@@ -8,6 +8,8 @@ import UsuarioRouters from "./Routes/Usuario.js";
 import SesionesRouters from "./Routes/sesiones.js";
 import datasetRouters from "./Routes/dataset.js";
 import googleRouters from "./Routes/google.js";
+import PuntajeRouters from "./Routes/Puntaje.js";
+import CronRouters from "./Routes/weeklyEmail.js";
 import { upload } from "./multer.js";
 
 
@@ -35,6 +37,8 @@ app.use("/conversacion", ConversacionRouters);
 app.use("/sesiones", SesionesRouters);
 app.use("/dataset", datasetRouters);
 app.use('/api/auth', googleRouters);
+app.use("/puntaje", PuntajeRouters);
+app.use("/cron", CronRouters);
 
 app.listen(port, () => {
     console.log("Escuchando ando");
