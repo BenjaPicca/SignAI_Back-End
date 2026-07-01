@@ -11,41 +11,27 @@ export const googleAuth = async (req, res) => {
   if (!id_token)
     return res.status(400).json({ message: 'id_token es requerido' });
 
-  // ✅ Todos los posibles client IDs
   const allowedAudiences = [
     process.env.GOOGLE_CLIENT_ID_WEB,
     process.env.GOOGLE_CLIENT_ID_IOS,
     process.env.GOOGLE_CLIENT_ID_ANDROID,
   ].filter(Boolean);
-  console.log('🟢 GOOGLE_CLIENT_ID_WEB:', process.env.GOOGLE_CLIENT_ID_WEB);
-  console.log('🟢 GOOGLE_CLIENT_ID_IOS:', process.env.GOOGLE_CLIENT_ID_IOS);
-  console.log('🟢 GOOGLE_CLIENT_ID_ANDROID:', process.env.GOOGLE_CLIENT_ID_ANDROID);
-  console.log('✅ allowedAudiences =', allowedAudiences);
 
   let payload = null;
 
   try {
     for (const aud of allowedAudiences) {
       try {
-        const ticket = await client.verifyIdToken({
-          idToken: id_token,
-          audience: aud,
-        });
+        const ticket = await client.verifyIdToken({ idToken: id_token, audience: aud });
         payload = ticket.getPayload();
-        console.log('✅ Token válido con audience =', aud);
-        break; // sale del loop
+        break;
       } catch (err) {
-
         console.log(`❌ Token no válido para audience: ${aud}`);
       }
     }
 
-    
-    if (!payload) {
+    if (!payload)
       return res.status(401).json({ message: 'Token de Google con audiencia no válida' });
-    }
-
-    console.log('👉 aud del token recibido:', payload.aud);
 
     const mail = payload.email;
     const nombre = payload.name;
@@ -56,18 +42,18 @@ export const googleAuth = async (req, res) => {
     if (!usuario) {
       usuario = { mail, nombre, contraseña: null, admin: false };
       await Usuario.insertUsuario(usuario);
+      usuarios = await Usuario.getAllByMail(mail);
     }
 
-    const token = generarJWT({ id: usuario.mail, admin: !!usuario.admin });
+    const token = generarJWT({ id: mail, admin: !!usuario.admin });
 
     return res.status(200).json({
-  message: usuarios.length
-    ? 'Login con Google exitoso'
-    : 'Registro con Google exitoso',
-  token,
-  usuario: {
-    NombreUsuario: usuarios[0]?.NombreUsuario
-  }
+      message: usuarios.length ? 'Login con Google exitoso' : 'Registro con Google exitoso',
+      token,
+      mail,
+      usuario: {
+        NombreUsuario: usuarios[0]?.NombreUsuario,
+      },
     });
   } catch (error) {
     console.error('googleAuth error:', error.message || error);
