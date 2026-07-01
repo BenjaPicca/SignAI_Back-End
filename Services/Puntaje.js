@@ -44,6 +44,21 @@ const getWeeklyByMail = async (mail) => {
     }
 };
 
+const getByJuegoMail = async (mail) => {
+    try {
+        const result = await pool.query(`
+        SELECT "Juego" AS juego, COALESCE(SUM("puntos"), 0) AS total
+        FROM public."Juegos"
+        WHERE "Mail_Usuario" = $1
+        GROUP BY "Juego"`, [mail]);
+        return result.rows;
+    }
+    catch (err) {
+        console.log(err);
+        throw new Error;
+    }
+};
+
 const getWeeklyProgressAllUsers = async () => {
     try {
         const result = await pool.query(`
@@ -66,5 +81,6 @@ export default {
     insertPuntaje,
     getTotalByMail,
     getWeeklyByMail,
+    getByJuegoMail,
     getWeeklyProgressAllUsers,
 };
