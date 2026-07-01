@@ -38,6 +38,7 @@ app.use("/sesiones", SesionesRouters);
 app.use("/dataset", datasetRouters);
 app.use('/api/auth', googleRouters);
 app.use("/puntaje", PuntajeRouters);
+app.use("/score", PuntajeRouters);
 app.use("/cron", CronRouters);
 
 app.listen(port, () => {

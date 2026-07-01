@@ -4,6 +4,7 @@ import { verifyToken } from "../middelware/middelware.js";
 
 const router = Router();
 
+router.post("/add", verifyToken, PuntajeControllers.addScore);
 router.get("/:mail/semanal", verifyToken, PuntajeControllers.getSemanal);
 router.get("/:mail", verifyToken, PuntajeControllers.getTotal);
 

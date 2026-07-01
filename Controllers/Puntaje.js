@@ -30,7 +30,23 @@ const getSemanal = async (req, res) => {
     }
 };
 
+const addScore = async (req, res) => {
+    const { mail, juego, puntos, fecha } = req.body;
+    if (!mail || !juego || puntos === undefined) {
+        return res.status(400).json({ message: "Faltan campos: mail, juego o puntos" });
+    }
+    try {
+        await Puntaje.insertPuntaje(mail, puntos, juego);
+        return res.status(200).json({ message: "Puntaje registrado" });
+    }
+    catch (err) {
+        console.log(err);
+        return res.status(500).json({ message: "Error al registrar el puntaje" });
+    }
+};
+
 export default {
     getTotal,
     getSemanal,
+    addScore,
 };
