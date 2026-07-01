@@ -10,7 +10,6 @@ import datasetRouters from "./Routes/dataset.js";
 import googleRouters from "./Routes/google.js";
 import PuntajeRouters from "./Routes/Puntaje.js";
 import CronRouters from "./Routes/weeklyEmail.js";
-import SeedRouters from "./Routes/seed.js";
 import { upload } from "./multer.js";
 
 
@@ -41,7 +40,6 @@ app.use('/api/auth', googleRouters);
 app.use("/puntaje", PuntajeRouters);
 app.use("/score", PuntajeRouters);
 app.use("/cron", CronRouters);
-app.use("/seed", SeedRouters);
 
 app.listen(port, () => {
     console.log("Escuchando ando");
