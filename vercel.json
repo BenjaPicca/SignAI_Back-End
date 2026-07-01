@@ -12,5 +12,11 @@
             "src": "/(.*)",
             "dest": "index.js"
         }
+    ],
+    "crons": [
+        {
+            "path": "/cron/weekly-progress",
+            "schedule": "0 9 * * 1"
+        }
     ]
 }
