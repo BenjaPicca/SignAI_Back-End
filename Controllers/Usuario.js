@@ -172,7 +172,9 @@ const login = async (req, res) => {
                 sameSite: 'Strict',
               });
             res.status(200).json({
-                token: token, usuario: {
+                token: token,
+                refreshToken: RefreshToken,
+                usuario: {
                     Mail: usuario_db.mail,
                     NombreUsuario: usuario_db.NombreUsuario
                 }
