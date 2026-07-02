@@ -1,6 +1,8 @@
 import { OAuth2Client } from 'google-auth-library';
+import jwt from 'jsonwebtoken';
 import { generarJWT } from '../middelware/middelware.js';
 import Usuario from '../Services/Usuario.js';
+import Sesiones from '../Services/sesiones.js';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -47,9 +49,23 @@ export const googleAuth = async (req, res) => {
 
     const token = generarJWT({ id: mail, admin: !!usuario.admin });
 
+    const refreshToken = jwt.sign(
+      { id: mail },
+      process.env.SECRET_RT,
+      { expiresIn: '30d' }
+    );
+
+    try {
+      await Sesiones.postToken({ mail, RefreshToken: refreshToken });
+    } catch (err) {
+      // Si falla el guardado del refresh token no bloqueamos el login
+      console.error('No se pudo guardar el refresh token de Google:', err.message || err);
+    }
+
     return res.status(200).json({
       message: usuarios.length ? 'Login con Google exitoso' : 'Registro con Google exitoso',
       token,
+      refreshToken,
       mail,
       usuario: {
         NombreUsuario: usuarios[0]?.NombreUsuario,
